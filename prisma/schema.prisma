@@ -1,0 +1,82 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model activities {
+  id                Int                 @id @default(autoincrement())
+  name              String              @db.VarChar(50)
+  img_url           String?             @db.Text
+  location          String              @db.Text
+  host_id           String              @db.VarChar(50)
+  description       String?             @db.Text
+  max_participants  Int
+  min_participants  Int
+  category          activities_category
+  status            activities_status
+  price             Decimal             @db.Decimal(10, 2)
+  pay_type          activities_pay_type
+  require_approval  Int                 @db.TinyInt
+  created_at        DateTime?           @db.Timestamp(0)
+  updated_at        DateTime?           @db.Timestamp(0)
+  approval_deadline DateTime?           @db.Timestamp(0)
+  event_time        DateTime            @db.Timestamp(0)
+  participants      participants[]
+}
+
+model participants {
+  activity_id    Int
+  participant_id String              @db.VarChar(255)
+  status         participants_status
+  id             Int                 @unique(map: "id_UNIQUE") @default(autoincrement()) @db.UnsignedInt
+  activities     activities          @relation(fields: [activity_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "participants_ibfk_1")
+  users          users               @relation(fields: [participant_id], references: [uid], onDelete: Cascade, onUpdate: NoAction, map: "participants_ibfk_2")
+
+  @@id([activity_id, participant_id])
+  @@index([participant_id], map: "participant_id")
+}
+
+model users {
+  uid            String         @id @db.VarChar(255)
+  email          String         @unique(map: "email") @db.VarChar(255)
+  email_verified Boolean        @default(false)
+  full_name      String         @db.VarChar(255)
+  display_name   String?        @db.VarChar(255)
+  phone_number   String?        @db.VarChar(15)
+  photo_url      String?        @db.Text
+  created_at     DateTime       @default(now()) @db.DateTime(0)
+  participants   participants[]
+}
+
+enum participants_status {
+  registered
+  approved
+  host_declined
+  participant_cancelled
+}
+
+enum activities_category {
+  food
+  shopping
+  travel
+  sports
+  education
+  others
+}
+
+enum activities_status {
+  registrationOpen
+  onGoing
+  completed
+  cancelled
+}
+
+enum activities_pay_type {
+  free
+  AA
+  host
+}
