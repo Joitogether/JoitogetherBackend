@@ -1,12 +1,12 @@
-import { initializeApp, cert } from 'firebase-admin/app';
-import { createRequire } from "module";
+// import { initializeApp, cert } from 'firebase-admin/app';
+// import { createRequire } from "module";
 
-const require = createRequire(import.meta.url);
-const serviceAccount = require(process.env.GOOGLE_APPLICATION_CREDENTIALS)
+// const require = createRequire(import.meta.url);
+// const serviceAccount = require(process.env.GOOGLE_APPLICATION_CREDENTIALS)
 
 
-export const fbApp = initializeApp({
-  credential: cert(serviceAccount),
-})  
+// export const fbApp = initializeApp({
+//   credential: cert(serviceAccount),
+// })  
 
 

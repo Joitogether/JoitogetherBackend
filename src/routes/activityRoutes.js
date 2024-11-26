@@ -74,6 +74,28 @@ const activityService = {
     return await prisma.participants.findMany({
       where: { activity_id: id }
     });
+  },
+
+  async getParticipants(activity_id){
+    return await prisma.participants.findMany({
+      where: { activity_id },
+      select: {
+        id: true,
+        activity_id: true,
+        participant_id: true,
+        status: true,
+        comment: true,
+      }
+    });
+  },
+
+  async verifyParticipant(id, status){
+    return await prisma.participants.update({
+      where: { id },
+      data: {
+        status
+      }
+    })
   }
 };
 
@@ -162,5 +184,49 @@ router.put('/cancel/:id',
     }
 });
 
+
+router.get('/participants/:id', async(req, res, next) => {
+  try{
+    const response = await activityService.getParticipants(parseInt(req.params.id))
+
+    if(!response){
+      return res.status(STATUS.NOT_FOUND).json({
+        message: MESSAGE.NOT_FOUND,
+        status: STATUS.NOT_FOUND
+      })
+    }
+
+    res.status(STATUS.SUCCESS).json({
+      message: MESSAGE.GET_SUCCESS,
+      status: STATUS.SUCCESS,
+      data: response
+    })
+
+  }catch(e){
+    next(e)
+  }
+})
+
+router.put('/participants/:id', async(req, res, next) => {
+  try{
+    const { status } = req.body
+    const response = await activityService.verifyParticipant(parseInt(req.params.id), status)
+
+    res.status(STATUS.SUCCESS).json({
+      message: MESSAGE.UPDATE_SUCCESS,
+      status: STATUS.SUCCESS,
+      data: response
+    })
+
+  }catch(e){
+    if(e.code === 'P2025'){
+      return res.status(STATUS.NOT_FOUND).json({
+        message: MESSAGE.NOT_FOUND,
+        status: STATUS.NOT_FOUND
+      })
+    }
+    next(e)
+  }
+})
 
 export default router

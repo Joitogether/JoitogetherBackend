@@ -35,6 +35,8 @@ const userService = {
       }
     });
   },
+
+
   
   async userRegister(userData) {
     return await prisma.users.create({
@@ -78,6 +80,12 @@ router.put('/update/:uid', async(req, res, next) => {
       data: result
     });
   }catch(e){
+    if(e.code === 'P2025'){
+      return res.status(STATUS.NOT_FOUND).json({
+        message: MESSAGE.NOT_FOUND,
+        status: STATUS.NOT_FOUND
+      })
+    }
     next(e)
   }
 })
@@ -102,6 +110,8 @@ router.get('/:uid', async(req, res, next) => {
     next(e)
   }
 })
+
+
 
 
 export default router

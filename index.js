@@ -2,7 +2,7 @@ import express from 'express'
 import 'dotenv/config'
 import { errorMiddleware } from './src/middlewares/errorMiddleware.js'
 import activityRouter from './src/routes/activityRoutes.js'
-import { fbApp } from './src/config/firebase.js';
+// import { fbApp } from './src/config/firebase.js';
 import userRouter from './src/routes/userRoutes.js'
 import cors from 'cors'
 
