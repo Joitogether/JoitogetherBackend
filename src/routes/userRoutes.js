@@ -52,6 +52,7 @@ const userService = {
   }
 }
 
+// 使用者註冊
 router.post('/register', async(req, res, next) => {
   try{
     const userData = {
@@ -70,6 +71,7 @@ router.post('/register', async(req, res, next) => {
   }
 })
 
+// 依照id更新使用者資料
 router.put('/update/:uid', async(req, res, next) => {
   try{
     const result = await userService.userUpdateInfo(req.body, req.params.uid)
@@ -90,7 +92,7 @@ router.put('/update/:uid', async(req, res, next) => {
   }
 })
 
-
+// 依照id獲取單一使用者資料
 router.get('/:uid', async(req, res, next) => {
   try{
     const result = await userService.getUserById(req.params.uid)
