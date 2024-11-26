@@ -77,16 +77,20 @@ const activityService = {
   },
 
   async getParticipants(activity_id){
-    return await prisma.participants.findMany({
+    const response = await prisma.participants.findMany({
       where: { activity_id },
-      select: {
-        id: true,
-        activity_id: true,
-        participant_id: true,
-        status: true,
-        comment: true,
-      }
+      include: { users: true }
     });
+
+    if(!response){
+      return null
+    }
+    const formattedData = response.map(data => {
+      const {users, ...rest} = data
+      return { ...rest, participant_data: { ...users }}
+    });
+
+    return formattedData
   },
 
   async verifyParticipant(id, status){
