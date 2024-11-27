@@ -1,7 +1,7 @@
 import express from 'express'
-import { prisma } from '../config/db.js'
-
-
+import { ActivityCreateSchema, ApplicationUpdateSchema } from '../validations/activitySchema.js';
+import { activityService } from '../services/activityService.js'
+import { z } from 'zod'
 
 // 缺少validator
 const router = express.Router()
@@ -25,83 +25,7 @@ const MESSAGE = {
 };
 
 
-// Service 層
-const activityService = {
-  async getAllActivities() {
-    return await prisma.activities.findMany({
-      select: {
-        approval_deadline: true,
-        category: true,
-        created_at: true,
-        description: true,
-        event_time: true,
-        host_id: true,
-        id: true,
-        img_url: true,
-        location: true,
-        max_participants: true,
-        min_participants: true,
-        name: true,
-        pay_type: true,
-        price: true,
-        require_approval: true,
-        status: true,
-        updated_at: true
-      }
-    });
-  },
 
-  async getActivityById(id) {
-    return await prisma.activities.findUnique({
-      where: { id }
-    });
-  },
-  
-  async createActivity(activityData) {
-    return await prisma.activities.create({
-      data: activityData
-    });
-  },
-  
-  async cancelActivity(id) {
-    return await prisma.activities.update({
-      where: { id },
-      data: { status: 'cancelled' }
-    });
-  },
-  
-  async getParticipantById(id) {
-    return await prisma.participants.findMany({
-      where: { activity_id: id }
-    });
-  },
-
-  async getParticipants(activity_id){
-    const response = await prisma.participants.findMany({
-      where: { activity_id },
-      include: { users: true }
-    });
-
-    if(!response){
-      return null
-    }
-    const formattedData = response.map(data => {
-      const {users, ...rest} = data
-      return { ...rest, participant_data: { ...users }}
-    });
-
-    return formattedData
-  },
-
-  async verifyParticipant(id, status){
-    return await prisma.participants.update({
-      where: { id },
-      data: {
-        status
-      }
-    })
-  }
-};
 
 
 // 路由處理
@@ -133,6 +57,7 @@ router.get('/:id',
     try {
       const result = await activityService.getActivityById(parseInt(req.params.id));
       const participants = await activityService.getParticipantById(parseInt(req.params.id))
+      // 沒找到東西
       if (!result || result.length === 0) {
         return res.status(STATUS.NOT_FOUND).json({
           status: STATUS.NOT_FOUND,
@@ -150,17 +75,15 @@ router.get('/:id',
     }
 });
 
+
+
 // 新增活動
 router.post('/',
   async (req, res, next) => {
     try {
-      const activityData = {
-        ...req.body,
-        created_at: new Date(),
-        updated_at: new Date()
-      };
-
-      const result = await activityService.createActivity(activityData);
+      ActivityCreateSchema.parse(req.body)
+  
+      const result = await activityService.createActivity(req.body);
 
       res.status(STATUS.CREATED).json({
         status: STATUS.CREATED,
@@ -168,6 +91,13 @@ router.post('/',
         data: result
       });
     } catch (error) {
+      if(error instanceof z.ZodError){
+        return res.status(STATUS.BAD_REQUEST).json({
+         status: STATUS.BAD_REQUEST,
+         message: MESSAGE.VALIDATION_ERROR,
+         errors: error.errors
+       })
+     }
       next(error);
     }
 });
@@ -184,16 +114,23 @@ router.put('/cancel/:id',
         data: result
       });
     } catch (error) {
+      if(error.code === 'P2025'){
+        return res.status(STATUS.NOT_FOUND).json({
+          message: MESSAGE.NOT_FOUND,
+          status: STATUS.NOT_FOUND
+        })
+      }
       next(error);
     }
 });
 
-
+// 獲得該活動報名者資訊
 router.get('/participants/:id', async(req, res, next) => {
   try{
-    const response = await activityService.getParticipants(parseInt(req.params.id))
+    const activityId = parseInt(req.params.id)
+    const response = await activityService.getParticipants(activityId)
 
-    if(!response){
+    if(!response || response.length === 0){
       return res.status(STATUS.NOT_FOUND).json({
         message: MESSAGE.NOT_FOUND,
         status: STATUS.NOT_FOUND
@@ -211,25 +148,37 @@ router.get('/participants/:id', async(req, res, next) => {
   }
 })
 
+// 審核活動報名者
 router.put('/participants/:id', async(req, res, next) => {
   try{
     const { status } = req.body
-    const response = await activityService.verifyParticipant(parseInt(req.params.id), status)
+    ApplicationUpdateSchema.parse(status)
+
+    const applicationId = parseInt(req.params.id)
+    const response = await activityService.verifyParticipant(applicationId, status)
 
     res.status(STATUS.SUCCESS).json({
-      message: MESSAGE.UPDATE_SUCCESS,
+      message: '審核成功',
       status: STATUS.SUCCESS,
       data: response
     })
 
-  }catch(e){
-    if(e.code === 'P2025'){
+  }catch(error){
+    if(error instanceof z.ZodError){
+      return res.status(STATUS.BAD_REQUEST).json({
+       status: STATUS.BAD_REQUEST,
+       message: MESSAGE.VALIDATION_ERROR,
+       errors: error.errors
+     })
+   }
+
+    if(error.code === 'P2025'){
       return res.status(STATUS.NOT_FOUND).json({
         message: MESSAGE.NOT_FOUND,
         status: STATUS.NOT_FOUND
       })
     }
-    next(e)
+    next(error)
   }
 })
 

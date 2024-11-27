@@ -22,6 +22,7 @@ app.use('/users', userRouter)
 // error 
 app.use(errorMiddleware)
 
+
 // server start
 app.listen(port,'0.0.0.0', () => {
   console.log(`server running on port ${port}`)
