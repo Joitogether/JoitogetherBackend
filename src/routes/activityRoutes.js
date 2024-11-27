@@ -125,9 +125,9 @@ router.put('/cancel/:id',
 });
 
 // 獲得該活動報名者資訊
-router.get('/participants/:id', async(req, res, next) => {
+router.get('/applications/:activity_id', async(req, res, next) => {
   try{
-    const activityId = parseInt(req.params.id)
+    const activityId = parseInt(req.params.activity_id)
     const response = await activityService.getParticipants(activityId)
 
     if(!response || response.length === 0){
@@ -149,12 +149,12 @@ router.get('/participants/:id', async(req, res, next) => {
 })
 
 // 審核活動報名者
-router.put('/participants/:id', async(req, res, next) => {
+router.put('/applications/:application_id', async(req, res, next) => {
   try{
     const { status } = req.body
     ApplicationUpdateSchema.parse(status)
 
-    const applicationId = parseInt(req.params.id)
+    const applicationId = parseInt(req.params.application_id)
     const response = await activityService.verifyParticipant(applicationId, status)
 
     res.status(STATUS.SUCCESS).json({

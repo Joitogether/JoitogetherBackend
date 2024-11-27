@@ -55,13 +55,13 @@ export const activityService = {
   },
   
   async getParticipantById(id) {
-    return await prisma.participants.findMany({
+    return await prisma.applications.findMany({
       where: { activity_id: id }
     });
   },
 
   async getParticipants(activity_id){
-    const response = await prisma.participants.findMany({
+    const response = await prisma.applications.findMany({
       where: { activity_id },
       include: { users: true }
     });
@@ -78,7 +78,7 @@ export const activityService = {
   },
 
   async verifyParticipant(application_id, status){
-    return await prisma.participants.update({
+    return await prisma.applications.update({
       where: { application_id },
       data: {
         status
