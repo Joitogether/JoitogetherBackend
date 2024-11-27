@@ -26,9 +26,20 @@ export const activityService = {
   },
 
   async getActivityById(id) {
-    return await prisma.activities.findUnique({
-      where: { id }
+    const response =  await prisma.activities.findUnique({
+      where: { id },
+      include: {
+        users: true
+      }
     });
+
+    if(!response){
+      return null
+    }
+
+    const users = response.users;
+    const { users: _, ...rest } = response;
+    return { ...rest, host_info: { ...users } };
   },
   
   async createActivity(activityData) {
