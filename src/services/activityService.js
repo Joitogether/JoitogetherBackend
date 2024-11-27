@@ -77,9 +77,9 @@ export const activityService = {
     return formattedData
   },
 
-  async verifyParticipant(id, status){
+  async verifyParticipant(application_id, status){
     return await prisma.participants.update({
-      where: { id },
+      where: { application_id },
       data: {
         status
       }
