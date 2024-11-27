@@ -152,6 +152,12 @@ router.get('/applications/:activity_id', async(req, res, next) => {
 router.put('/applications/:application_id', async(req, res, next) => {
   try{
     const { status } = req.body
+    if(!status){
+      return res.status(STATUS.BAD_REQUEST).json({
+        message: MESSAGE.VALIDATION_ERROR,
+        status: STATUS.BAD_REQUEST
+      })
+    }
     ApplicationUpdateSchema.parse(status)
 
     const applicationId = parseInt(req.params.application_id)

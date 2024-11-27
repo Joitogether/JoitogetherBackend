@@ -29,6 +29,9 @@ Users:
 GET  /users/:id
 // 新增使用者資料
 POST /users/register
+data = {
+  使用者資料
+}
 // 更改使用者資料
 PUT /users/update/:id
 
@@ -40,6 +43,9 @@ GET /activities/:id
 GET /activities/
 // 新增活動資料
 POST /activities
+data = {
+  活動資料
+}
 // 取消單一活動
 PUT /activities/cancel/:id
 
@@ -49,3 +55,6 @@ Applications:
 GET /applications/:id
 // 審核單筆報名
 PUT /applications/:id
+data = {
+  status: registered/approved/host_declined/participant_cancelled
+}
