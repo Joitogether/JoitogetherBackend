@@ -42,8 +42,8 @@ router.post('/register', async(req, res, next) => {
       });
     }
     return res.status(409).json({
-      message: MESSAGE.CREATE_EXISTS,
-      status: 409
+      status: 409,
+      message: MESSAGE.CREATE_EXISTS
     })
 
   }catch(error){

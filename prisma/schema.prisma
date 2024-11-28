@@ -32,16 +32,32 @@ model activities {
 }
 
 model users {
-  uid            String         @id @unique(map: "uid_UNIQUE") @db.VarChar(255)
-  email          String         @unique(map: "email_UNIQUE") @db.VarChar(255)
-  email_verified Boolean        @default(false)
-  full_name      String         @db.VarChar(255)
-  display_name   String         @db.VarChar(255)
-  phone_number   String         @db.VarChar(10)
-  photo_url      String?        @db.Text
-  created_at     DateTime       @default(now()) @db.DateTime(0)
-  activities     activities[]
-  applications   applications[]
+  uid                                    String         @id @unique(map: "uid_UNIQUE") @db.VarChar(255)
+  email                                  String         @unique(map: "email_UNIQUE") @db.VarChar(255)
+  email_verified                         Boolean        @default(false)
+  full_name                              String         @db.VarChar(255)
+  display_name                           String         @db.VarChar(255)
+  phone_number                           String         @db.VarChar(10)
+  photo_url                              String?        @db.Text
+  created_at                             DateTime       @default(now()) @db.DateTime(0)
+  city                                   String?        @db.VarChar(5)
+  age                                    Int?
+  career                                 String?        @db.VarChar(45)
+  favorite_sentence                      String?        @db.VarChar(45)
+  tags                                   String?        @db.VarChar(255)
+  self_introduction                      String?        @db.VarChar(45)
+  zodiac                                 String?        @db.VarChar(3)
+  hobby                                  String?        @db.VarChar(45)
+  expertise                              String?        @db.VarChar(45)
+  interested_in                          String?        @db.VarChar(255)
+  life_photo_1                           String?        @db.Text
+  life_photo_2                           String?        @db.Text
+  activities                             activities[]
+  applications                           applications[]
+  followers_followers_follower_idTousers followers[]    @relation("followers_follower_idTousers")
+  followers_followers_user_idTousers     followers[]    @relation("followers_user_idTousers")
+  ratings_ratings_host_idTousers         ratings[]      @relation("ratings_host_idTousers")
+  ratings_ratings_user_idTousers         ratings[]      @relation("ratings_user_idTousers")
 }
 
 model applications {
@@ -55,6 +71,34 @@ model applications {
 
   @@id([activity_id, participant_id])
   @@index([participant_id], map: "participants_ibfk_2")
+}
+
+model followers {
+  id                                 Int    @id @unique(map: "id_UNIQUE")
+  user_id                            String @db.VarChar(255)
+  follower_id                        String @db.VarChar(255)
+  users_followers_follower_idTousers users  @relation("followers_follower_idTousers", fields: [follower_id], references: [uid], onDelete: Cascade, map: "followers bind follower id")
+  users_followers_user_idTousers     users  @relation("followers_user_idTousers", fields: [user_id], references: [uid], onDelete: NoAction, onUpdate: NoAction, map: "followers bind user id")
+
+  @@index([follower_id], map: "bind follower id_idx")
+  @@index([user_id], map: "bind user id_idx")
+}
+
+model ratings {
+  rating_id                    Int      @id @unique(map: "rating_id_UNIQUE") @default(autoincrement())
+  user_id                      String   @db.VarChar(255)
+  host_id                      String   @db.VarChar(255)
+  rating_heart                 Int
+  user_comment                 String   @db.Text
+  rating_kindness              Int
+  rating_ability               Int
+  rating_credit                Int
+  created_at                   DateTime @default(now()) @db.DateTime(0)
+  users_ratings_host_idTousers users    @relation("ratings_host_idTousers", fields: [host_id], references: [uid], onDelete: NoAction, onUpdate: NoAction, map: "bind host id")
+  users_ratings_user_idTousers users    @relation("ratings_user_idTousers", fields: [user_id], references: [uid], onDelete: Cascade, map: "bind user id")
+
+  @@index([host_id], map: "bind host id_idx")
+  @@index([user_id], map: "bind id_idx")
 }
 
 enum activities_category {
