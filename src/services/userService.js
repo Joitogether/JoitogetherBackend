@@ -16,8 +16,22 @@ export const userService = {
     });
   },
 
+  async getUserByEmail( email) {
+    return await prisma.users.findUnique({
+      where: {  email },
+      select: {
+        display_name: true,
+        email: true,
+        email_verified: true,
+        full_name: true,
+        phone_number: true,
+        photo_url: true,
+        uid: true
+      }
+    });
+  },
 
-     async userRegister(userData) {
+  async userRegister(userData) {
     return await prisma.users.create({
       data: userData
     });

@@ -1,6 +1,6 @@
 import express from 'express'
 import { userService } from '../services/userService.js'
-import { UserCreateSchema } from '../validations/userSchema.js';
+import { UserCreateSchema, UserUpdateSchema } from '../validations/userSchema.js';
 import { z } from 'zod'
 
 const router = express.Router()
@@ -16,7 +16,9 @@ const MESSAGE = {
   GET_SUCCESS: '取得使用者資料成功',
   CREATE_SUCCESS: '使用者新增成功',
   CREATE_ERROR: '使用者新增失敗',
+  CREATE_EXISTS: '使用者已存在',
   UPDATE_SUCCESS: '使用者更新成功',
+  UPDATE_ERROR: '使用者更新失敗',
   NOT_FOUND: '查無使用者',
   VALIDATION_ERROR: '資料驗證失敗',
   SERVER_ERROR: '伺服器錯誤'
@@ -30,14 +32,20 @@ router.post('/register', async(req, res, next) => {
   try{
     const userData = req.body
     UserCreateSchema.parse(userData)
+    const user = await userService.getUserByEmail( userData.email)
+    if(!user){    
+      const result = await userService.userRegister(userData)
+      res.status(STATUS.CREATED).json({
+        status: STATUS.CREATED,
+        message: MESSAGE.CREATE_SUCCESS,
+        data: result
+      });
+    }
+    return res.status(409).json({
+      message: MESSAGE.CREATE_EXISTS,
+      status: 409
+    })
 
-    const result = await userService.userRegister(userData)
-
-    res.status(STATUS.CREATED).json({
-      status: STATUS.CREATED,
-      message: MESSAGE.CREATE_SUCCESS,
-      data: result
-    });
   }catch(error){
     if(error instanceof z.ZodError){
       return res.status(STATUS.BAD_REQUEST).json({
@@ -63,6 +71,7 @@ router.put('/update/:uid', async(req, res, next) => {
   try{
     const userUid = req.params.uid
     const updateData = req.body
+    UserUpdateSchema.parse(updateData)
     const result = await userService.userUpdateInfo(updateData, userUid)
 
     res.status(STATUS.CREATED).json({
@@ -71,6 +80,13 @@ router.put('/update/:uid', async(req, res, next) => {
       data: result
     });
   }catch(error){
+    if(error instanceof z.ZodError){
+      return res.status(STATUS.BAD_REQUEST).json({
+        status: STATUS.BAD_REQUEST,
+        message: MESSAGE.VALIDATION_ERROR,
+        errors: error.message
+      })
+    }
     if(error.code === 'P2025'){
       return res.status(STATUS.NOT_FOUND).json({
         message: MESSAGE.NOT_FOUND,

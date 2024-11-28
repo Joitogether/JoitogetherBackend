@@ -27,7 +27,6 @@ const MESSAGE = {
 
 
 
-
 // 路由處理
 // 獲取所有活動
 router.get('/', async (req, res, next) => {
@@ -55,8 +54,9 @@ router.get('/', async (req, res, next) => {
 router.get('/:id', 
   async (req, res, next) => {
     try {
-      const result = await activityService.getActivityById(parseInt(req.params.id));
-      const participants = await activityService.getParticipantById(parseInt(req.params.id))
+      const activity_id = parseInt(req.params.id)
+      const result = await activityService.getActivityById(activity_id);
+      const participants = await activityService.getParticipantById(activity_id)
       // 沒找到東西
       if (!result || result.length === 0) {
         return res.status(STATUS.NOT_FOUND).json({
@@ -150,7 +150,7 @@ router.post('/applications/:activity_id', async(req, res, next) => {
       return res.status(STATUS.BAD_REQUEST).json({
         message: MESSAGE.VALIDATION_ERROR,
         status: STATUS.BAD_REQUEST,
-        errors: error.errors
+        errors: error.message
       })
     }
     if(error.code === "P2002"){
