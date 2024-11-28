@@ -1,5 +1,5 @@
 import express from 'express'
-import { ActivityCreateSchema, ApplicationUpdateSchema } from '../validations/activitySchema.js';
+import { ActivityCreateSchema, ApplicationSchema, ApplicationUpdateSchema } from '../validations/activitySchema.js';
 import { activityService } from '../services/activityService.js'
 import { z } from 'zod'
 
@@ -15,10 +15,10 @@ const STATUS = {
 };
 
 const MESSAGE = {
-  GET_SUCCESS: '取得活動資料成功',
-  CREATE_SUCCESS: '活動新增成功',
-  UPDATE_SUCCESS: '活動更新成功',
-  CANCEL_SUCCESS: '活動取消成功',
+  GET_SUCCESS: '取得資料成功',
+  CREATE_SUCCESS: '資料新增成功',
+  UPDATE_SUCCESS: '資料更新成功',
+  CREATE_ERROR: '資料新增失敗',
   NOT_FOUND: '查無資料',
   VALIDATION_ERROR: '資料驗證失敗',
   SERVER_ERROR: '伺服器錯誤'
@@ -98,6 +98,14 @@ router.post('/',
          errors: error.errors
        })
      }
+
+     if(error.code === "P2002"){
+      return res.status(STATUS.BAD_REQUEST).json({
+        message: MESSAGE.CREATE_ERROR,
+        status: STATUS.BAD_REQUEST,
+        errors: error.message
+      })
+    }
       next(error);
     }
 });
@@ -110,7 +118,7 @@ router.put('/cancel/:id',
       
       res.status(STATUS.SUCCESS).json({
         status: STATUS.SUCCESS,
-        message: MESSAGE.CANCEL_SUCCESS,
+        message: MESSAGE.UPDATE_SUCCESS,
         data: result
       });
     } catch (error) {
@@ -123,6 +131,39 @@ router.put('/cancel/:id',
       next(error);
     }
 });
+
+// 報名活動
+router.post('/applications/:activity_id', async(req, res, next) => {
+  try{
+    const { participant_id } = req.body
+    const activity_id = parseInt(req.params.activity_id)
+
+    ApplicationSchema.parse({ activity_id, participant_id })
+    const response = await activityService.registerActivity(activity_id, participant_id)
+    res.status(STATUS.CREATED).json({
+      message: MESSAGE.CREATE_SUCCESS,
+      status: STATUS.CREATED,
+      data: response
+    })
+  }catch(error){
+    if(error instanceof z.ZodError){
+      return res.status(STATUS.BAD_REQUEST).json({
+        message: MESSAGE.VALIDATION_ERROR,
+        status: STATUS.BAD_REQUEST,
+        errors: error.errors
+      })
+    }
+    if(error.code === "P2002"){
+      return res.status(STATUS.BAD_REQUEST).json({
+        message: MESSAGE.CREATE_ERROR,
+        status: STATUS.BAD_REQUEST,
+        errors: error.message
+      })
+    }
+
+    next(error)
+  }
+})
 
 // 獲得該活動報名者資訊
 router.get('/applications/:activity_id', async(req, res, next) => {
@@ -187,5 +228,6 @@ router.put('/applications/:application_id', async(req, res, next) => {
     next(error)
   }
 })
+
 
 export default router

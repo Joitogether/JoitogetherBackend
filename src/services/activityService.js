@@ -64,6 +64,15 @@ export const activityService = {
       data: { status: 'cancelled' }
     });
   },
+
+  async registerActivity(activityId, user_id) {
+    return await prisma.applications.create({
+      data: {
+        activity_id: activityId,
+        participant_id: user_id
+      }
+    });
+  },
   
   async getParticipantById(id) {
     return await prisma.applications.findMany({
@@ -95,5 +104,5 @@ export const activityService = {
         status
       }
     })
-  }
+  },
 };

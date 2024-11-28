@@ -48,7 +48,7 @@ model applications {
   application_id Int                 @unique(map: "id_UNIQUE") @default(autoincrement()) @db.UnsignedInt
   activity_id    Int
   participant_id String              @db.VarChar(255)
-  status         applications_status
+  status         applications_status @default(registered)
   comment        String?             @db.VarChar(50)
   activities     activities          @relation(fields: [activity_id], references: [id], onDelete: Cascade, map: "applications_ibfk_1")
   users          users               @relation(fields: [participant_id], references: [uid], onDelete: Cascade, map: "applications_ibfk_2")
