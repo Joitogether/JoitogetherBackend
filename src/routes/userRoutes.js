@@ -43,7 +43,7 @@ router.post('/register', async(req, res, next) => {
       return res.status(STATUS.BAD_REQUEST).json({
        status: STATUS.BAD_REQUEST,
        message: MESSAGE.VALIDATION_ERROR,
-       errors: error.errors
+       errors: error.message
      })
     }
 

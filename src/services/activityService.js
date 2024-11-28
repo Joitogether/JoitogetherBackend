@@ -65,12 +65,13 @@ export const activityService = {
     });
   },
 
-  async registerActivity(activityId, user_id) {
+  async registerActivity(activity_id,participant_id, comment) {
     return await prisma.applications.create({
       data: {
-        activity_id: activityId,
-        participant_id: user_id
-      }
+        activity_id,
+        participant_id,
+        comment
+     }
     });
   },
   

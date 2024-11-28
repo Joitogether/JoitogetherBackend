@@ -135,11 +135,11 @@ router.put('/cancel/:id',
 // 報名活動
 router.post('/applications/:activity_id', async(req, res, next) => {
   try{
-    const { participant_id } = req.body
+    const { participant_id, comment } = req.body
     const activity_id = parseInt(req.params.activity_id)
 
-    ApplicationSchema.parse({ activity_id, participant_id })
-    const response = await activityService.registerActivity(activity_id, participant_id)
+    ApplicationSchema.parse({ activity_id, participant_id, comment })
+    const response = await activityService.registerActivity(activity_id, participant_id, comment)
     res.status(STATUS.CREATED).json({
       message: MESSAGE.CREATE_SUCCESS,
       status: STATUS.CREATED,

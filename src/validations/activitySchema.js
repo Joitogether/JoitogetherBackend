@@ -25,4 +25,5 @@ export const ApplicationUpdateSchema = z.enum(['registered', 'approved', 'host_d
 export const ApplicationSchema = z.object({
   activity_id: z.number().int(),
   participant_id: z.string().max(50),
+  comment: z.string().optional()
 })
