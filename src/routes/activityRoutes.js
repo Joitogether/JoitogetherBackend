@@ -145,9 +145,9 @@ router.post('/applications/:activity_id', async(req, res, next) => {
     const hasRegistered = await activityService.hasRegistered(participant_id, activity_id)
     if(hasRegistered){
       const response = await activityService.setApplicationStatus(participant_id, activity_id, 'registered', comment)
-      return res.status(STATUS.SUCCESS).json({
-        message: MESSAGE.UPDATE_SUCCESS,
-        status: STATUS.SUCCESS,
+      return res.status(STATUS.CREATED).json({
+        message: MESSAGE.CREATE_SUCCESS,
+        status: STATUS.CREATED,
         data: response
       })
     }
