@@ -56,7 +56,7 @@ router.get('/:id',
     try {
       const activity_id = parseInt(req.params.id)
       const result = await activityService.getActivityById(activity_id);
-      const participants = await activityService.getParticipantById(activity_id)
+      const participants = await activityService.getParticipantsByActivityId(activity_id)
       // 沒找到東西
       if (!result || result.length === 0) {
         return res.status(STATUS.NOT_FOUND).json({
@@ -135,10 +135,23 @@ router.put('/cancel/:id',
 // 報名活動
 router.post('/applications/:activity_id', async(req, res, next) => {
   try{
+    // 取得資料
     const { participant_id, comment } = req.body
     const activity_id = parseInt(req.params.activity_id)
-
+    // 資料驗證
     ApplicationSchema.parse({ activity_id, participant_id, comment })
+
+    // 確認是否已有這筆資料，有的話就修改
+    const hasRegistered = await activityService.hasRegistered(participant_id, activity_id)
+    if(hasRegistered){
+      const response = await activityService.setApplicationStatus(participant_id, activity_id, 'registered', comment)
+      return res.status(STATUS.SUCCESS).json({
+        message: MESSAGE.UPDATE_SUCCESS,
+        status: STATUS.SUCCESS,
+        data: response
+      })
+    }
+    // 沒有的話新增
     const response = await activityService.registerActivity(activity_id, participant_id, comment)
     res.status(STATUS.CREATED).json({
       message: MESSAGE.CREATE_SUCCESS,
@@ -146,6 +159,7 @@ router.post('/applications/:activity_id', async(req, res, next) => {
       data: response
     })
   }catch(error){
+    // 如果資料驗證失敗
     if(error instanceof z.ZodError){
       return res.status(STATUS.BAD_REQUEST).json({
         message: MESSAGE.VALIDATION_ERROR,
@@ -153,6 +167,7 @@ router.post('/applications/:activity_id', async(req, res, next) => {
         errors: error.message
       })
     }
+    // 已經有這筆，回傳P2002錯誤
     if(error.code === "P2002"){
       return res.status(STATUS.BAD_REQUEST).json({
         message: MESSAGE.CREATE_ERROR,
@@ -169,13 +184,9 @@ router.post('/applications/:activity_id', async(req, res, next) => {
 router.put('/applications/:activity_id', async(req, res, next) => {
   const activity_id = parseInt(req.params.activity_id)
   const { participant_id } = req.body
-  if(!participant_id){
-    return res.status(STATUS.BAD_REQUEST).json({
-      message: MESSAGE.VALIDATION_ERROR,
-      status: STATUS.BAD_REQUEST
-    })
-  }
+
   try{
+    ApplicationSchema.parse({ activity_id, participant_id })
     const response = await activityService.cancelRegister(participant_id, activity_id)
 
     res.status(STATUS.SUCCESS).json({
@@ -184,6 +195,13 @@ router.put('/applications/:activity_id', async(req, res, next) => {
       data: response
     })
   }catch(error){
+    if(error instanceof z.ZodError){
+      return res.status(STATUS.BAD_REQUEST).json({
+        message: MESSAGE.VALIDATION_ERROR,
+        status: STATUS.BAD_REQUEST,
+        errors: error.message
+      })
+    }
     // 沒找到
     if(error.code === 'P2025'){
       return res.status(STATUS.NOT_FOUND).json({
@@ -200,8 +218,8 @@ router.put('/applications/:activity_id', async(req, res, next) => {
 router.get('/applications/:activity_id', async(req, res, next) => {
   try{
     const activityId = parseInt(req.params.activity_id)
-    const response = await activityService.getParticipants(activityId)
-
+    const response = await activityService.getDetailedApplications(activityId)
+    
     if(!response || response.length === 0){
       return res.status(STATUS.NOT_FOUND).json({
         message: MESSAGE.NOT_FOUND,

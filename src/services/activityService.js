@@ -82,13 +82,14 @@ export const activityService = {
     });
   },
   
-  async getParticipantById(id) {
+  // 審核用資料
+  async getParticipantsByActivityId(activity_id) {
     return await prisma.applications.findMany({
-      where: { activity_id: id }
+      where: { activity_id }
     });
-  },
-
-  async getParticipants(activity_id){
+  }, 
+ // 活動頁面顯示用
+  async getDetailedApplications(activity_id){
     const response = await prisma.applications.findMany({
       where: { activity_id },
       include: { users: true }
@@ -105,6 +106,14 @@ export const activityService = {
     return formattedData
   },
 
+  async hasRegistered(participant_id, activity_id){
+    const res = await prisma.applications.findUnique({
+      where: { activity_id_participant_id: { participant_id, activity_id } }
+    })
+    return !!res
+  },
+
+
   async verifyParticipant(application_id, status){
     return await prisma.applications.update({
       where: { application_id },
@@ -113,4 +122,14 @@ export const activityService = {
       }
     })
   },
-};
+
+  async setApplicationStatus(participant_id,activity_id, status, comment){
+    return await prisma.applications.update({
+      where: { activity_id_participant_id: { participant_id, activity_id } },
+      data: {
+        status,
+        comment
+      }
+    })
+  }
+}

@@ -27,3 +27,4 @@ export const ApplicationSchema = z.object({
   participant_id: z.string().max(50),
   comment: z.string().optional()
 })
+
