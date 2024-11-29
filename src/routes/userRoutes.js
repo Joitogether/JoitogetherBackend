@@ -24,7 +24,19 @@ const MESSAGE = {
   SERVER_ERROR: '伺服器錯誤'
 };
 
-
+// 取得所有使用者
+router.get('/', async(req, res, next) => {
+  try{
+    const users = await userService.getAllUsers()
+    res.status(STATUS.SUCCESS).json({
+      status: STATUS.SUCCESS,
+      message: MESSAGE.GET_SUCCESS,
+      data: users
+    })
+  }catch(e){
+    next(e)
+  }
+})
 
 
 // 使用者註冊
