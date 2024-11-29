@@ -165,6 +165,37 @@ router.post('/applications/:activity_id', async(req, res, next) => {
   }
 })
 
+// 使用者取消報名
+router.put('/applications/:activity_id', async(req, res, next) => {
+  const activity_id = parseInt(req.params.activity_id)
+  const { participant_id } = req.body
+  if(!participant_id){
+    return res.status(STATUS.BAD_REQUEST).json({
+      message: MESSAGE.VALIDATION_ERROR,
+      status: STATUS.BAD_REQUEST
+    })
+  }
+  try{
+    const response = await activityService.cancelRegister(participant_id, activity_id)
+
+    res.status(STATUS.SUCCESS).json({
+      message: MESSAGE.UPDATE_SUCCESS,  
+      status: STATUS.SUCCESS,
+      data: response
+    })
+  }catch(error){
+    // 沒找到
+    if(error.code === 'P2025'){
+      return res.status(STATUS.NOT_FOUND).json({
+        message: MESSAGE.NOT_FOUND,
+        status: STATUS.NOT_FOUND
+      })
+    }
+    next(error)
+  }
+
+})
+
 // 獲得該活動報名者資訊
 router.get('/applications/:activity_id', async(req, res, next) => {
   try{
@@ -228,6 +259,7 @@ router.put('/applications/:application_id', async(req, res, next) => {
     next(error)
   }
 })
+
 
 
 export default router

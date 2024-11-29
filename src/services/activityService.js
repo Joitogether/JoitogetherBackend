@@ -65,6 +65,13 @@ export const activityService = {
     });
   },
 
+  async cancelRegister(participant_id, activity_id) {
+    return await prisma.applications.update({
+      where: { activity_id_participant_id: { participant_id, activity_id } },
+      data: { status: 'participant_cancelled' }
+    });
+  },
+
   async registerActivity(activity_id,participant_id, comment) {
     return await prisma.applications.create({
       data: {
