@@ -25,6 +25,8 @@ base url: http://localhost:3030
 
 
 Users:
+// 獲得所有使用者資料
+GET /users
 // 獲得單一使用者資料
 GET  /users/:id
 // 新增使用者資料
@@ -52,9 +54,17 @@ PUT /activities/cancel/:id
 
 Applications:
 // 獲得該活動所有報名資訊
-GET /applications/:id
+GET /applications/:activity_id
+// 報名活動
+POST /applications/:activity_id
+data = {
+  使用者id
+  報名評論
+}
+// 取消報名
+PUT /applications/:activity_id
 // 審核單筆報名
-PUT /applications/:id
+PUT /applications/:activity_id/verify
 data = {
   status: registered/approved/host_declined/participant_cancelled
 }

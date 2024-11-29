@@ -1,29 +1,7 @@
 import express from 'express'
-import { ActivityCreateSchema, ApplicationSchema, ApplicationUpdateSchema } from '../validations/activitySchema.js';
+import { ActivityCreateSchema, ApplicationSchema, ApplicationReviewSchema } from '../validations/activitySchema.js';
 import { activityService } from '../services/activityService.js'
-import { z } from 'zod'
-
-// 缺少validator
 const router = express.Router()
-
-const STATUS = {
-  SUCCESS: 200,
-  CREATED: 201,
-  BAD_REQUEST: 400,
-  NOT_FOUND: 404,
-  SERVER_ERROR: 500
-};
-
-const MESSAGE = {
-  GET_SUCCESS: '取得資料成功',
-  CREATE_SUCCESS: '資料新增成功',
-  UPDATE_SUCCESS: '資料更新成功',
-  CREATE_ERROR: '資料新增失敗',
-  NOT_FOUND: '查無資料',
-  VALIDATION_ERROR: '資料驗證失敗',
-  SERVER_ERROR: '伺服器錯誤'
-};
-
 
 
 
@@ -33,16 +11,9 @@ router.get('/', async (req, res, next) => {
   try {
     const results = await activityService.getAllActivities();
     
-    if (!results || results.length === 0) {
-      return res.status(STATUS.NOT_FOUND).json({
-        status: STATUS.NOT_FOUND,
-        message: MESSAGE.NOT_FOUND
-      });
-    }
-
-    res.status(STATUS.SUCCESS).json({
-      status: STATUS.SUCCESS,
-      message: MESSAGE.GET_SUCCESS,
+    res.status(200).json({
+      status: 200,
+      message: '資料獲取成功',
       data: results,
     });
   } catch (error) {
@@ -59,15 +30,15 @@ router.get('/:id',
       const participants = await activityService.getParticipantsByActivityId(activity_id)
       // 沒找到東西
       if (!result || result.length === 0) {
-        return res.status(STATUS.NOT_FOUND).json({
-          status: STATUS.NOT_FOUND,
-          message: MESSAGE.NOT_FOUND
+        return res.status(404).json({
+          status: 404,
+          message: '查無此資料'
         });
       }
 
-      res.status(STATUS.SUCCESS).json({
-        status: STATUS.SUCCESS,
-        message: MESSAGE.GET_SUCCESS,
+      res.status(200).json({
+        status: 200,
+        message: '資料獲取成功',
         data: {...result, participants}
       });
     } catch (error) {
@@ -85,28 +56,13 @@ router.post('/',
   
       const result = await activityService.createActivity(req.body);
 
-      res.status(STATUS.CREATED).json({
-        status: STATUS.CREATED,
-        message: MESSAGE.CREATE_SUCCESS,
+      res.status(201).json({
+        status: 201,
+        message: '資料創建成功',
         data: result
       });
     } catch (error) {
-      if(error instanceof z.ZodError){
-        return res.status(STATUS.BAD_REQUEST).json({
-         status: STATUS.BAD_REQUEST,
-         message: MESSAGE.VALIDATION_ERROR,
-         errors: error.errors
-       })
-     }
-
-     if(error.code === "P2002"){
-      return res.status(STATUS.BAD_REQUEST).json({
-        message: MESSAGE.CREATE_ERROR,
-        status: STATUS.BAD_REQUEST,
-        errors: error.message
-      })
-    }
-      next(error);
+      next(error)
     }
 });
 
@@ -114,21 +70,14 @@ router.post('/',
 router.put('/cancel/:id',
   async (req, res, next) => {
     try {
-      const result = await activityService.cancelActivity(parseInt(req.params.id));
-      
-      res.status(STATUS.SUCCESS).json({
-        status: STATUS.SUCCESS,
-        message: MESSAGE.UPDATE_SUCCESS,
+      const result = await activityService.cancelActivity(parseInt(req.params.id));   
+      res.status(200).json({
+        status: 200,
+        message: '資料更新成功',
         data: result
       });
     } catch (error) {
-      if(error.code === 'P2025'){
-        return res.status(STATUS.NOT_FOUND).json({
-          message: MESSAGE.NOT_FOUND,
-          status: STATUS.NOT_FOUND
-        })
-      }
-      next(error);
+      next(error)
     }
 });
 
@@ -145,37 +94,20 @@ router.post('/applications/:activity_id', async(req, res, next) => {
     const hasRegistered = await activityService.hasRegistered(participant_id, activity_id)
     if(hasRegistered){
       const response = await activityService.setApplicationStatus(participant_id, activity_id, 'registered', comment)
-      return res.status(STATUS.CREATED).json({
-        message: MESSAGE.CREATE_SUCCESS,
-        status: STATUS.CREATED,
+      return res.status(201).json({
+        message: '資料創建成功',
+        status: 201,
         data: response
       })
     }
     // 沒有的話新增
     const response = await activityService.registerActivity(activity_id, participant_id, comment)
-    res.status(STATUS.CREATED).json({
-      message: MESSAGE.CREATE_SUCCESS,
-      status: STATUS.CREATED,
+    res.status(201).json({
+      message: '資料創建成功',
+      status: 201,
       data: response
     })
   }catch(error){
-    // 如果資料驗證失敗
-    if(error instanceof z.ZodError){
-      return res.status(STATUS.BAD_REQUEST).json({
-        message: MESSAGE.VALIDATION_ERROR,
-        status: STATUS.BAD_REQUEST,
-        errors: error.message
-      })
-    }
-    // 已經有這筆，回傳P2002錯誤
-    if(error.code === "P2002"){
-      return res.status(STATUS.BAD_REQUEST).json({
-        message: MESSAGE.CREATE_ERROR,
-        status: STATUS.BAD_REQUEST,
-        errors: error.message
-      })
-    }
-
     next(error)
   }
 })
@@ -189,29 +121,14 @@ router.put('/applications/:activity_id', async(req, res, next) => {
     ApplicationSchema.parse({ activity_id, participant_id })
     const response = await activityService.cancelRegister(participant_id, activity_id)
 
-    res.status(STATUS.SUCCESS).json({
-      message: MESSAGE.UPDATE_SUCCESS,  
-      status: STATUS.SUCCESS,
+    res.status(200).json({
+      message: '資料更新成功',  
+      status: 200,
       data: response
     })
   }catch(error){
-    if(error instanceof z.ZodError){
-      return res.status(STATUS.BAD_REQUEST).json({
-        message: MESSAGE.VALIDATION_ERROR,
-        status: STATUS.BAD_REQUEST,
-        errors: error.message
-      })
-    }
-    // 沒找到
-    if(error.code === 'P2025'){
-      return res.status(STATUS.NOT_FOUND).json({
-        message: MESSAGE.NOT_FOUND,
-        status: STATUS.NOT_FOUND
-      })
-    }
     next(error)
   }
-
 })
 
 // 獲得該活動報名者資訊
@@ -227,9 +144,9 @@ router.get('/applications/:activity_id', async(req, res, next) => {
       })
     }
 
-    res.status(STATUS.SUCCESS).json({
-      message: MESSAGE.GET_SUCCESS,
-      status: STATUS.SUCCESS,
+    res.status(200).json({
+      message: '資料獲取成功',
+      status: 200,
       data: response
     })
 
@@ -239,41 +156,21 @@ router.get('/applications/:activity_id', async(req, res, next) => {
 })
 
 // 審核活動報名者
-router.put('/applications/:application_id', async(req, res, next) => {
+router.put('/applications/:activity_id/verify', async(req, res, next) => {
   try{
-    const { status } = req.body
-    if(!status){
-      return res.status(STATUS.BAD_REQUEST).json({
-        message: MESSAGE.VALIDATION_ERROR,
-        status: STATUS.BAD_REQUEST
-      })
-    }
-    ApplicationUpdateSchema.parse(status)
+    const application_id = parseInt(req.params.activity_id)
+    const {  status } = req.body
+    ApplicationReviewSchema.parse({status, application_id})
 
-    const applicationId = parseInt(req.params.application_id)
-    const response = await activityService.verifyParticipant(applicationId, status)
+    const response = await activityService.verifyParticipant(application_id, status)
 
-    res.status(STATUS.SUCCESS).json({
+    res.status(200).json({
       message: '審核成功',
-      status: STATUS.SUCCESS,
+      status: 200,
       data: response
     })
 
   }catch(error){
-    if(error instanceof z.ZodError){
-      return res.status(STATUS.BAD_REQUEST).json({
-       status: STATUS.BAD_REQUEST,
-       message: MESSAGE.VALIDATION_ERROR,
-       errors: error.errors
-     })
-   }
-
-    if(error.code === 'P2025'){
-      return res.status(STATUS.NOT_FOUND).json({
-        message: MESSAGE.NOT_FOUND,
-        status: STATUS.NOT_FOUND
-      })
-    }
     next(error)
   }
 })

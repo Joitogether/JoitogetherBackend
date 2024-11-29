@@ -20,7 +20,11 @@ export const ActivityCreateSchema = z.object({
 });
 
 
-export const ApplicationUpdateSchema = z.enum(['registered', 'approved', 'host_declined', 'participant_cancelled']);
+export const ApplicationReviewSchema = z.object({ 
+  status: z.enum(['registered', 'approved', 'host_declined', 'participant_cancelled']),
+  application_id: z.number().int(), 
+})   
+
 
 export const ApplicationSchema = z.object({
   activity_id: z.number().int(),
