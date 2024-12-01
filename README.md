@@ -14,7 +14,10 @@ users
 applications
 activities
 
-// Step 4. 啟動伺服器 npm run dev
+// Step 4. 同步DB並且啟動伺服器 
+npx prisma db pull
+npx prisma generate
+npm run dev
 
 // Step 5. 可以打API了！
 base url: http://localhost:3030  
@@ -64,7 +67,7 @@ data = {
 // 取消報名
 PUT /applications/:activity_id
 // 審核單筆報名
-PUT /applications/:activity_id/verify
+PUT /applications/:application_id/verify
 data = {
   status: registered/approved/host_declined/participant_cancelled
 }
