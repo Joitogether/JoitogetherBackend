@@ -1,4 +1,5 @@
 import { prisma } from '../config/db.js'
+import { ActivityCommentCancelSchema } from '../validations/activitySchema.js';
 
 // Service 層
 export const activityService = {
@@ -130,6 +131,24 @@ export const activityService = {
         status,
         comment
       }
+    })
+  },
+
+  async createActivityComment(activity_id, uid, user_comment) {
+    return await prisma.activity_comments.create({
+      data: {
+        activity_id,
+        uid,
+        user_comment
+      }
+    });
+  },
+
+  async deleteActivityComment(comment_id) {
+    ActivityCommentCancelSchema.parse({comment_id})
+    return await prisma.activity_comments.update({
+      where: { comment_id },
+      data: { status: "deleted" }
     })
   }
 }

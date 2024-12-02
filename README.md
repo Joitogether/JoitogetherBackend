@@ -54,7 +54,9 @@ data = {
 }
 // 取消單一活動
 PUT /activities/cancel/:id
-
+POST /activities/comment/:activity_id
+{ participant_id, comment }
+DELETE /activities/comment/:comment_id
 
 Applications:
 // 獲得該活動所有報名資訊
@@ -72,3 +74,4 @@ PUT /applications/verify/:application_id
 data = {
   status: registered/approved/host_declined/participant_cancelled
 }
+

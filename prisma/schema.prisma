@@ -26,38 +26,42 @@ model activities {
   event_time        DateTime            @db.DateTime(0)
   updated_at        DateTime            @default(now()) @db.DateTime(0)
   users             users               @relation(fields: [host_id], references: [uid], onUpdate: Restrict, map: "12")
+  activity_comments activity_comments[]
   applications      applications[]
 
   @@index([host_id], map: "host_idanduid_idx")
 }
 
 model users {
-  uid                                    String         @id @unique(map: "uid_UNIQUE") @db.VarChar(255)
-  email                                  String         @unique(map: "email_UNIQUE") @db.VarChar(255)
-  email_verified                         Boolean        @default(false)
-  full_name                              String         @db.VarChar(255)
-  display_name                           String         @db.VarChar(255)
-  phone_number                           String         @db.VarChar(10)
-  photo_url                              String?        @db.Text
-  created_at                             DateTime       @default(now()) @db.DateTime(0)
-  city                                   String?        @db.VarChar(5)
+  uid                                    String              @id @unique(map: "uid_UNIQUE") @db.VarChar(255)
+  email                                  String              @unique(map: "email_UNIQUE") @db.VarChar(255)
+  email_verified                         Boolean             @default(false)
+  full_name                              String              @db.VarChar(255)
+  display_name                           String              @db.VarChar(255)
+  phone_number                           String              @db.VarChar(10)
+  photo_url                              String?             @db.Text
+  created_at                             DateTime            @default(now()) @db.DateTime(0)
+  city                                   String?             @db.VarChar(5)
   age                                    Int?
-  career                                 String?        @db.VarChar(45)
-  favorite_sentence                      String?        @db.VarChar(45)
-  tags                                   String?        @db.VarChar(255)
-  self_introduction                      String?        @db.VarChar(45)
-  zodiac                                 String?        @db.VarChar(3)
-  hobby                                  String?        @db.VarChar(45)
-  expertise                              String?        @db.VarChar(45)
-  interested_in                          String?        @db.VarChar(255)
-  life_photo_1                           String?        @db.Text
-  life_photo_2                           String?        @db.Text
+  career                                 String?             @db.VarChar(45)
+  favorite_sentence                      String?             @db.VarChar(45)
+  tags                                   String?             @db.VarChar(255)
+  self_introduction                      String?             @db.VarChar(45)
+  zodiac                                 String?             @db.VarChar(3)
+  hobby                                  String?             @db.VarChar(45)
+  expertise                              String?             @db.VarChar(45)
+  interested_in                          String?             @db.VarChar(255)
+  life_photo_1                           String?             @db.Text
+  life_photo_2                           String?             @db.Text
   activities                             activities[]
+  activity_comments                      activity_comments[]
   applications                           applications[]
-  followers_followers_follower_idTousers followers[]    @relation("followers_follower_idTousers")
-  followers_followers_user_idTousers     followers[]    @relation("followers_user_idTousers")
-  ratings_ratings_host_idTousers         ratings[]      @relation("ratings_host_idTousers")
-  ratings_ratings_user_idTousers         ratings[]      @relation("ratings_user_idTousers")
+  followers_followers_follower_idTousers followers[]         @relation("followers_follower_idTousers")
+  followers_followers_user_idTousers     followers[]         @relation("followers_user_idTousers")
+  post_comments                          post_comments[]
+  posts                                  posts[]
+  ratings_ratings_host_idTousers         ratings[]           @relation("ratings_host_idTousers")
+  ratings_ratings_user_idTousers         ratings[]           @relation("ratings_user_idTousers")
 }
 
 model applications {
@@ -101,6 +105,49 @@ model ratings {
   @@index([user_id], map: "bind id_idx")
 }
 
+model activity_comments {
+  comment_id   Int                      @id @unique(map: "comment_id_UNIQUE") @default(autoincrement())
+  activity_id  Int
+  user_comment String                   @db.VarChar(50)
+  uid          String                   @db.VarChar(255)
+  created_at   DateTime                 @default(now()) @db.DateTime(0)
+  status       activity_comments_status @default(posted)
+  activities   activities               @relation(fields: [activity_id], references: [id], onDelete: Cascade, map: "FK_ac_activities")
+  users        users                    @relation(fields: [uid], references: [uid], onDelete: NoAction, onUpdate: NoAction, map: "FK_ac_users")
+
+  @@index([activity_id], map: "FK_ac_activities_idx")
+  @@index([uid], map: "FK_ac_users_idx")
+}
+
+model post_comments {
+  comment_id      Int      @id @default(autoincrement())
+  post_id         Int
+  comment_content String   @db.Text
+  uid             String   @db.VarChar(255)
+  created_at      DateTime @default(now()) @db.DateTime(0)
+  users           users    @relation(fields: [uid], references: [uid], onDelete: NoAction, onUpdate: NoAction, map: "FK_postComments_users")
+  posts           posts    @relation(fields: [post_id], references: [post_id], onDelete: NoAction, map: "FK_postComments_users-postid")
+
+  @@index([post_id], map: "FK_postComments_users-postid_idx")
+  @@index([uid], map: "FK_postComments_users_idx")
+}
+
+model posts {
+  post_id       Int                 @id @default(autoincrement())
+  post_title    String              @db.VarChar(10)
+  post_content  String              @db.Text
+  uid           String              @db.VarChar(255)
+  created_at    DateTime            @default(now()) @db.DateTime(0)
+  updated_at    DateTime?           @default(now()) @db.DateTime(0)
+  post_category posts_post_category
+  post_status   posts_post_status
+  post_img      String?             @db.Text
+  post_comments post_comments[]
+  users         users               @relation(fields: [uid], references: [uid], map: "FK_posts_users-uid")
+
+  @@index([uid], map: "FK_posts_users-uid_idx")
+}
+
 enum activities_category {
   food
   shopping
@@ -128,4 +175,24 @@ enum applications_status {
   approved
   host_declined
   participant_cancelled
+}
+
+enum activity_comments_status {
+  posted
+  deleted
+}
+
+enum posts_post_category {
+  Events
+  Travel
+  Health
+  Lifestyle
+  Hobbies
+  Other
+}
+
+enum posts_post_status {
+  onEdit
+  posted
+  deleted
 }

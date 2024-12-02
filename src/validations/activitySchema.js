@@ -19,16 +19,13 @@ export const ActivityCreateSchema = z.object({
   status: z.enum(['registrationOpen', 'onGoing', 'completed', 'cancelled']),
 });
 
-
-export const ApplicationReviewSchema = z.object({ 
-  status: z.enum(['registered', 'approved', 'host_declined', 'participant_cancelled']),
-  application_id: z.number().int(), 
-})   
-
-
-export const ApplicationSchema = z.object({
+export const ActivityCommentSchema = z.object({
   activity_id: z.number().int(),
-  participant_id: z.string().max(50),
-  comment: z.string().optional()
+  comment: z.string().max(50),
+  participant_id: z.string().max(50)
+})
+
+export const ActivityCommentCancelSchema = z.object({
+  comment_id: z.number().int(),
 })
 

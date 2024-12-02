@@ -1,10 +1,11 @@
 import { z } from 'zod'
 export const errorMiddleware = (err, req, res, next) => {
+  console.log('ERR', err)
   if (err instanceof z.ZodError) {
     return res.status(400).json({
       message: '資料驗證發生錯誤',
       status: 400,
-      errors: err.message
+      error: err.issues
     });
   }
 
@@ -13,7 +14,15 @@ export const errorMiddleware = (err, req, res, next) => {
     return res.status(400).json({
       message: '資料唯一性衝突',
       status: 400,
-      errors: err.message
+      error: err.message
+    });
+  }
+
+  if (err.code === 'P2003') {
+    return res.status(400).json({
+      message: '外鍵約束失敗',
+      status: 400,
+      error: err.meta,
     });
   }
 
