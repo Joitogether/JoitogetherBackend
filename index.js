@@ -4,6 +4,7 @@ import { errorMiddleware } from './src/middlewares/errorMiddleware.js'
 import activityRouter from './src/routes/activityRoutes.js'
 // import { fbApp } from './src/config/firebase.js';
 import userRouter from './src/routes/userRoutes.js'
+import applicationRouter from './src/routes/applicationRoutes.js'
 import cors from 'cors'
 
 
@@ -18,6 +19,7 @@ app.use(cors())
 // routes
 app.use('/activities', activityRouter)
 app.use('/users', userRouter)
+app.use('/applications', applicationRouter)
 
 // error 
 app.use(errorMiddleware)

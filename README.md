@@ -14,9 +14,10 @@ users
 applications
 activities
 
-// Step 4. 同步DB並且啟動伺服器 
+// Step 4. 聯動db 啟動伺服器 
 npx prisma db pull
 npx prisma generate
+
 npm run dev
 
 // Step 5. 可以打API了！
@@ -59,15 +60,15 @@ Applications:
 // 獲得該活動所有報名資訊
 GET /applications/:activity_id
 // 報名活動
-POST /applications/:activity_id
+POST /applications/register/:activity_id
 data = {
   使用者id
   報名評論
 }
 // 取消報名
-PUT /applications/:activity_id
+PUT /applications/cancel/:activity_id
 // 審核單筆報名
-PUT /applications/:application_id/verify
+PUT /applications/verify/:application_id
 data = {
   status: registered/approved/host_declined/participant_cancelled
 }
