@@ -75,3 +75,21 @@ data = {
   status: registered/approved/host_declined/participant_cancelled
 }
 
+Posts:
+// 新增貼文
+POST /posts/
+{
+    "post_title": "上個禮拜去玩水好讚喔",
+    "post_content": "上禮拜我們一群人一起去玩水，結果人超多的啦",
+    "uid": "7P6ocyCefPc8oTzjfAEs16RZThR",
+    "post_category": "Travel",
+    "post_status": "onEdit",
+    "post_img": "https://tse3.mm.bing.net/th?id=OIP.lvtKu4xQC80LcJUgC2qw3gHaE8&pid=Api&P=0&h=180"
+}
+
+// 新增貼文留言
+POST /posts/comment/:post_id
+{
+    "uid": "abcd1234efgh5678",
+    "comment_content": "超同意的啦" 
+}
