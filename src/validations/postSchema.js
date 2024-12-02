@@ -12,3 +12,9 @@ export const CreatePostSchema = z.object({
   post_status: z.enum(['onEdit', 'posted', 'deleted']),
   post_img: z.string().optional()  
 })
+
+export const CreatePostCommentSchema = z.object({
+  comment_content: z.string(),
+  uid: z.string().max(255),
+  post_id: z.number().int()
+})

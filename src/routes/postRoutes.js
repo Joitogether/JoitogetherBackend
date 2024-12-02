@@ -12,7 +12,7 @@ router.get('/', async (req, res, next) => {
 router.post('/', async (req, res, next) => {
   try{
     const data = req.body
-    const response = await postService.createNewPost(data)
+    const response = await postService.createPost(data)
     res.status(201).json({
       message: '資料創建成功',
       status: 201,
@@ -21,10 +21,22 @@ router.post('/', async (req, res, next) => {
   }catch(error){
     next(error)
   }
-
 })
 // 新增post 留言
-
+router.post('/comment/:post_id', async (req, res, next) => {
+  try{
+    const post_id = parseInt(req.params.post_id)
+    const data = { ...req.body, post_id }
+    const response = await postService.createPostComment(data)
+    res.status(201).json({
+      message: '資料創建成功',
+      status: 201,
+      data: response
+    })
+  }catch(error){
+    next(error)
+  }
+})
 // 根據分類獲得posts 
 
 
