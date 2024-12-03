@@ -18,3 +18,7 @@ export const CreatePostCommentSchema = z.object({
   uid: z.string().max(255),
   post_id: z.number().int()
 })
+
+export const GetPostSchema = z.object({
+  post_id: z.number().int()
+})
