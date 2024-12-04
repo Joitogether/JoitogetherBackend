@@ -80,6 +80,13 @@ router.put('/cancel/:id',
     }
 });
 
+router.get('/comment/:activity_id', async (req, res, next) => {
+  
+})
+
+
+
+// 新增活動留言
 router.post('/comment/:activity_id', async (req, res, next) => {
   try {
     const { participant_id, comment } = req.body
@@ -99,12 +106,14 @@ router.post('/comment/:activity_id', async (req, res, next) => {
   }
 })
 
+
+// 刪除活動留言
 router.delete('/comment/:comment_id', async (req, res, next) => {
   try{
     const comment_id = parseInt(req.params.comment_id)
     const response = await activityService.deleteActivityComment(comment_id)
     res.status(200).json({
-      message: '資料更新成功',  
+      message: '資料刪除成功',  
       status: 200,
       data: response
     })

@@ -30,7 +30,22 @@ export const activityService = {
     const response =  await prisma.activities.findUnique({
       where: { id },
       include: {
-        users: true
+        users: true,
+        activity_comments: {
+          where: { status: 'posted'},
+          orderBy: { created_at: 'desc' },
+          include: {
+            users: {
+              select: {
+                display_name: true,
+                photo_url: true,
+                city: true,
+                age: true,
+                career: true,
+              }
+            }
+          }
+        }
       }
     });
 
@@ -39,8 +54,15 @@ export const activityService = {
     }
 
     const users = response.users;
-    const { users: _, ...rest } = response;
-    return { ...rest, host_info: { ...users } };
+
+    const { users: _, activity_comments, ...rest } = response;
+    const comments = activity_comments.map(comment => {
+      const { users, ...rest } = comment;
+      return { ...rest, ...users }
+    })
+    
+    
+    return { ...rest, host_info: { ...users }, comments };
   },
   
   async createActivity(activityData) {
