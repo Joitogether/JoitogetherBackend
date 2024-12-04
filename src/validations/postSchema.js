@@ -22,3 +22,7 @@ export const CreatePostCommentSchema = z.object({
 export const GetPostSchema = z.object({
   post_id: z.number().int()
 })
+
+export const GetCategoryPostSchema = z.object({
+  post_category: z.enum(['food', 'shopping', 'travel', 'sports', 'education', 'others'])
+})

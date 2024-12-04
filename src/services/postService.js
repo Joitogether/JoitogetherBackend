@@ -1,5 +1,5 @@
 import { prisma } from '../config/db.js'
-import { CreatePostCommentSchema, CreatePostSchema, GetPostSchema } from '../validations/postSchema.js'
+import { CreatePostCommentSchema, CreatePostSchema, GetCategoryPostSchema, GetPostSchema } from '../validations/postSchema.js'
 
 
 export  const postService = {
@@ -21,5 +21,22 @@ export  const postService = {
     return await prisma.posts.findUnique({
       where: { post_id }
     })
+  },
+
+  async getPostByCategory(post_category){
+    GetCategoryPostSchema.parse({post_category})
+    const response = await prisma.posts.findMany({
+      where: { 
+        post_category,
+        post_status: 'posted'
+      },
+      orderBy: {
+        created_at: 'desc'
+      }
+    })
+    if(response.length === 0){
+      return null
+    }
+    return response
   }
 }
