@@ -8,7 +8,7 @@ export const CreatePostSchema = z.object({
   post_content: z.string(),
   uid: z.string().max(255),
   updated_at: z.string().regex(dateTimeRegex).optional(),
-  post_category: z.enum(['Events', 'Travel', 'Health', 'Lifestyle', 'Hobbies', 'Other']),
+  post_category: z.enum(['food', 'shopping', 'travel', 'sports', 'education', 'others']),
   post_status: z.enum(['onEdit', 'posted', 'deleted']),
   post_img: z.string().optional()  
 })
@@ -16,5 +16,9 @@ export const CreatePostSchema = z.object({
 export const CreatePostCommentSchema = z.object({
   comment_content: z.string(),
   uid: z.string().max(255),
+  post_id: z.number().int()
+})
+
+export const GetPostSchema = z.object({
   post_id: z.number().int()
 })

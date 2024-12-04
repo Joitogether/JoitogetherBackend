@@ -1,5 +1,5 @@
 import { prisma } from '../config/db.js'
-import { CreatePostCommentSchema, CreatePostSchema } from '../validations/postSchema.js'
+import { CreatePostCommentSchema, CreatePostSchema, GetPostSchema } from '../validations/postSchema.js'
 
 
 export  const postService = {
@@ -13,6 +13,13 @@ export  const postService = {
     CreatePostCommentSchema.parse(data)
     return await prisma.post_comments.create({
       data
+    })
+  },
+
+  async getPost(post_id){
+    GetPostSchema.parse({post_id})
+    return await prisma.posts.findUnique({
+      where: { post_id }
     })
   }
 }

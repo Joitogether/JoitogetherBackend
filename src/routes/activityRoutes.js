@@ -22,8 +22,7 @@ router.get('/', async (req, res, next) => {
 });
 
 // 獲取單一活動
-router.get('/:id', 
-  async (req, res, next) => {
+router.get('/:id', async (req, res, next) => {
     try {
       const activity_id = parseInt(req.params.id)
       const result = await activityService.getActivityById(activity_id);

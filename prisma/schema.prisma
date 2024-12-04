@@ -59,6 +59,7 @@ model users {
   followers_followers_follower_idTousers followers[]         @relation("followers_follower_idTousers")
   followers_followers_user_idTousers     followers[]         @relation("followers_user_idTousers")
   post_comments                          post_comments[]
+  post_likes                             post_likes[]
   posts                                  posts[]
   ratings_ratings_host_idTousers         ratings[]           @relation("ratings_host_idTousers")
   ratings_ratings_user_idTousers         ratings[]           @relation("ratings_user_idTousers")
@@ -143,9 +144,22 @@ model posts {
   post_status   posts_post_status
   post_img      String?             @db.Text
   post_comments post_comments[]
+  post_likes    post_likes[]
   users         users               @relation(fields: [uid], references: [uid], map: "FK_posts_users-uid")
 
   @@index([uid], map: "FK_posts_users-uid_idx")
+}
+
+model post_likes {
+  like_id    Int       @id @default(autoincrement())
+  post_id    Int
+  uid        String    @db.VarChar(255)
+  created_at DateTime? @default(now()) @db.Timestamp(0)
+  posts      posts     @relation(fields: [post_id], references: [post_id], onDelete: NoAction, map: "FK_likes_posts")
+  users      users     @relation(fields: [uid], references: [uid], onDelete: NoAction, map: "FK_likes_users")
+
+  @@index([post_id], map: "FK_likes_posts_idx")
+  @@index([uid], map: "FK_likes_users_idx")
 }
 
 enum activities_category {
@@ -182,17 +196,17 @@ enum activity_comments_status {
   deleted
 }
 
-enum posts_post_category {
-  Events
-  Travel
-  Health
-  Lifestyle
-  Hobbies
-  Other
-}
-
 enum posts_post_status {
   onEdit
   posted
   deleted
+}
+
+enum posts_post_category {
+  food
+  shopping
+  travel
+  sports
+  education
+  others
 }
