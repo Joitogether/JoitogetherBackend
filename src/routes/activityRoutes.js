@@ -45,6 +45,26 @@ router.get('/:id', async (req, res, next) => {
     }
 });
 
+// 照category獲得活動(條件為:開放報名 順序:新到舊)
+router.get('/category/:category', async (req, res, next) => {
+  try {
+    const category = req.params.category
+    const response = await activityService.getActivityByCategory(category)
+    if(!response){
+      return res.status(404).json({
+        message: '查無此資料',
+        status: 404
+      })
+    }
+    return res.status(200).json({
+      message: '資料獲取成功',
+      status: 200,
+      data: response
+    })
+  } catch (error) {
+    next(error)
+  }
+})
 
 // 新增活動
 router.post('/',

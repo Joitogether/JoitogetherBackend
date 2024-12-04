@@ -29,3 +29,6 @@ export const ActivityCommentCancelSchema = z.object({
   comment_id: z.number().int(),
 })
 
+export const ActivityGetCategorySchema = z.object({
+  category: z.enum(['food', 'shopping', 'travel', 'sports', 'education', 'others']),
+})

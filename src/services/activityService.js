@@ -1,5 +1,5 @@
 import { prisma } from '../config/db.js'
-import { ActivityCommentCancelSchema } from '../validations/activitySchema.js';
+import { ActivityCommentCancelSchema, ActivityGetCategorySchema } from '../validations/activitySchema.js';
 
 // Service 層
 export const activityService = {
@@ -65,6 +65,23 @@ export const activityService = {
     return { ...rest, host_info: { ...users }, comments };
   },
   
+  async getActivityByCategory(category) {
+    ActivityGetCategorySchema.parse({category})
+    const response = await prisma.activities.findMany({
+      where: { 
+        category,
+        status: "registrationOpen" 
+      },
+      orderBy: {
+        created_at: 'desc'
+      }
+    })
+    if(response.length === 0){
+      return null
+    }
+    return response
+  },
+
   async createActivity(activityData) {
 
     const convertToISOString = (dateTimeString) => {
