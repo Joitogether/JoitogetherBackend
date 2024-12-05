@@ -1,5 +1,5 @@
 import { prisma } from '../config/db.js'
-import { ActivityCommentCancelSchema } from '../validations/activitySchema.js';
+import { ActivityCommentCancelSchema, ActivityGetCategorySchema } from '../validations/activitySchema.js';
 
 // Service 層
 export const activityService = {
@@ -30,7 +30,22 @@ export const activityService = {
     const response =  await prisma.activities.findUnique({
       where: { id },
       include: {
-        users: true
+        users: true,
+        activity_comments: {
+          where: { status: 'posted'},
+          orderBy: { created_at: 'desc' },
+          include: {
+            users: {
+              select: {
+                display_name: true,
+                photo_url: true,
+                city: true,
+                age: true,
+                career: true,
+              }
+            }
+          }
+        }
       }
     });
 
@@ -39,10 +54,34 @@ export const activityService = {
     }
 
     const users = response.users;
-    const { users: _, ...rest } = response;
-    return { ...rest, host_info: { ...users } };
+
+    const { users: _, activity_comments, ...rest } = response;
+    const comments = activity_comments.map(comment => {
+      const { users, ...rest } = comment;
+      return { ...rest, ...users }
+    })
+    
+    
+    return { ...rest, host_info: { ...users }, comments };
   },
   
+  async getActivityByCategory(category) {
+    ActivityGetCategorySchema.parse({category})
+    const response = await prisma.activities.findMany({
+      where: { 
+        category,
+        status: "registrationOpen" 
+      },
+      orderBy: {
+        created_at: 'desc'
+      }
+    })
+    if(response.length === 0){
+      return null
+    }
+    return response
+  },
+
   async createActivity(activityData) {
 
     const convertToISOString = (dateTimeString) => {

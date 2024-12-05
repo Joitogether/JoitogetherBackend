@@ -37,6 +37,7 @@ router.post('/comment/:post_id', async (req, res, next) => {
     next(error)
   }
 })
+
 router.get('/:post_id', async (req, res, next) => { 
   try {
     const post_id = parseInt(req.params.post_id)
@@ -58,7 +59,25 @@ router.get('/:post_id', async (req, res, next) => {
 })
 
 // 根據分類獲得posts 
-
+router.get('/category/:category', async (req, res, next) => {
+  try {
+    const category = req.params.category
+    const response = await postService.getPostByCategory(category)
+    if(!response){
+      return res.status(404).json({
+        message: '查無此資料',
+        status: 404
+      })
+    }
+    return res.status(200).json({
+      message: '資料獲取成功',
+      status: 200,
+      data: response
+    })
+  } catch (error) {
+    next(error)
+  }
+})
 
 
 export default router
