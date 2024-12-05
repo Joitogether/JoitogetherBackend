@@ -31,6 +31,6 @@ export const UserUpdateSchema = z.object({
   life_photo_2: z.string().optional(),
 })
 
-export const UserGetApplications = z.object({
-  uid: z.string().max(255)
+export const UserUidSchema = z.object({
+  uid: z.string().max(255).min(5)
 })

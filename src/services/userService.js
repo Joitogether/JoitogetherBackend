@@ -1,5 +1,5 @@
 import { prisma } from '../config/db.js';
-import { UserGetApplications } from '../validations/userSchema.js';
+import {  UserUidSchema } from '../validations/userSchema.js';
 
 export const userService = {
   async getAllUsers() {
@@ -41,7 +41,7 @@ export const userService = {
   },
   
   async getApplicationsByUserId(uid) {
-    UserGetApplications.parse({ uid })
+    UserUidSchema.parse({ uid })
     const response =  await prisma.applications.findMany({
       where: { participant_id: uid,
         OR: [
@@ -61,6 +61,19 @@ export const userService = {
       }
     });
     if(response.length === 0){
+      return null
+    }
+    return response
+  },
+  async getUserPosts(uid) {
+    UserUidSchema.parse({ uid })
+    const response = await prisma.posts.findMany({
+      where: { uid, post_status: 'posted' },
+      orderBy: {
+        created_at: 'desc'
+      }
+    })
+    if(!response || response.length === 0){
       return null
     }
     return response
