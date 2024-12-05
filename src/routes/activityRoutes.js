@@ -45,7 +45,6 @@ router.get('/:id', async (req, res, next) => {
     }
 });
 
-
 // 新增活動
 router.post('/',
   async (req, res, next) => {
@@ -68,7 +67,8 @@ router.post('/',
 router.put('/cancel/:id',
   async (req, res, next) => {
     try {
-      const result = await activityService.cancelActivity(parseInt(req.params.id));   
+      const activityId = parseInt(req.params.id)
+      const result = await activityService.cancelActivity(activityId);   
       res.status(200).json({
         status: 200,
         message: '資料更新成功',
@@ -79,6 +79,7 @@ router.put('/cancel/:id',
     }
 });
 
+// 
 router.post('/comment/:activity_id', async (req, res, next) => {
   try {
     const { participant_id, comment } = req.body
