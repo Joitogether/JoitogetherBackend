@@ -65,9 +65,12 @@ export const activityService = {
     return { ...rest, host_info: { ...users }, comments };
   },
   
-  async getActivityByCategory(category) {
-    ActivityGetCategorySchema.parse({category})
+  async getActivityByCategory(category, page, pageSize) {
+    ActivityGetCategorySchema.parse({category, page, pageSize})
+    const skip = (page - 1) * pageSize
     const response = await prisma.activities.findMany({
+      skip,
+      take: pageSize,
       where: { 
         category,
         status: "registrationOpen" 

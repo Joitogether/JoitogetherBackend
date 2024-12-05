@@ -48,8 +48,10 @@ router.get('/:id', async (req, res, next) => {
 // 照category獲得活動(條件為:開放報名 順序:新到舊)
 router.get('/category/:category', async (req, res, next) => {
   try {
+    const page = parseInt(req.body.page) || 1
+    const pageSize = parseInt(req.body.pageSize) || 5
     const category = req.params.category
-    const response = await activityService.getActivityByCategory(category)
+    const response = await activityService.getActivityByCategory(category, page, pageSize)
     if(!response){
       return res.status(404).json({
         message: '查無此資料',

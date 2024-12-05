@@ -83,7 +83,27 @@ router.get('/:uid', async(req, res, next) => {
   }
 })
 
+router.get('/applications/:uid', async(req, res ,next) => {
+  try {
+    const { uid } = req.params
+    const response = await userService.getApplicationsByUserId(uid)
+    if(!response){
+      return res.status(404).json({
+        message: '查無此資料',
+        status: 404
+      })
+    }
+    return res.status(200).json({
+      message: '資料獲取成功',
+      status: 200,
+      data: response
+    })    
+  } catch (error) {
+    next(error)
+  }
 
+
+})
 
 
 export default router

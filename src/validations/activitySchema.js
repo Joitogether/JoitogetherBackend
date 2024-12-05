@@ -31,4 +31,6 @@ export const ActivityCommentCancelSchema = z.object({
 
 export const ActivityGetCategorySchema = z.object({
   category: z.enum(['food', 'shopping', 'travel', 'sports', 'education', 'others']),
+  page: z.number().int(),
+  pageSize: z.number().int().min(1)
 })
