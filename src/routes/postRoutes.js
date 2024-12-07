@@ -87,4 +87,42 @@ router.get("/category/:category", async (req, res, next) => {
   }
 });
 
+// 透過 post_id 獲得留言
+router.get("/comments/:post_id", async (req, res, next) => {
+  try {
+    const post_id = parseInt(req.params.post_id);
+    const response = await postService.getPostComments(post_id);
+    if (!response || response.length === 0) {
+      return res.status(404).json({
+        status: 404,
+        message: "查無此資料",
+      });
+    }
+
+    res.status(200).json({
+      status: 200,
+      message: "資料獲取成功",
+      data: response,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// 刪除留言
+router.delete("/comment/:comment_id", async (req, res, next) => {
+  try {
+    const comment_id = parseInt(req.params.comment_id);
+    const response = await postService.deletePostComment(comment_id);
+
+    res.status(200).json({
+      status: 200,
+      message: "資料刪除成功",
+      data: response,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 export default router;

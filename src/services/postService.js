@@ -4,6 +4,7 @@ import {
   CreatePostSchema,
   GetCategoryPostSchema,
   GetPostSchema,
+  DeletePostCommentSchema,
 } from "../validations/postSchema.js";
 
 export const postService = {
@@ -66,5 +67,26 @@ export const postService = {
       return null;
     }
     return response;
+  },
+
+  async getPostComments(post_id) {
+    GetPostSchema.parse({ post_id });
+    return await prisma.post_comments.findMany({
+      where: { post_id },
+      select: {
+        post_id: true,
+        uid: true,
+        created_at: true,
+        comment_id: true,
+        comment_content: true,
+      },
+    });
+  },
+
+  async deletePostComment(comment_id) {
+    DeletePostCommentSchema.parse({ comment_id });
+    return await prisma.post_comments.delete({
+      where: { comment_id },
+    });
   },
 };
