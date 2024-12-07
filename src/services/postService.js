@@ -5,6 +5,7 @@ import {
   GetCategoryPostSchema,
   GetPostSchema,
   DeletePostCommentSchema,
+  DeletePostLikeSchema,
 } from "../validations/postSchema.js";
 
 export const postService = {
@@ -85,8 +86,31 @@ export const postService = {
 
   async deletePostComment(comment_id) {
     DeletePostCommentSchema.parse({ comment_id });
-    return await prisma.post_comments.delete({
+    return await prisma.post_comments.update({
       where: { comment_id },
+      data: { status: "deleted" },
+    });
+  },
+
+  async getPostLikes(post_id) {
+    GetPostSchema.parse({ post_id });
+    return await prisma.post_likes.findMany({
+      where: { post_id },
+      select: {
+        like_id: true,
+        post_id: true,
+        // comment_id: true,
+        uid: true,
+        created_at: true,
+      },
+    });
+  },
+
+  async deletePostLike(like_id) {
+    DeletePostLikeSchema.parse({ like_id });
+    return await prisma.post_likes.update({
+      where: { like_id },
+      data: { status: "unliked" },
     });
   },
 };

@@ -125,4 +125,43 @@ router.delete("/comment/:comment_id", async (req, res, next) => {
   }
 });
 
+// 獲得按讚數
+router.get("/likes/:post_id", async (req, res, next) => {
+  try {
+    const post_id = parseInt(req.params.post_id);
+    const response = await postService.getPostLikes(post_id);
+
+    if (!response || response.length === 0) {
+      return res.status(400).json({
+        status: 400,
+        message: "查無此資料",
+      });
+    }
+
+    res.status(200).json({
+      status: 200,
+      message: "資料獲取成功",
+      data: response,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// 取消按讚
+router.delete("/like/:like_id", async (req, res, next) => {
+  try {
+    const like_id = parseInt(req.params.like_id);
+    const response = await postService.deletePostLike(like_id);
+
+    res.status(200).json({
+      status: 200,
+      message: "資料刪除成功",
+      data: response,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 export default router;

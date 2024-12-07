@@ -43,3 +43,7 @@ export const GetCategoryPostSchema = z.object({
 export const DeletePostCommentSchema = z.object({
   comment_id: z.number().int(),
 });
+
+export const DeletePostLikeSchema = z.object({
+  like_id: z.number().int(),
+});
