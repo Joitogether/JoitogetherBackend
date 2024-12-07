@@ -141,7 +141,7 @@ router.get("/userFollowers/:user_id", async (req, res, next) => {
     res.status(200).json({
       status: 200,
       message: "資料獲取成功",
-      return: response,
+      data: response,
     });
   } catch (error) {
     next(error);
@@ -163,7 +163,7 @@ router.get("/following/:follower_id", async (req, res, next) => {
     res.status(200).json({
       status: 200,
       message: "資料獲取成功",
-      return: response,
+      data: response,
     });
   } catch (error) {
     next(error);
