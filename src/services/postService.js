@@ -19,7 +19,28 @@ export  const postService = {
   async getPost(post_id){
     GetPostSchema.parse({post_id})
     return await prisma.posts.findUnique({
-      where: { post_id }
+      where: { post_id },
+      include: {
+        users: {
+          select: {
+            display_name: true,
+            photo_url: true
+          }
+        },
+        post_comments: {
+          include: {
+            users: {
+              select: {
+                display_name: true,
+                photo_url: true
+              }
+            }
+          },
+          orderBy: {
+            created_at: 'desc'
+          }
+        }
+      }
     })
   },
 
