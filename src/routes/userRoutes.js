@@ -170,3 +170,40 @@ router.get("/following/:follower_id", async (req, res, next) => {
   }
 });
 export default router;
+
+router.get('/notifications/:uid', async(req, res, next) => {
+  try {
+    const { uid } = req.params
+    const response = await userService.getUserNotifications(uid)
+    if(!response){
+      return res.status(404).json({
+        status: 404,
+        message: '查無此資料',
+      })
+    }
+    return res.status(200).json({
+      message:  '資料獲取成功',
+      status: 200,
+      data: response
+    }) 
+  } catch (error) {
+    next(error)
+  }
+})
+
+router.put('/notifications/:uid', async(req, res, next) => {
+  try{
+    const unreadList = req.body.unreadList
+    const user_id = req.params.uid
+    await userService.updateUserNotifications(user_id, unreadList)
+
+    res.status(200).json({
+      message: '資料更新成功',
+      status: 200
+    })
+  }catch(error){
+    console.log(error)
+    next(error)
+  }
+})
+export default router

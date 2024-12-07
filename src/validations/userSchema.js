@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { number, z } from "zod";
 
 export const UserCreateSchema = z.object({
   uid: z.string().max(255),
@@ -48,4 +48,16 @@ export const GetFollowersSchema = z.object({
 
 export const GetFollowingSchema = z.object({
   follower_id: z.string().max(255),
+});
+
+export const NotificationSchema = z.object({
+  user_id: z.string().max(255),
+  actor_id: z.string().max(255),
+  action: z.enum(["like", "comment", "register", "review", "rate"]),
+  target_type: z.enum(["post", "activity", "rating"]),
+  message: z.string(),
+});
+
+export const NotificationListSchema = z.object({
+  unreadList: z.array(z.number().int()).min(1),
 });

@@ -8,11 +8,12 @@ import applicationRouter from './src/routes/applicationRoutes.js'
 import postRouter from './src/routes/postRoutes.js'
 import ratingRouter from './src/routes/ratingRoutes.js'
 import cors from 'cors'
-
+import http from 'http'
+import { Server } from 'socket.io'
+import { initSocket } from './src/config/socket.js'
 
 const app = express()
 const port = 3030
-
 // middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -28,8 +29,14 @@ app.use('/ratings', ratingRouter)
 // error 
 app.use(errorMiddleware)
 
+const server = http.createServer(app)
+initSocket(server)
 
-// server start
-app.listen(port,'0.0.0.0', () => {
+server.listen(port, () => {
   console.log(`server running on port ${port}`)
 })
+
+// server start
+// app.listen(port,'0.0.0.0', () => {
+//   console.log(`server running on port ${port}`)
+// })

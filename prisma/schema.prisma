@@ -33,35 +33,37 @@ model activities {
 }
 
 model users {
-  uid                                    String              @id @unique(map: "uid_UNIQUE") @db.VarChar(255)
-  email                                  String              @unique(map: "email_UNIQUE") @db.VarChar(255)
-  email_verified                         Boolean             @default(false)
-  full_name                              String              @db.VarChar(255)
-  display_name                           String              @db.VarChar(255)
-  phone_number                           String              @db.VarChar(10)
-  photo_url                              String?             @db.Text
-  created_at                             DateTime            @default(now()) @db.DateTime(0)
-  city                                   String?             @db.VarChar(5)
-  age                                    Int?
-  career                                 String?             @db.VarChar(45)
-  favorite_sentence                      String?             @db.VarChar(45)
-  tags                                   String?             @db.VarChar(255)
-  self_introduction                      String?             @db.VarChar(45)
-  zodiac                                 String?             @db.VarChar(3)
-  hobby                                  String?             @db.VarChar(45)
-  expertise                              String?             @db.VarChar(45)
-  interested_in                          String?             @db.VarChar(255)
-  life_photo_1                           String?             @db.Text
-  life_photo_2                           String?             @db.Text
-  activities                             activities[]
-  activity_comments                      activity_comments[]
-  applications                           applications[]
-  followers_followers_follower_idTousers followers[]         @relation("followers_follower_idTousers")
-  followers_followers_user_idTousers     followers[]         @relation("followers_user_idTousers")
-  post_comments                          post_comments[]
-  posts                                  posts[]
-  ratings_ratings_host_idTousers         ratings[]           @relation("ratings_host_idTousers")
-  ratings_ratings_user_idTousers         ratings[]           @relation("ratings_user_idTousers")
+  uid                                         String              @id @unique(map: "uid_UNIQUE") @db.VarChar(255)
+  email                                       String              @unique(map: "email_UNIQUE") @db.VarChar(255)
+  email_verified                              Boolean             @default(false)
+  full_name                                   String              @db.VarChar(255)
+  display_name                                String              @db.VarChar(255)
+  phone_number                                String              @db.VarChar(10)
+  photo_url                                   String?             @db.Text
+  created_at                                  DateTime            @default(now()) @db.DateTime(0)
+  city                                        String?             @db.VarChar(5)
+  age                                         Int?
+  career                                      String?             @db.VarChar(45)
+  favorite_sentence                           String?             @db.VarChar(45)
+  tags                                        String?             @db.VarChar(255)
+  self_introduction                           String?             @db.VarChar(45)
+  zodiac                                      String?             @db.VarChar(3)
+  hobby                                       String?             @db.VarChar(45)
+  expertise                                   String?             @db.VarChar(45)
+  interested_in                               String?             @db.VarChar(255)
+  life_photo_1                                String?             @db.Text
+  life_photo_2                                String?             @db.Text
+  activities                                  activities[]
+  activity_comments                           activity_comments[]
+  applications                                applications[]
+  followers_followers_follower_idTousers      followers[]         @relation("followers_follower_idTousers")
+  followers_followers_user_idTousers          followers[]         @relation("followers_user_idTousers")
+  notifications_notifications_actor_idTousers notifications[]     @relation("notifications_actor_idTousers")
+  notifications_notifications_user_idTousers  notifications[]     @relation("notifications_user_idTousers")
+  post_comments                               post_comments[]
+  posts                                       posts[]
+  ratings_ratings_host_idTousers              ratings[]           @relation("ratings_host_idTousers")
+  ratings_ratings_user_idTousers              ratings[]           @relation("ratings_user_idTousers")
 }
 
 model applications {
@@ -154,7 +156,24 @@ model post_likes {
   post_id    Int
   comment_id Int
   uid        String    @db.VarChar(255)
-  created_at DateTime? @default(now()) @db.Timestamp(0)
+  created_at DateTime? @default(now()) @db.DateTime(0)
+}
+
+model notifications {
+  id                                  Int                       @id @unique(map: "id_UNIQUE") @default(autoincrement())
+  user_id                             String                    @db.VarChar(255)
+  actor_id                            String                    @db.VarChar(255)
+  action                              notifications_action
+  target_type                         notifications_target_type
+  target_id                           Int
+  message                             String?                   @db.Text
+  is_read                             Int?                      @default(0) @db.TinyInt
+  created_at                          DateTime?                 @default(now()) @db.DateTime(0)
+  users_notifications_actor_idTousers users                     @relation("notifications_actor_idTousers", fields: [actor_id], references: [uid], onDelete: NoAction, map: "FK_noti_users_actorId")
+  users_notifications_user_idTousers  users                     @relation("notifications_user_idTousers", fields: [user_id], references: [uid], onDelete: NoAction, map: "FK_noti_users_userId")
+
+  @@index([actor_id], map: "FK_noti_users_actorId_idx")
+  @@index([user_id], map: "FK_noti_users_userId_idx")
 }
 
 enum activities_category {
@@ -206,8 +225,23 @@ enum posts_post_category {
   others
 }
 
+<<<<<<< HEAD
 enum followers_follow_status {
   following
   unfollow
   blocked
+=======
+enum notifications_action {
+  like
+  comment
+  register
+  review
+  rate
+}
+
+enum notifications_target_type {
+  post
+  activity
+  rating
+>>>>>>> main
 }
