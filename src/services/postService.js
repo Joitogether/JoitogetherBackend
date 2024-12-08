@@ -73,13 +73,20 @@ export const postService = {
   async getPostComments(post_id) {
     GetPostSchema.parse({ post_id });
     return await prisma.post_comments.findMany({
-      where: { post_id },
+      where: {
+        post_id,
+        status: "active",
+      },
       select: {
         post_id: true,
         uid: true,
         created_at: true,
         comment_id: true,
         comment_content: true,
+        status: true,
+      },
+      orderBy: {
+        created_at: "desc",
       },
     });
   },
