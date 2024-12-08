@@ -109,10 +109,40 @@ export const userService = {
           target_type: true,
           target_id: true,
           id: true,
+          link: true,
         },
       });
-      detailResponse.link = `/${detailResponse.target_type}/detail/${detailResponse.target_id}`;
-      return detailResponse;
+      let target_detail;
+      switch (detailResponse.target_type) {
+        case "activity":
+          target_detail = await prisma.activities.findUnique({
+            where: { id: detailResponse.target_id },
+            select: {
+              name: true,
+            },
+          });
+          break;
+        case "post":
+          target_detail = await prisma.posts.findUnique({
+            where: { post_id: detailResponse.target_id },
+            select: {
+              post_title: true,
+            },
+          });
+          break;
+        case "rating":
+          target_detail = await prisma.ratings.findUnique({
+            where: { id: detailResponse.target_id },
+            select: {
+              user_comment: true,
+            },
+          });
+          break;
+      }
+      return {
+        ...detailResponse,
+        target_detail,
+      };
     } catch (error) {
       console.log(error);
       return null;
@@ -138,6 +168,7 @@ export const userService = {
         target_type: true,
         target_id: true,
         id: true,
+        link: true,
       },
       orderBy: {
         created_at: "desc",
@@ -146,10 +177,43 @@ export const userService = {
     if (!response || response.length === 0) {
       return null;
     }
-    response.forEach((data) => {
-      data.link = `/${data.target_type}/detail/${data.target_id}`;
-    });
-    return response;
+    // 拿target的詳細資料
+    const responseWithDetail = await Promise.all(
+      response.map(async (notification) => {
+        let target_detail = null;
+        switch (notification.target_type) {
+          case "activity":
+            target_detail = await prisma.activities.findUnique({
+              where: { id: notification.target_id },
+              select: {
+                name: true,
+              },
+            });
+            break;
+          case "post":
+            target_detail = await prisma.posts.findUnique({
+              where: { post_id: notification.target_id },
+              select: {
+                post_title: true,
+              },
+            });
+            break;
+          case "rating":
+            target_detail = await prisma.ratings.findUnique({
+              where: { id: notification.target_id },
+              select: {
+                user_comment: true,
+              },
+            });
+            break;
+        }
+        return {
+          ...notification,
+          target_detail,
+        };
+      })
+    );
+    return responseWithDetail;
   },
 
   async updateUserNotifications(user_id, unreadList) {
