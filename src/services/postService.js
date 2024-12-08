@@ -92,6 +92,12 @@ export const postService = {
     });
   },
 
+  async createPostLike(data) {
+    return await prisma.post_likes.create({
+      data,
+    });
+  },
+
   async getPostLikes(post_id) {
     GetPostSchema.parse({ post_id });
     return await prisma.post_likes.findMany({
@@ -108,9 +114,8 @@ export const postService = {
 
   async deletePostLike(like_id) {
     DeletePostLikeSchema.parse({ like_id });
-    return await prisma.post_likes.update({
+    return await prisma.post_likes.delete({
       where: { like_id },
-      data: { status: "unliked" },
     });
   },
 };

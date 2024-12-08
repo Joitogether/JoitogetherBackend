@@ -46,6 +46,7 @@ router.post("/comment/:post_id", async (req, res, next) => {
   }
 });
 
+// 獲得單一post
 router.get("/:post_id", async (req, res, next) => {
   try {
     const post_id = parseInt(req.params.post_id);
@@ -123,6 +124,19 @@ router.delete("/comment/:comment_id", async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+});
+
+// 新增按讚
+router.post("/like/:post_id", async (req, res, next) => {
+  const post_id = parseInt(req.params.post_id);
+  const data = { ...req.body, post_id };
+  const response = await postService.createPostLike(data);
+
+  res.status(201).json({
+    status: 201,
+    message: "資料創建成功",
+    data: response,
+  });
 });
 
 // 獲得按讚數
