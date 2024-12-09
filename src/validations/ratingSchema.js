@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
 
-export const GetRatingSchema = z.object({
+export const RatingGetSchema = z.object({
   host_id: z.string().max(50)
 })
