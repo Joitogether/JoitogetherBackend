@@ -3,6 +3,19 @@ import { CreatePostCommentSchema, CreatePostSchema, GetCategoryPostSchema, GetPo
 
 
 export  const postService = {
+  async getAllPosts(){
+    const response = await prisma.posts.findMany({
+      orderBy: {
+        created_at: 'desc'
+      }
+    })
+    if(!response || response.length === 0){
+      return null
+    }
+    return response
+  },
+
+
   async createPost(data){
     CreatePostSchema.parse(data)
     return await prisma.posts.create({

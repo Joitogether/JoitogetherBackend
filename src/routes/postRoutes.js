@@ -6,7 +6,22 @@ const router = express.Router()
 
 // 獲得所有post
 router.get('/', async (req, res, next) => {
-
+  try{
+    const response = await postService.getAllPosts()
+    if(!response){
+      return res.status(404).json({
+        status: 404,
+        message: '查無資料'
+      })
+    }
+    return res.status(200).json({
+      message: '資料獲取成功',
+      status: 200,
+      data: response
+    })
+  }catch(error){
+    next(error)
+  }
 })
 // 新增post
 router.post('/', async (req, res, next) => {
