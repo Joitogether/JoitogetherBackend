@@ -5,24 +5,30 @@ import { ActivityCommentCancelSchema, ActivityGetCategorySchema } from '../valid
 export const activityService = {
   async getAllActivities() {
     return await prisma.activities.findMany({
-      select: {
-        name: true,
-        approval_deadline: true,
-        category: true,
-        created_at: true,
-        description: true,
-        event_time: true,
-        host_id: true,
-        id: true,
-        img_url: true,
-        location: true,
-        max_participants: true,
-        min_participants: true,
-        pay_type: true,
-        price: true,
-        require_approval: true,
-        status: true,
-        updated_at: true,}
+      where: { status: "registrationOpen" },
+      include: { 
+        users: {
+          select: {
+            display_name: true,
+            photo_url: true
+          }
+        },
+      _count: {
+        select: {
+          applications: {
+            where: {
+              OR: [
+                { status: 'registered' },
+                { status: 'approved' }
+              ]
+            }
+          }
+        }
+      }
+      },
+        orderBy: {
+          created_at: 'desc'
+        }
     });
   },
 

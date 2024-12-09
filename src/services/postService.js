@@ -9,6 +9,18 @@ import {
 } from "../validations/postSchema.js";
 
 export const postService = {
+  async getAllPosts() {
+    const response = await prisma.posts.findMany({
+      orderBy: {
+        created_at: "desc",
+      },
+    });
+    if (!response || response.length === 0) {
+      return null;
+    }
+    return response;
+  },
+
   async createPost(data) {
     CreatePostSchema.parse(data);
     return await prisma.posts.create({
@@ -21,9 +33,9 @@ export const postService = {
       data,
     });
   },
-  async getAllPosts() {
-    return await prisma.posts.findMany();
-  },
+  // async getAllPosts() {
+  //   return await prisma.posts.findMany();
+  // },
 
   async getPost(post_id) {
     GetPostSchema.parse({ post_id });
