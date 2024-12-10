@@ -71,7 +71,7 @@ export const userService = {
     }
     return response;
   },
-
+  
   async getUserPosts(uid) {
     UserUidSchema.parse({ uid });
     const response = await prisma.posts.findMany({
@@ -149,8 +149,11 @@ export const userService = {
     }
   },
 
-  async getUserNotifications(uid) {
+  async getUserNotifications(uid, page, pageSize){
+    const skip = (page - 1) * pageSize
     const response = await prisma.notifications.findMany({
+      skip,
+      take: pageSize,
       where: {
         user_id: uid,
       },

@@ -173,9 +173,12 @@ export default router;
 
 router.get("/notifications/:uid", async (req, res, next) => {
   try {
-    const { uid } = req.params;
-    const response = await userService.getUserNotifications(uid);
-    if (!response) {
+    const uid = req.params.uid
+    let { page, pageSize } = req.query
+    page = parseInt(page) || 1
+    pageSize = parseInt(pageSize) || 5
+    const response = await userService.getUserNotifications(uid, page, pageSize)
+    if(!response){
       return res.status(404).json({
         status: 404,
         message: "查無此資料",
