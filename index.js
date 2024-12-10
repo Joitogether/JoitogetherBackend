@@ -16,7 +16,7 @@ const app = express()
 const port = 3030
 // middlewares
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cors())
 
 // routes

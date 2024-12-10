@@ -127,8 +127,11 @@ router.get('/posts/:uid', async(req, res, next) => {
 
 router.get('/notifications/:uid', async(req, res, next) => {
   try {
-    const { uid } = req.params
-    const response = await userService.getUserNotifications(uid)
+    const uid = req.params.uid
+    let { page, pageSize } = req.query
+    page = parseInt(page) || 1
+    pageSize = parseInt(pageSize) || 5
+    const response = await userService.getUserNotifications(uid, page, pageSize)
     if(!response){
       return res.status(404).json({
         status: 404,

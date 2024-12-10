@@ -10,7 +10,7 @@ export const ActivityCreateSchema = z.object({
   category: z.enum(['food', 'shopping', 'travel', 'sports', 'education', 'others']),
   event_time: z.string().regex(dateTimeRegex),
   host_id: z.string().max(50),
-  approval_deadline: z.string().regex(dateTimeRegex),
+  approval_deadline: z.string().regex(dateTimeRegex).optional().nullable(),
   min_participants: z.number().int(), 
   max_participants: z.number().int(), 
   pay_type: z.enum(['free', 'AA', 'host']),
