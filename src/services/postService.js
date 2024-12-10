@@ -89,13 +89,13 @@ export const postService = {
         post_id,
         status: "active",
       },
-      select: {
-        post_id: true,
-        uid: true,
-        created_at: true,
-        comment_id: true,
-        comment_content: true,
-        status: true,
+      include: {
+        users: {
+          select: {
+            display_name: true,
+            photo_url: true,
+          },
+        },
       },
       orderBy: {
         created_at: "desc",
