@@ -1,6 +1,6 @@
-import { z } from 'zod'
+import { z } from "zod";
 
-
-export const RatingGetSchema = z.object({
-  host_id: z.string().max(50)
-})
+export const GetRatingSchema = z.object({
+  host_id: z.string().max(50).optional(),
+  user_id: z.string().max(50).optional(),
+});
