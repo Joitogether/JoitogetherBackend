@@ -22,19 +22,19 @@ export const UserUpdateSchema = z.object({
     .string()
     .regex(/^09\d{8}$/)
     .optional(),
-  photo_url: z.string().optional(),
-  city: z.string().max(5).optional(),
-  age: z.number().int().optional(),
-  career: z.string().max(45).optional(),
-  favortie_sentence: z.string().max(45).optional(),
-  tags: z.string().max(255).optional(),
-  sel_introduction: z.string().max(255).optional(),
-  zodiac: z.string().max(3).optional(),
-  hobby: z.string().max(45).optional(),
-  expertise: z.string().max(45).optional(),
-  interested_in: z.string().max(255).optional(),
-  life_photo_1: z.string().optional(),
-  life_photo_2: z.string().optional(),
+  photo_url: z.string().nullable().optional(),
+  city: z.string().max(5).nullable().optional(),
+  age: z.number().int().nullable().optional(),
+  career: z.string().max(45).nullable().optional(),
+  favortie_sentence: z.string().max(45).nullable().optional(),
+  tags: z.string().max(255).nullable().optional(),
+  sel_introduction: z.string().max(255).nullable().optional(),
+  zodiac: z.string().max(3).nullable().optional(),
+  hobby: z.string().max(45).nullable().optional(),
+  expertise: z.string().max(45).nullable().optional(),
+  interested_in: z.string().max(255).nullable().optional(),
+  life_photo_1: z.string().nullable().optional(),
+  life_photo_2: z.string().nullable().optional(),
 });
 
 export const UserUidSchema = z.object({
