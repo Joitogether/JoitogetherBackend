@@ -174,10 +174,11 @@ export default router;
 router.get("/notifications/:uid", async (req, res, next) => {
   try {
     const uid = req.params.uid
-    let { page, pageSize } = req.query
+    let { page, pageSize, additionalSkip } = req.query
     page = parseInt(page) || 1
     pageSize = parseInt(pageSize) || 5
-    const response = await userService.getUserNotifications(uid, page, pageSize)
+    additionalSkip = parseInt(additionalSkip) || 0
+    const response = await userService.getUserNotifications(uid, page, pageSize, additionalSkip)
     if(!response){
       return res.status(404).json({
         status: 404,
