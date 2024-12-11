@@ -73,6 +73,41 @@ const addPost = async (req, res, next) => {
   }
 };
 
+const editPost = async (req, res, next) => {
+  try {
+    const post_id = parseInt(req.params.post_id);
+    const data = req.body;
+    const response = await postService.updatePost(post_id, data);
+
+    if (!response) {
+      res.status(400).json({
+        status: 400,
+        message: "資料更新失敗",
+      });
+    }
+
+    res.status(200).json({
+      status: 200,
+      message: "資料更新成功",
+      data: response,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const removePost = async (req, res, next) => {
+  try {
+    const post_id = parseInt(req.params.post_id);
+    const response = await postService.deletePost(post_id);
+    res.status(200).json({
+      status: 200,
+      message: "資料刪除成功",
+      data: response,
+    });
+  } catch (error) {}
+};
+
 const fetchPostComments = async (req, res, next) => {
   try {
     const post_id = parseInt(req.params.post_id);
@@ -178,6 +213,8 @@ export {
   fetchPostDetails,
   fetchPostsByCategory,
   addPost,
+  editPost,
+  removePost,
   fetchPostComments,
   addPostComment,
   removePostComment,

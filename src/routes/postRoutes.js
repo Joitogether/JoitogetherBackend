@@ -8,8 +8,10 @@ router.get("/", PostController.fetchAllPosts);
 router.get("/:post_id", PostController.fetchPostDetails);
 router.get("/category/:category", PostController.fetchPostsByCategory);
 
-// Post Create/Delete
+// Post Create/Update/Delete
 router.post("/", PostController.addPost);
+router.put("/:post_id", PostController.editPost);
+router.delete("/:post_id", PostController.removePost);
 
 // Post Comment
 router.get("/comments/:post_id", PostController.fetchPostComments);
