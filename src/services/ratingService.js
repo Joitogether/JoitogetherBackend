@@ -2,6 +2,7 @@ import { GetRatingSchema } from "../validations/ratingSchema.js";
 import { prisma } from "../config/db.js";
 
 export const ratingService = {
+  // 查詢特定 host_id（評價者）的評論列表
   async getRatingByHostId(host_id) {
     GetRatingSchema.parse({ host_id });
     return await prisma.ratings.findMany({
@@ -9,7 +10,7 @@ export const ratingService = {
     });
   },
 
-  // 查詢 host_id（被評價者） 的評論
+  // 查詢特定 host_id（評價者）的評論列表（含 users_table 的 city、display_name、photo_url）
   async getRatingWithUserInfoByHostId(host_id) {
     GetRatingSchema.parse({ host_id });
     return await prisma.ratings.findMany({
@@ -34,7 +35,7 @@ export const ratingService = {
     });
   },
 
-  // 查詢 user_id（評價者） 的評論
+  // 查詢特定 user_id（被評價者）的評論列表（含 users_table 的 city、display_name、photo_url）
   async getRatingWithUserInfoByUserId(user_id) {
     GetRatingSchema.parse({ user_id });
     return await prisma.ratings.findMany({
