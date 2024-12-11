@@ -1,12 +1,13 @@
 import { z } from "zod";
 
-const dateTimeRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
+// const dateTimeRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
 
 export const CreatePostSchema = z.object({
   post_title: z.string().max(10),
   post_content: z.string(),
   uid: z.string().max(255),
-  updated_at: z.string().regex(dateTimeRegex).optional(),
+  // updated_at: z.string().regex(dateTimeRegex).optional(),
+  updated_at: z.coerce.date().optional(),
   post_category: z.enum([
     "food",
     "shopping",
@@ -38,6 +39,10 @@ export const GetCategoryPostSchema = z.object({
     "education",
     "others",
   ]),
+});
+
+export const DeletePostSchema = z.object({
+  post_id: z.number().int(),
 });
 
 export const DeletePostCommentSchema = z.object({

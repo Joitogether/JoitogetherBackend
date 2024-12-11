@@ -1,101 +1,19 @@
-import express from 'express'
-import { ApplicationSchema, ApplicationReviewSchema } from '../validations/applicationSchema.js'
-import { activityService } from '../services/activityService.js'
-const router = express.Router()
+import express from "express";
+import * as ApplicationController from "../controllers/applicationController.js";
+const router = express.Router();
 
+router.post(
+  "/register/:activity_id",
+  ApplicationController.createActivityRegistration
+);
+router.put(
+  "/cancel/:activity_id",
+  ApplicationController.removeActivityRegistration
+);
+router.get("/:activity_id", ApplicationController.fetchActivityRegistrations);
+router.put(
+  "/verify/:application_id",
+  ApplicationController.approveActivityParticipant
+);
 
-// 報名活動
-router.post('/register/:activity_id', async(req, res, next) => {
-  try{
-    // 取得資料
-    const { participant_id, comment } = req.body
-    const activity_id = parseInt(req.params.activity_id)
-    // 資料驗證
-    ApplicationSchema.parse({ activity_id, participant_id, comment })
-
-    // 確認是否已有這筆資料，有的話就修改
-    const hasRegistered = await activityService.hasRegistered(participant_id, activity_id)
-    if(hasRegistered){
-      const response = await activityService.setApplicationStatus(participant_id, activity_id, 'registered', comment)
-      return res.status(201).json({
-        message: '資料創建成功',
-        status: 201,
-        data: response
-      })
-    }
-    // 沒有的話新增
-    const response = await activityService.registerActivity(activity_id, participant_id, comment)
-    res.status(201).json({
-      message: '資料創建成功',
-      status: 201,
-      data: response
-    })
-  }catch(error){
-    next(error)
-  }
-})
-
-// 使用者取消報名
-router.put('/cancel/:activity_id', async(req, res, next) => {
-  const activity_id = parseInt(req.params.activity_id)
-  const { participant_id } = req.body
-
-  try{
-    ApplicationSchema.parse({ activity_id, participant_id })
-    const response = await activityService.cancelRegister(participant_id, activity_id)
-
-    res.status(200).json({
-      message: '資料更新成功',  
-      status: 200,
-      data: response
-    })
-  }catch(error){
-    next(error)
-  }
-})
-
-// 獲得該活動報名者資訊
-router.get('/:activity_id', async(req, res, next) => {
-  try{
-    const activityId = parseInt(req.params.activity_id)
-    const response = await activityService.getDetailedApplications(activityId)
-    
-    if(!response || response.length === 0){
-      return res.status(STATUS.NOT_FOUND).json({
-        message: MESSAGE.NOT_FOUND,
-        status: STATUS.NOT_FOUND
-      })
-    }
-
-    res.status(200).json({
-      message: '資料獲取成功',
-      status: 200,
-      data: response
-    })
-
-  }catch(e){
-    next(e)
-  }
-})
-
-// 審核活動報名者
-router.put('/verify/:application_id', async(req, res, next) => {
-  try{
-    const application_id = parseInt(req.params.application_id)
-    const {  status } = req.body
-    ApplicationReviewSchema.parse({status, application_id})
-
-    const response = await activityService.verifyParticipant(application_id, status)
-
-    res.status(200).json({
-      message: '審核成功',
-      status: 200,
-      data: response
-    })
-
-  }catch(error){
-    next(error)
-  }
-})
-
-export default router
+export default router;
