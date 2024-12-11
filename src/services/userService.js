@@ -149,8 +149,8 @@ export const userService = {
     }
   },
 
-  async getUserNotifications(uid, page, pageSize){
-    const skip = (page - 1) * pageSize
+  async getUserNotifications(uid, page, pageSize, additionalSkip){
+    const skip = (page - 1) * pageSize + additionalSkip
     const response = await prisma.notifications.findMany({
       skip,
       take: pageSize,
