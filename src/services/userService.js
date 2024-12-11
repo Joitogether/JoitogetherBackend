@@ -102,6 +102,7 @@ export const userService = {
               photo_url: true,
             },
           },
+          user_id: true,
           message: true,
           action: true,
           is_read: true,
