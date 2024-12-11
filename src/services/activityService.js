@@ -116,15 +116,7 @@ export const activityService = {
     });
   },
 
-  // 取消報名
-  async cancelRegister(participant_id, activity_id) {
-    return await prisma.applications.update({
-      where: { activity_id_participant_id: { participant_id, activity_id } },
-      data: { status: "participant_cancelled", comment: null },
-    });
-  },
-
-  // 報名
+  // 報名活動
   async registerActivity(activity_id, participant_id, comment) {
     return await prisma.applications.create({
       data: {
@@ -135,7 +127,15 @@ export const activityService = {
     });
   },
 
-  // 審核用資料
+  // 取消報名
+  async cancelRegister(participant_id, activity_id) {
+    return await prisma.applications.update({
+      where: { activity_id_participant_id: { participant_id, activity_id } },
+      data: { status: "participant_cancelled", comment: null },
+    });
+  },
+
+  // 獲得該活動報名者資訊
   async getParticipantsByActivityId(activity_id) {
     return await prisma.applications.findMany({
       where: { activity_id },
