@@ -9,7 +9,7 @@ import {
 } from "../validations/postSchema.js";
 
 export const postService = {
-  // 獲得所有 post
+  // 獲得所有 posts (包含留言與按讚數量)
   async getAllPosts() {
     const response = await prisma.posts.findMany({
       // 過濾文章狀態 "posted"
@@ -48,7 +48,7 @@ export const postService = {
     }));
   },
 
-  // 獲得單一 post
+  // 獲得單一 post (包含留言與按讚詳細資料)
   async getPost(post_id) {
     GetPostSchema.parse({ post_id });
     return await prisma.posts.findUnique({
@@ -89,7 +89,7 @@ export const postService = {
     });
   },
 
-  // 根據分類獲得 posts
+  // 根據分類獲得 posts (包含留言與按讚數量)
   async getPostByCategory(post_category) {
     GetCategoryPostSchema.parse({ post_category });
     const response = await prisma.posts.findMany({
@@ -241,7 +241,7 @@ export const postService = {
           data: { status: "unlike" },
         });
       }
-      return existingLike; // 已經是 "unlike"，直接返回
+      return existingLike;
     } else {
       throw new Error("記錄不存在，無法取消按讚");
     }
