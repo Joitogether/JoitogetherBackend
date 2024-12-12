@@ -12,6 +12,26 @@ export const postService = {
   // 獲得所有 post
   async getAllPosts() {
     const response = await prisma.posts.findMany({
+      // 過濾文章狀態 "posted"
+      where: {
+        post_status: "posted",
+      },
+      include: {
+        // 過濾留言狀態 "active"
+        post_comments: {
+          where: { comment_status: "active" },
+        },
+        // 過濾按讚狀態 "liked"
+        post_likes: { where: { like_status: "liked" } },
+        // 計算留言數量與按讚數量
+        _count: {
+          select: {
+            post_comments: true,
+            post_likes: true,
+          },
+        },
+      },
+      // 按照創建時間排序
       orderBy: {
         created_at: "desc",
       },
@@ -19,14 +39,23 @@ export const postService = {
     if (!response || response.length === 0) {
       return null;
     }
-    return response;
+    // 將資料格式化
+    return response.map((post) => ({
+      ...post,
+      // 將留言數量與按讚數量動態加入 data
+      commentCount: post._count.post_comments,
+      likeCount: post._count.post_likes,
+    }));
   },
 
   // 獲得單一 post
   async getPost(post_id) {
     GetPostSchema.parse({ post_id });
     return await prisma.posts.findUnique({
-      where: { post_id },
+      where: {
+        post_id,
+        post_status: "posted",
+      },
       include: {
         users: {
           select: {
@@ -35,6 +64,7 @@ export const postService = {
           },
         },
         post_comments: {
+          where: { comment_status: "active" },
           include: {
             users: {
               select: {
@@ -45,6 +75,14 @@ export const postService = {
           },
           orderBy: {
             created_at: "desc",
+          },
+        },
+        post_likes: {
+          where: { like_status: "liked" },
+          select: {
+            like_id: true,
+            uid: true,
+            created_at: true,
           },
         },
       },
@@ -59,6 +97,16 @@ export const postService = {
         post_category,
         post_status: "posted",
       },
+      include: {
+        post_comments: { where: { comment_status: "active" } },
+        post_likes: { where: { like_status: "liked" } },
+        _count: {
+          select: {
+            post_comments: true,
+            post_likes: true,
+          },
+        },
+      },
       orderBy: {
         created_at: "desc",
       },
@@ -66,7 +114,11 @@ export const postService = {
     if (response.length === 0) {
       return null;
     }
-    return response;
+    return response.map((post) => ({
+      ...post,
+      commentCount: post._count.post_comments,
+      likeCount: post._count.post_likes,
+    }));
   },
 
   // 新增 post

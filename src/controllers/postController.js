@@ -1,6 +1,6 @@
 import { postService } from "../services/postService.js";
 
-const fetchAllPosts = async (req, res, next) => {
+const fetchAllPosts = async (_req, res, next) => {
   try {
     const response = await postService.getAllPosts();
     if (!response) {
@@ -105,7 +105,9 @@ const removePost = async (req, res, next) => {
       message: "資料刪除成功",
       data: response,
     });
-  } catch (error) {}
+  } catch (error) {
+    next(error);
+  }
 };
 
 const fetchPostComments = async (req, res, next) => {
