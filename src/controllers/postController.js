@@ -185,12 +185,15 @@ const addPostLike = async (req, res, next) => {
   const post_id = parseInt(req.params.post_id);
   const uid = req.body.uid;
   const response = await postService.createPostLike(post_id, uid);
-
-  res.status(201).json({
-    status: 201,
-    message: "資料創建成功",
-    data: response,
-  });
+  try {
+    res.status(201).json({
+      status: 201,
+      message: "按讚成功",
+      data: response,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 const removePostLike = async (req, res, next) => {
@@ -201,7 +204,7 @@ const removePostLike = async (req, res, next) => {
 
     res.status(200).json({
       status: 200,
-      message: "資料刪除成功",
+      message: "取消按讚成功",
       data: response,
     });
   } catch (error) {

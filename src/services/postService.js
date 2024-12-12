@@ -167,9 +167,9 @@ export const postService = {
       return prisma.post_likes.update({
         where: {
           like_id: existingLike.like_id,
-          data: {
-            status: "liked",
-          },
+        },
+        data: {
+          status: "liked",
         },
       });
     }
@@ -190,9 +190,9 @@ export const postService = {
       return prisma.post_likes.update({
         where: {
           like_id: existingLike.like_id,
-          data: {
-            status: "unlike",
-          },
+        },
+        data: {
+          status: "unlike",
         },
       });
     }
