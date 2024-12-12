@@ -9,38 +9,27 @@ import {
   GetFollowingSchema,
 } from "../validations/userSchema.js";
 
+// 取得所有使用者
 export const userService = {
   async getAllUsers() {
     return await prisma.users.findMany();
   },
 
+  // 依照 uid 獲取單一使用者資料
   async getUserById(uid) {
     return await prisma.users.findUnique({
       where: { uid },
     });
   },
 
-  async getUserByEmail(email) {
-    return await prisma.users.findUnique({
-      where: { email },
-      select: {
-        display_name: true,
-        email: true,
-        email_verified: true,
-        full_name: true,
-        phone_number: true,
-        photo_url: true,
-        uid: true,
-      },
-    });
-  },
-
+  // 使用者註冊
   async userRegister(userData) {
     return await prisma.users.create({
       data: userData,
     });
   },
 
+  // 更新使用者資料（第三方登入）
   async userUpdateInfo(userData, uid) {
     return await prisma.users.update({
       where: { uid },
@@ -48,6 +37,7 @@ export const userService = {
     });
   },
 
+  // 依照 uid 獲取單一使用者報名資料
   async getApplicationsByUserId(uid) {
     UserUidSchema.parse({ uid });
     const response = await prisma.applications.findMany({
@@ -71,7 +61,8 @@ export const userService = {
     }
     return response;
   },
-  
+
+  // 依照 uid 獲取單一使用者貼文
   async getUserPosts(uid) {
     UserUidSchema.parse({ uid });
     const response = await prisma.posts.findMany({
@@ -86,6 +77,7 @@ export const userService = {
     return response;
   },
 
+  // 新增通知
   async addNotification(data) {
     try {
       // 先校驗
@@ -149,8 +141,9 @@ export const userService = {
     }
   },
 
-  async getUserNotifications(uid, page, pageSize){
-    const skip = (page - 1) * pageSize
+  // 依照 uid 獲取單一使用者通知
+  async getUserNotifications(uid, page, pageSize) {
+    const skip = (page - 1) * pageSize;
     const response = await prisma.notifications.findMany({
       skip,
       take: pageSize,
@@ -219,6 +212,7 @@ export const userService = {
     return responseWithDetail;
   },
 
+  // 依照 uid 更新使用者通知
   async updateUserNotifications(user_id, unreadList) {
     NotificationListSchema.parse({ unreadList });
     const transaction = unreadList.map((id) =>
@@ -232,6 +226,7 @@ export const userService = {
     return await prisma.$transaction(transaction);
   },
 
+  // 取得使用者的追隨者
   async getFollowersByUserId(user_id) {
     GetFollowersSchema.parse({ user_id });
     return await prisma.followers.findMany({
@@ -249,6 +244,7 @@ export const userService = {
     });
   },
 
+  // 取得使用者的追隨
   async getFollowingByFollowerId(follower_id) {
     GetFollowingSchema.parse({ follower_id });
     return await prisma.followers.findMany({
