@@ -139,11 +139,13 @@ export const postService = {
   async getPostLikes(post_id) {
     GetPostSchema.parse({ post_id });
     return await prisma.post_likes.findMany({
-      where: { post_id },
+      where: {
+        post_id,
+        status: "liked",
+      },
       select: {
         like_id: true,
         post_id: true,
-        // comment_id: true,
         uid: true,
         created_at: true,
       },

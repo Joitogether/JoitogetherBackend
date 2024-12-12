@@ -24,3 +24,7 @@ router.post("/like/:post_id", PostController.addPostLike);
 router.delete("/like/:like_id", PostController.removePostLike);
 
 export default router;
+
+// all post likes and comments count
+// post all info and likes and comments
+// category post likes and comments count
