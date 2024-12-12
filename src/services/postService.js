@@ -6,7 +6,6 @@ import {
   GetPostSchema,
   DeletePostSchema,
   DeletePostCommentSchema,
-  DeletePostLikeSchema,
 } from "../validations/postSchema.js";
 
 export const postService = {
@@ -154,21 +153,23 @@ export const postService = {
 
   // 新增 post 按讚
   async createPostLike(post_id, uid) {
-    const existingLike = await prisma.post_likes.findUnique({
+    const existingLike = await prisma.post_likes.findFirst({
       where: {
-        post_id_uid: {
-          post_id,
-          uid,
-        },
+        post_id,
+        uid,
       },
     });
 
     if (existingLike) {
       return prisma.post_likes.update({
-        where: {
-          like_id: existingLike.like_id,
-        },
+        where: { like_id: existingLike.like_id },
+        data: { status: "liked" },
+      });
+    } else {
+      return prisma.post_likes.create({
         data: {
+          post_id,
+          uid,
           status: "liked",
         },
       });
@@ -177,24 +178,23 @@ export const postService = {
 
   // 取消 post 按讚
   async deletePostLike(post_id, uid) {
-    const existingLike = await prisma.post_likes.findUnique({
+    const existingLike = await prisma.post_likes.findFirst({
       where: {
-        post_id_uid: {
-          post_id,
-          uid,
-        },
+        post_id,
+        uid,
       },
     });
 
     if (existingLike) {
-      return prisma.post_likes.update({
-        where: {
-          like_id: existingLike.like_id,
-        },
-        data: {
-          status: "unlike",
-        },
-      });
+      if (existingLike.status !== "unlike") {
+        return await prisma.post_likes.update({
+          where: { like_id: existingLike.like_id },
+          data: { status: "unlike" },
+        });
+      }
+      return existingLike; // 已經是 "unlike"，直接返回
+    } else {
+      throw new Error("記錄不存在，無法取消按讚");
     }
   },
 };

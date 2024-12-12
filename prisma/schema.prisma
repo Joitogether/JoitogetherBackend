@@ -231,11 +231,6 @@ enum post_comments_status {
   deleted
 }
 
-enum post_likes_status {
-  liked
-  unlike
-}
-
 enum notifications_action {
   like
   comment
@@ -248,4 +243,9 @@ enum notifications_target_type {
   post
   activity
   rating
+}
+
+enum post_likes_status {
+  liked
+  unlike
 }
