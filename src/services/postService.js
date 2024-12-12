@@ -153,18 +153,48 @@ export const postService = {
   },
 
   // 新增 post 按讚
-  async createPostLike(data) {
-    return await prisma.post_likes.create({
-      data,
+  async createPostLike(post_id, uid) {
+    const existingLike = await prisma.post_likes.findUnique({
+      where: {
+        post_id_uid: {
+          post_id,
+          uid,
+        },
+      },
     });
+
+    if (existingLike) {
+      return prisma.post_likes.update({
+        where: {
+          like_id: existingLike.like_id,
+          data: {
+            status: "liked",
+          },
+        },
+      });
+    }
   },
 
   // 取消 post 按讚
-  async deletePostLike(like_id) {
-    DeletePostLikeSchema.parse({ like_id });
-    return await prisma.post_likes.update({
-      where: { like_id },
-      data: { status: "unlike" },
+  async deletePostLike(post_id, uid) {
+    const existingLike = await prisma.post_likes.findUnique({
+      where: {
+        post_id_uid: {
+          post_id,
+          uid,
+        },
+      },
     });
+
+    if (existingLike) {
+      return prisma.post_likes.update({
+        where: {
+          like_id: existingLike.like_id,
+          data: {
+            status: "unlike",
+          },
+        },
+      });
+    }
   },
 };

@@ -21,7 +21,7 @@ router.delete("/comment/:comment_id", PostController.removePostComment);
 // Post Like
 router.get("/likes/:post_id", PostController.fetchPostLikes);
 router.post("/like/:post_id", PostController.addPostLike);
-router.delete("/like/:like_id", PostController.removePostLike);
+router.delete("/like/:post_id", PostController.removePostLike);
 
 export default router;
 
