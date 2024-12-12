@@ -177,12 +177,9 @@ export const postService = {
   },
 
   // 取消 post 按讚
-  async deletePostLike(post_id, uid) {
+  async deletePostLike(like_id) {
     const existingLike = await prisma.post_likes.findFirst({
-      where: {
-        post_id,
-        uid,
-      },
+      where: { like_id },
     });
 
     if (existingLike) {
