@@ -198,9 +198,8 @@ const addPostLike = async (req, res, next) => {
 
 const removePostLike = async (req, res, next) => {
   try {
-    const post_id = parseInt(req.params.post_id);
-    const uid = req.body.uid;
-    const response = await postService.deletePostLike(post_id, uid);
+    const like_id = parseInt(req.params.like_id);
+    const response = await postService.deletePostLike(like_id);
 
     res.status(200).json({
       status: 200,
