@@ -9,9 +9,24 @@ import {
 } from "../validations/postSchema.js";
 
 export const postService = {
-  // 獲得所有 post
+  // 獲得所有 posts (包含留言與按讚數量)
   async getAllPosts() {
     const response = await prisma.posts.findMany({
+      // 過濾文章狀態 "posted"
+      where: {
+        post_status: "posted",
+      },
+      include: {
+        _count: {
+          select: {
+            post_comments: {
+              where: { comment_status: "active" },
+            },
+            post_likes: { where: { like_status: "liked" } },
+          },
+        },
+      },
+      // 按照創建時間排序
       orderBy: {
         created_at: "desc",
       },
@@ -19,14 +34,23 @@ export const postService = {
     if (!response || response.length === 0) {
       return null;
     }
-    return response;
+    // 將資料格式化
+    return response.map((post) => ({
+      ...post,
+      // 將留言數量與按讚數量動態加入 data
+      commentCount: post._count.post_comments,
+      likeCount: post._count.post_likes,
+    }));
   },
 
-  // 獲得單一 post
+  // 獲得單一 post (包含留言與按讚詳細資料)
   async getPost(post_id) {
     GetPostSchema.parse({ post_id });
     return await prisma.posts.findUnique({
-      where: { post_id },
+      where: {
+        post_id,
+        post_status: "posted",
+      },
       include: {
         users: {
           select: {
@@ -35,6 +59,7 @@ export const postService = {
           },
         },
         post_comments: {
+          where: { comment_status: "active" },
           include: {
             users: {
               select: {
@@ -47,17 +72,33 @@ export const postService = {
             created_at: "desc",
           },
         },
+        post_likes: {
+          where: { like_status: "liked" },
+          select: {
+            like_id: true,
+            uid: true,
+            created_at: true,
+          },
+        },
       },
     });
   },
 
-  // 根據分類獲得 posts
+  // 根據分類獲得 posts (包含留言與按讚數量)
   async getPostByCategory(post_category) {
     GetCategoryPostSchema.parse({ post_category });
     const response = await prisma.posts.findMany({
       where: {
         post_category,
         post_status: "posted",
+      },
+      include: {
+        _count: {
+          select: {
+            post_comments: { where: { comment_status: "active" } },
+            post_likes: { where: { like_status: "liked" } },
+          },
+        },
       },
       orderBy: {
         created_at: "desc",
@@ -66,7 +107,11 @@ export const postService = {
     if (response.length === 0) {
       return null;
     }
-    return response;
+    return response.map((post) => ({
+      ...post,
+      commentCount: post._count.post_comments,
+      likeCount: post._count.post_likes,
+    }));
   },
 
   // 新增 post
@@ -101,7 +146,7 @@ export const postService = {
     return await prisma.post_comments.findMany({
       where: {
         post_id,
-        status: "active",
+        comment_status: "active",
       },
       include: {
         users: {
@@ -121,7 +166,13 @@ export const postService = {
   async createPostComment(data) {
     CreatePostCommentSchema.parse(data);
     return await prisma.post_comments.create({
-      data,
+      data: {
+        post_id: data.post_id,
+        comment_content: data.comment_content,
+        uid: data.uid,
+        created_at: data.created_at,
+        comment_status: data.comment_status,
+      },
     });
   },
 
@@ -130,7 +181,7 @@ export const postService = {
     DeletePostCommentSchema.parse({ comment_id });
     return await prisma.post_comments.update({
       where: { comment_id },
-      data: { status: "deleted" },
+      data: { comment_status: "deleted" },
     });
   },
 
@@ -140,7 +191,7 @@ export const postService = {
     return await prisma.post_likes.findMany({
       where: {
         post_id,
-        status: "liked",
+        like_status: "liked",
       },
       select: {
         like_id: true,
@@ -163,14 +214,14 @@ export const postService = {
     if (existingLike) {
       return prisma.post_likes.update({
         where: { like_id: existingLike.like_id },
-        data: { status: "liked" },
+        data: { like_status: "liked" },
       });
     } else {
       return prisma.post_likes.create({
         data: {
           post_id,
           uid,
-          status: "liked",
+          like_status: "liked",
         },
       });
     }
@@ -183,13 +234,13 @@ export const postService = {
     });
 
     if (existingLike) {
-      if (existingLike.status !== "unlike") {
+      if (existingLike.like_status !== "unlike") {
         return await prisma.post_likes.update({
           where: { like_id: existingLike.like_id },
-          data: { status: "unlike" },
+          data: { like_status: "unlike" },
         });
       }
-      return existingLike; // 已經是 "unlike"，直接返回
+      return existingLike;
     } else {
       throw new Error("記錄不存在，無法取消按讚");
     }

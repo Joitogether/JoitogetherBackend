@@ -122,14 +122,14 @@ model activity_comments {
 }
 
 model post_comments {
-  comment_id      Int                  @id @default(autoincrement())
+  comment_id      Int                          @id @default(autoincrement())
   post_id         Int
-  comment_content String               @db.Text
-  uid             String               @db.VarChar(255)
-  created_at      DateTime             @default(now()) @db.DateTime(0)
-  status          post_comments_status
-  users           users                @relation(fields: [uid], references: [uid], onDelete: NoAction, onUpdate: NoAction, map: "FK_postComments_users")
-  posts           posts                @relation(fields: [post_id], references: [post_id], onDelete: NoAction, map: "FK_postComments_users-postid")
+  comment_content String                       @db.Text
+  uid             String                       @db.VarChar(255)
+  created_at      DateTime                     @default(now()) @db.DateTime(0)
+  comment_status  post_comments_comment_status
+  users           users                        @relation(fields: [uid], references: [uid], onDelete: NoAction, onUpdate: NoAction, map: "FK_postComments_users")
+  posts           posts                        @relation(fields: [post_id], references: [post_id], onDelete: NoAction, map: "FK_postComments_users-postid")
 
   @@index([post_id], map: "FK_postComments_users-postid_idx")
   @@index([uid], map: "FK_postComments_users_idx")
@@ -146,17 +146,21 @@ model posts {
   post_status   posts_post_status
   post_img      String?             @db.Text
   post_comments post_comments[]
+  post_likes    post_likes[]
   users         users               @relation(fields: [uid], references: [uid], map: "FK_posts_users-uid")
 
   @@index([uid], map: "FK_posts_users-uid_idx")
 }
 
 model post_likes {
-  like_id    Int               @id @default(autoincrement())
-  post_id    Int
-  uid        String            @db.VarChar(255)
-  created_at DateTime?         @default(now()) @db.Timestamp(0)
-  status     post_likes_status
+  like_id     Int                    @id @default(autoincrement())
+  post_id     Int
+  uid         String                 @db.VarChar(255)
+  created_at  DateTime?              @default(now()) @db.Timestamp(0)
+  like_status post_likes_like_status
+  posts       posts                  @relation(fields: [post_id], references: [post_id], onDelete: Cascade, map: "fk_post_likes_posts")
+
+  @@index([post_id], map: "fk_post_likes_posts")
 }
 
 model notifications {
@@ -226,11 +230,6 @@ enum posts_post_category {
   others
 }
 
-enum post_comments_status {
-  active
-  deleted
-}
-
 enum notifications_action {
   like
   comment
@@ -245,7 +244,12 @@ enum notifications_target_type {
   rating
 }
 
-enum post_likes_status {
+enum post_likes_like_status {
   liked
   unlike
+}
+
+enum post_comments_comment_status {
+  active
+  deleted
 }
