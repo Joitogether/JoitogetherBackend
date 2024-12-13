@@ -1,5 +1,5 @@
 import { userService } from "../services/userService.js";
-
+import { UserCreateSchema, UserUpdateSchema } from "../validations/userSchema.js";
 const fetchAllUsers = async (req, res, next) => {
   try {
     const users = await userService.getAllUsers();
@@ -51,6 +51,7 @@ const registerUser = async (req, res, next) => {
       data: result,
     });
   } catch (error) {
+    console.log(error)
     next(error);
   }
 };

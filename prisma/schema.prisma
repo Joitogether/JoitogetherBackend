@@ -51,8 +51,8 @@ model users {
   hobby                                       String?             @db.VarChar(45)
   expertise                                   String?             @db.VarChar(45)
   interested_in                               String?             @db.VarChar(255)
-  life_photo_1                                String?             @db.Text
-  life_photo_2                                String?             @db.Text
+  life_photo_1                                String?             @default("https://firebasestorage.googleapis.com/v0/b/login-demo1-9d3cb.firebasestorage.app/o/lifephoto%2F1733574359943_defaultimg.jpg?alt=media&token=c5486472-dadd-4276-8666-97a538e46e5f") @db.VarChar(2000)
+  life_photo_2                                String?             @default("https://firebasestorage.googleapis.com/v0/b/login-demo1-9d3cb.firebasestorage.app/o/lifephoto%2F1733574359943_defaultimg.jpg?alt=media&token=c5486472-dadd-4276-8666-97a538e46e5f") @db.VarChar(2000)
   activities                                  activities[]
   activity_comments                           activity_comments[]
   applications                                applications[]
@@ -122,14 +122,13 @@ model activity_comments {
 }
 
 model post_comments {
-  comment_id      Int                          @id @default(autoincrement())
+  comment_id      Int      @id @default(autoincrement())
   post_id         Int
-  comment_content String                       @db.Text
-  uid             String                       @db.VarChar(255)
-  created_at      DateTime                     @default(now()) @db.DateTime(0)
-  comment_status  post_comments_comment_status
-  users           users                        @relation(fields: [uid], references: [uid], onDelete: NoAction, onUpdate: NoAction, map: "FK_postComments_users")
-  posts           posts                        @relation(fields: [post_id], references: [post_id], onDelete: NoAction, map: "FK_postComments_users-postid")
+  comment_content String   @db.Text
+  uid             String   @db.VarChar(255)
+  created_at      DateTime @default(now()) @db.DateTime(0)
+  users           users    @relation(fields: [uid], references: [uid], onDelete: NoAction, onUpdate: NoAction, map: "FK_postComments_users")
+  posts           posts    @relation(fields: [post_id], references: [post_id], onDelete: NoAction, map: "FK_postComments_users-postid")
 
   @@index([post_id], map: "FK_postComments_users-postid_idx")
   @@index([uid], map: "FK_postComments_users_idx")
@@ -146,21 +145,17 @@ model posts {
   post_status   posts_post_status
   post_img      String?             @db.Text
   post_comments post_comments[]
-  post_likes    post_likes[]
   users         users               @relation(fields: [uid], references: [uid], map: "FK_posts_users-uid")
 
   @@index([uid], map: "FK_posts_users-uid_idx")
 }
 
 model post_likes {
-  like_id     Int                    @id @default(autoincrement())
-  post_id     Int
-  uid         String                 @db.VarChar(255)
-  created_at  DateTime?              @default(now()) @db.Timestamp(0)
-  like_status post_likes_like_status
-  posts       posts                  @relation(fields: [post_id], references: [post_id], onDelete: Cascade, map: "fk_post_likes_posts")
-
-  @@index([post_id], map: "fk_post_likes_posts")
+  like_id    Int       @id @default(autoincrement())
+  post_id    Int
+  comment_id Int
+  uid        String    @db.VarChar(255)
+  created_at DateTime? @default(now()) @db.DateTime(0)
 }
 
 model notifications {
@@ -242,14 +237,4 @@ enum notifications_target_type {
   post
   activity
   rating
-}
-
-enum post_likes_like_status {
-  liked
-  unlike
-}
-
-enum post_comments_comment_status {
-  active
-  deleted
 }

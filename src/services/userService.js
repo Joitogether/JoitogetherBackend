@@ -22,6 +22,11 @@ export const userService = {
     });
   },
 
+  async getUserByEmail(email){
+    return await prisma.users.findUnique({
+      where: {email}
+    })
+  },
   // 使用者註冊
   async userRegister(userData) {
     return await prisma.users.create({
