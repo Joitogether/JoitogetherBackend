@@ -17,17 +17,12 @@ export const postService = {
         post_status: "posted",
       },
       include: {
-        // 過濾留言狀態 "active"
-        post_comments: {
-          where: { comment_status: "active" },
-        },
-        // 過濾按讚狀態 "liked"
-        post_likes: { where: { like_status: "liked" } },
-        // 計算留言數量與按讚數量
         _count: {
           select: {
-            post_comments: true,
-            post_likes: true,
+            post_comments: {
+              where: { comment_status: "active" },
+            },
+            post_likes: { where: { like_status: "liked" } },
           },
         },
       },
@@ -98,12 +93,10 @@ export const postService = {
         post_status: "posted",
       },
       include: {
-        post_comments: { where: { comment_status: "active" } },
-        post_likes: { where: { like_status: "liked" } },
         _count: {
           select: {
-            post_comments: true,
-            post_likes: true,
+            post_comments: { where: { comment_status: "active" } },
+            post_likes: { where: { like_status: "liked" } },
           },
         },
       },
@@ -153,7 +146,7 @@ export const postService = {
     return await prisma.post_comments.findMany({
       where: {
         post_id,
-        status: "active",
+        comment_status: "active",
       },
       include: {
         users: {
@@ -173,7 +166,13 @@ export const postService = {
   async createPostComment(data) {
     CreatePostCommentSchema.parse(data);
     return await prisma.post_comments.create({
-      data,
+      data: {
+        post_id: data.post_id,
+        comment_content: data.comment_content,
+        uid: data.uid,
+        created_at: data.created_at,
+        comment_status: data.comment_status,
+      },
     });
   },
 
@@ -182,7 +181,7 @@ export const postService = {
     DeletePostCommentSchema.parse({ comment_id });
     return await prisma.post_comments.update({
       where: { comment_id },
-      data: { status: "deleted" },
+      data: { comment_status: "deleted" },
     });
   },
 
@@ -192,7 +191,7 @@ export const postService = {
     return await prisma.post_likes.findMany({
       where: {
         post_id,
-        status: "liked",
+        like_status: "liked",
       },
       select: {
         like_id: true,
@@ -215,14 +214,14 @@ export const postService = {
     if (existingLike) {
       return prisma.post_likes.update({
         where: { like_id: existingLike.like_id },
-        data: { status: "liked" },
+        data: { like_status: "liked" },
       });
     } else {
       return prisma.post_likes.create({
         data: {
           post_id,
           uid,
-          status: "liked",
+          like_status: "liked",
         },
       });
     }
@@ -235,10 +234,10 @@ export const postService = {
     });
 
     if (existingLike) {
-      if (existingLike.status !== "unlike") {
+      if (existingLike.like_status !== "unlike") {
         return await prisma.post_likes.update({
           where: { like_id: existingLike.like_id },
-          data: { status: "unlike" },
+          data: { like_status: "unlike" },
         });
       }
       return existingLike;
