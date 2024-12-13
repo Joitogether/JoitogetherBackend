@@ -1,67 +1,77 @@
-import { prisma } from "../config/db.js"
+import { prisma } from "../config/db.js";
 
 const getCartByUserId = async (userId) => {
-  // 獲取該使用者的購物車內容
-  const cartItems = await prisma.cartItem.findMany({
-      where: { userId },
-      include: {
-          activity: true, // 假設有關聯的活動資料
-      },
-  });
+    try {
+        const cartItems = await prisma.carts_comments.findMany({
+            where: { cart: { user_id: userId } },
+            include: { activity: true },
+        });
 
-  // 計算已報名的活動數量
-  const totalActivities = cartItems.length;
+        const totalActivities = cartItems.length;
 
-  return {
-      cartItems,
-      totalActivities,
-  };
+        return { cartItems, totalActivities };
+    } catch (error) {
+        console.error("無法取得購物車:", error);
+        throw new Error(`無法獲取購物車內容: ${error.message}`);
+    }
 };
 
-const addToCart = async (userId, activityId, quantity = 1) => {
-  // 檢查購物車中是否已有該活動
-  const existingItem = await prisma.cartItem.findFirst({
-      where: { userId, activityId },
-  });
+const addToCart = async (userId, activityId) => {
+    try {
+        if (!userId || !activityId) throw new Error("缺少必要的參數");
 
-  if (existingItem) {
-      // 如果活動已存在，不做任何處理
-      return { message: '活動已存在於購物車中', status: 200 };
-  } else {
-      // 如果不存在，新增至購物車
-      const newItem = await prisma.cartItem.create({
-          data: {
-              userId,
-              activityId,
-              quantity, // 預設數量為 1
-          },
-      });
-      return newItem;
-  }
-};
+        // 檢查購物車是否存在
+        let cart = await prisma.carts.findFirst({
+            where: { user_id: userId },
+        });
 
-const updateCartItem = async (userId, activityId, quantity) => {
-    // 更新購物車中特定活動的數量
-    const updatedItem = await prisma.cartItem.updateMany({
-        where: { userId, activityId },
-        data: { quantity },
-    });
+        // 如果購物車不存在，創建購物車
+        if (!cart) {
+            cart = await prisma.carts.create({
+                data: {
+                    user_id: userId,
+                    created_at: new Date(),
+                },
+            });
+        }
 
-    return updatedItem;
+        // 檢查購物車中是否已有該活動
+        const existingItem = await prisma.carts_comments.findFirst({
+            where: { cart_id: cart.id, activity_id: activityId },
+        });
+        if (existingItem) {
+            return { message: "活動已存在於購物車中", status: 200 };
+        }
+
+        // 新增活動到購物車
+        const newItem = await prisma.carts_comments.create({
+            data: { cart_id: cart.id, activity_id: activityId },
+        });
+
+        return newItem;
+    } catch (error) {
+        console.error("無法新增至購物車:", error);
+        throw new Error(`無法新增至購物車: ${error.message}`);
+    }
 };
 
 const removeFromCart = async (userId, activityId) => {
-    // 刪除購物車中的特定活動
-    const deletedItem = await prisma.cartItem.deleteMany({
-        where: { userId, activityId },
-    });
+    try {
+        if (!userId || !activityId) throw new Error("缺少必要的參數");
 
-    return deletedItem;
+        const deletedItem = await prisma.carts_comments.deleteMany({
+            where: { cart: { user_id: userId }, activity_id: activityId },
+        });
+
+        return deletedItem;
+    } catch (error) {
+        console.error("無法從購物車中刪除:", error);
+        throw new Error(`無法移除購物車內容: ${error.message}`);
+    }
 };
 
 export const cartService = {
     getCartByUserId,
     addToCart,
-    updateCartItem,
     removeFromCart,
 };
