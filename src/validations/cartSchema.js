@@ -8,7 +8,8 @@ const AddToCartSchema = z.object({
 
 // 驗證移除活動的資料
 const RemoveFromCartSchema = z.object({
-  activityId: z.number().int().positive(), // 活動 ID 必須是正整數
+  userId: z.string().max(255),
+  activityId: z.number().int(), 
 });
 
 // 用於驗證 URL 參數中的 userId 是否有效

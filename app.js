@@ -21,7 +21,7 @@ app.use("/users", userRouter);
 app.use("/applications", applicationRouter);
 app.use("/posts", postRouter);
 app.use("/ratings", ratingRouter);
-app.use("/cart",cartRouter)
+app.use("/carts",cartRouter)
 
 // error
 app.use(errorMiddleware);
