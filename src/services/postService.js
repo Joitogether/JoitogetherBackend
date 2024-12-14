@@ -93,6 +93,12 @@ export const postService = {
         post_status: "posted",
       },
       include: {
+        users: {
+          select: {
+            display_name: true,
+            photo_url: true,
+          },
+        },
         _count: {
           select: {
             post_comments: { where: { comment_status: "active" } },
