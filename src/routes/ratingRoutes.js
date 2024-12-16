@@ -5,5 +5,9 @@ const router = express.Router();
 router.get("/:host_id", RatingController.fetchHostRatings);
 router.get("/hostDetails/:host_id", RatingController.fetchHostDetails);
 router.get("/userDetails/:user_id", RatingController.fetchUserDetails);
+router.get("/activity/:activity_id", RatingController.fetchActivityAndHostRating);
+
+
+router.post('/', RatingController.createRating)
 
 export default router;
