@@ -64,6 +64,14 @@ export const ratingService = {
   async getRatingAndActivityByActivityId(id) {
     const activity = await prisma.activities.findUnique({
       where: { id },
+      include: {
+        users: {
+          select: {
+            display_name: true,
+            photo_url: true
+          }
+        }
+      }
     })
 
     if(!activity) {
@@ -86,6 +94,14 @@ export const ratingService = {
     const latestHostRating = await prisma.ratings.findFirst({
       where: {
         host_id: activity.host_id
+      },
+      include: {
+        users_ratings_user_idTousers: {
+          select: {
+            display_name: true,
+            photo_url: true
+          }
+        }
       },
       orderBy: {
         created_at: 'desc'

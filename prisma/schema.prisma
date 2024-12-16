@@ -28,6 +28,7 @@ model activities {
   users             users               @relation(fields: [host_id], references: [uid], onUpdate: Restrict, map: "12")
   activity_comments activity_comments[]
   applications      applications[]
+  ratings           ratings[]
 
   @@index([host_id], map: "host_idanduid_idx")
 }
@@ -91,20 +92,23 @@ model followers {
 }
 
 model ratings {
-  rating_id                    Int      @id @unique(map: "rating_id_UNIQUE") @default(autoincrement())
-  user_id                      String   @db.VarChar(255)
-  host_id                      String   @db.VarChar(255)
+  rating_id                    Int        @id @unique(map: "rating_id_UNIQUE") @default(autoincrement())
+  user_id                      String     @db.VarChar(255)
+  host_id                      String     @db.VarChar(255)
   rating_heart                 Int
-  user_comment                 String   @db.Text
+  user_comment                 String     @db.Text
   rating_kindness              Int
   rating_ability               Int
   rating_credit                Int
-  created_at                   DateTime @default(now()) @db.DateTime(0)
-  users_ratings_host_idTousers users    @relation("ratings_host_idTousers", fields: [host_id], references: [uid], onDelete: NoAction, onUpdate: NoAction, map: "bind host id")
-  users_ratings_user_idTousers users    @relation("ratings_user_idTousers", fields: [user_id], references: [uid], onDelete: Cascade, map: "bind user id")
+  created_at                   DateTime   @default(now()) @db.DateTime(0)
+  activity_id                  Int
+  activities                   activities @relation(fields: [activity_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "bind activity id")
+  users_ratings_host_idTousers users      @relation("ratings_host_idTousers", fields: [host_id], references: [uid], onDelete: NoAction, onUpdate: NoAction, map: "bind host id")
+  users_ratings_user_idTousers users      @relation("ratings_user_idTousers", fields: [user_id], references: [uid], onDelete: Cascade, map: "bind user id")
 
   @@index([host_id], map: "bind host id_idx")
   @@index([user_id], map: "bind id_idx")
+  @@index([activity_id], map: "bind activity id_idx")
 }
 
 model activity_comments {
