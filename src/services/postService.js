@@ -10,13 +10,29 @@ import {
 
 export const postService = {
   // 獲得所有 posts (包含留言與按讚數量)
-  async getAllPosts() {
+  async getAllPosts(page = 1, pageSize = 15) {
+    // console.log(page, pageSize);
+    // 分頁起始點
+    const skip = (page - 1) * pageSize;
+    // 分頁筆數
+    const take = pageSize;
+    // 總筆數
+    const totalCount = await prisma.posts.count({
+      where: { post_status: "posted" },
+    });
+    console.log(page, pageSize, skip, take, totalCount);
     const response = await prisma.posts.findMany({
       // 過濾文章狀態 "posted"
       where: {
         post_status: "posted",
       },
       include: {
+        users: {
+          select: {
+            display_name: true,
+            photo_url: true,
+          },
+        },
         _count: {
           select: {
             post_comments: {
@@ -30,17 +46,30 @@ export const postService = {
       orderBy: {
         created_at: "desc",
       },
+      skip,
+      take,
     });
+
     if (!response || response.length === 0) {
-      return null;
+      return { data: [], totalCount, totalPage: 0, currentPage: page };
     }
+
     // 將資料格式化
-    return response.map((post) => ({
-      ...post,
-      // 將留言數量與按讚數量動態加入 data
-      commentCount: post._count.post_comments,
-      likeCount: post._count.post_likes,
-    }));
+    const formattedResponse = {
+      data: response.map((post) => ({
+        ...post,
+        // 將留言數量與按讚數量動態加入 data
+        commentCount: post._count.post_comments,
+        likeCount: post._count.post_likes,
+      })),
+
+      // 分頁資料
+      totalCount,
+      totalPage: Math.ceil(totalCount / pageSize),
+      currentPage: page,
+    };
+
+    return formattedResponse;
   },
 
   // 獲得單一 post (包含留言與按讚詳細資料)
@@ -113,11 +142,13 @@ export const postService = {
     if (response.length === 0) {
       return null;
     }
-    return response.map((post) => ({
+    const formattedResponse = response.map((post) => ({
       ...post,
       commentCount: post._count.post_comments,
       likeCount: post._count.post_likes,
     }));
+
+    return formattedResponse;
   },
 
   // 新增 post

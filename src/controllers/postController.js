@@ -1,8 +1,11 @@
 import { postService } from "../services/postService.js";
 
-const fetchAllPosts = async (_req, res, next) => {
+const fetchAllPosts = async (req, res, next) => {
   try {
-    const response = await postService.getAllPosts();
+    const page = parseInt(req.query.page, 10) || 1;
+    const pageSize = parseInt(req.query.pageSize, 10) || 15;
+
+    const response = await postService.getAllPosts(page, pageSize);
     if (!response) {
       return res.status(404).json({
         status: 404,
