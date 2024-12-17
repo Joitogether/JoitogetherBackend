@@ -84,6 +84,10 @@ export const postService = {
       take: 15,
     });
 
+    if (!response || response.length === 0) {
+      return null;
+    }
+
     const formattedResponse = {
       data: response.map((post) => ({
         ...post,

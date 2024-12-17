@@ -24,7 +24,7 @@ const fetchAllPosts = async (req, res, next) => {
 
 const fetchLatestPosts = async (_req, res, next) => {
   try {
-    const response = await postService.getLeastPosts();
+    const response = await postService.getLatestPosts();
     if (!response) {
       return res.status(404).json({
         status: 404,
