@@ -22,6 +22,44 @@ const fetchAllPosts = async (req, res, next) => {
   }
 };
 
+const fetchLeastPosts = async (_req, res, next) => {
+  try {
+    const response = await postService.getLeastPosts();
+    if (!response) {
+      return res.status(404).json({
+        status: 404,
+        message: "查無資料",
+      });
+    }
+    res.status(200).json({
+      status: 200,
+      message: "資料獲取成功",
+      data: response,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const fetchPopularPosts = async (_req, res, next) => {
+  try {
+    const response = await postService.getPopularPosts();
+    if (!response) {
+      return res.status(404).json({
+        status: 404,
+        message: "查無資料",
+      });
+    }
+    res.status(200).json({
+      status: 200,
+      message: "資料獲取成功",
+      data: response,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const fetchPostDetails = async (req, res, next) => {
   try {
     const post_id = parseInt(req.params.post_id);
@@ -218,6 +256,8 @@ const removePostLike = async (req, res, next) => {
 
 export {
   fetchAllPosts,
+  fetchLeastPosts,
+  fetchPopularPosts,
   fetchPostDetails,
   fetchPostsByCategory,
   addPost,
