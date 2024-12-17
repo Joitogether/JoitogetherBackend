@@ -5,7 +5,7 @@ const router = express.Router();
 
 // Post List
 router.get("/", PostController.fetchAllPosts);
-router.get("/least", PostController.fetchLeastPosts);
+router.get("/latest", PostController.fetchLatestPosts);
 router.get("/popular", PostController.fetchPopularPosts);
 router.get("/:post_id", PostController.fetchPostDetails);
 router.get("/category/:category", PostController.fetchPostsByCategory);

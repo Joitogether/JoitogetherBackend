@@ -22,7 +22,7 @@ const fetchAllPosts = async (req, res, next) => {
   }
 };
 
-const fetchLeastPosts = async (_req, res, next) => {
+const fetchLatestPosts = async (_req, res, next) => {
   try {
     const response = await postService.getLeastPosts();
     if (!response) {
@@ -256,7 +256,7 @@ const removePostLike = async (req, res, next) => {
 
 export {
   fetchAllPosts,
-  fetchLeastPosts,
+  fetchLatestPosts,
   fetchPopularPosts,
   fetchPostDetails,
   fetchPostsByCategory,
