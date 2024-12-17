@@ -10,17 +10,7 @@ import {
 
 export const postService = {
   // 獲得所有 posts (包含留言與按讚數量)
-  async getAllPosts(page = 1, pageSize = 15) {
-    // console.log(page, pageSize);
-    // 分頁起始點
-    const skip = (page - 1) * pageSize;
-    // 分頁筆數
-    const take = pageSize;
-    // 總筆數
-    const totalCount = await prisma.posts.count({
-      where: { post_status: "posted" },
-    });
-    console.log(page, pageSize, skip, take, totalCount);
+  async getAllPosts() {
     const response = await prisma.posts.findMany({
       // 過濾文章狀態 "posted"
       where: {
@@ -46,12 +36,10 @@ export const postService = {
       orderBy: {
         created_at: "desc",
       },
-      skip,
-      take,
     });
 
     if (!response || response.length === 0) {
-      return { data: [], totalCount, totalPage: 0, currentPage: page };
+      return null;
     }
 
     // 將資料格式化
@@ -62,14 +50,94 @@ export const postService = {
         commentCount: post._count.post_comments,
         likeCount: post._count.post_likes,
       })),
-
-      // 分頁資料
-      totalCount,
-      totalPage: Math.ceil(totalCount / pageSize),
-      currentPage: page,
     };
 
     return formattedResponse;
+  },
+
+  // 獲得最新貼文（十五篇）
+  async getLeastPosts() {
+    const response = await prisma.posts.findMany({
+      where: {
+        post_status: "posted",
+      },
+      include: {
+        users: {
+          select: {
+            display_name: true,
+            photo_url: true,
+          },
+        },
+        _count: {
+          select: {
+            post_comments: {
+              where: { comment_status: "active" },
+            },
+            post_likes: { where: { like_status: "liked" } },
+          },
+        },
+      },
+      // 按照創建時間排序
+      orderBy: {
+        created_at: "desc",
+      },
+      take: 15,
+    });
+
+    const formattedResponse = {
+      data: response.map((post) => ({
+        ...post,
+        commentCount: post._count.post_comments,
+        likeCount: post._count.post_likes,
+      })),
+    };
+
+    return formattedResponse;
+  },
+
+  // 獲取十五天內的熱門文章（依讚數排序）
+  async getPopularPosts() {
+    // 設定天數
+    const fifteenDaysAgo = new Date();
+    fifteenDaysAgo.setDate(fifteenDaysAgo.getDate() - 15);
+
+    const response = await prisma.posts.findMany({
+      where: {
+        post_status: "posted",
+        created_at: {
+          gte: fifteenDaysAgo,
+        },
+      },
+      include: {
+        users: {
+          select: {
+            display_name: true,
+            photo_url: true,
+          },
+        },
+        _count: {
+          select: {
+            post_comments: {
+              where: { comment_status: "active" },
+            },
+            post_likes: { where: { like_status: "liked" } },
+          },
+        },
+      },
+      // 按照創建時間排序
+      orderBy: {
+        created_at: "desc",
+      },
+    });
+    const formattedPosts = {
+      data: response.map((post) => ({
+        ...post,
+        commentCount: post._count.post_comments,
+        likeCount: post._count.post_likes,
+      })),
+    };
+
+    return formattedPosts;
   },
 
   // 獲得單一 post (包含留言與按讚詳細資料)
