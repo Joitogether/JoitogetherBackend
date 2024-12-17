@@ -7,7 +7,7 @@ import ratingRouter from "./src/routes/ratingRoutes.js";
 import cartRouter from "./src/routes/cartRoutes.js";
 import cors from "cors";
 import { errorMiddleware } from "./src/middlewares/errorMiddleware.js";
-
+import paymentRouter from "./src/routes/paymentRoutes.js"
 const app = express();
 
 // middlewares
@@ -22,6 +22,7 @@ app.use("/applications", applicationRouter);
 app.use("/posts", postRouter);
 app.use("/ratings", ratingRouter);
 app.use("/carts", cartRouter);
+app.use("/payment", paymentRouter)
 
 // error
 app.use(errorMiddleware);
