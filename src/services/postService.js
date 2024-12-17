@@ -56,7 +56,7 @@ export const postService = {
   },
 
   // 獲得最新貼文（十五篇）
-  async getLeastPosts() {
+  async getLatestPosts() {
     const response = await prisma.posts.findMany({
       where: {
         post_status: "posted",
