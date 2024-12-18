@@ -4,6 +4,7 @@ import userRouter from "./src/routes/userRoutes.js";
 import applicationRouter from "./src/routes/applicationRoutes.js";
 import postRouter from "./src/routes/postRoutes.js";
 import ratingRouter from "./src/routes/ratingRoutes.js";
+import cartRouter from "./src/routes/cartRoutes.js";
 import cors from "cors";
 import { errorMiddleware } from "./src/middlewares/errorMiddleware.js";
 
@@ -20,6 +21,7 @@ app.use("/users", userRouter);
 app.use("/applications", applicationRouter);
 app.use("/posts", postRouter);
 app.use("/ratings", ratingRouter);
+app.use("/carts", cartRouter);
 
 // error
 app.use(errorMiddleware);
