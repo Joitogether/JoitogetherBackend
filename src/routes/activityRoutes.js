@@ -7,6 +7,7 @@ router.get("/", ActivityController.fetchAllActiveActivities);
 router.get("/:id", ActivityController.fetchActivityDetails);
 router.get("/category/:category", ActivityController.fetchActivitiesByCategory);
 
+
 // Activity Create/Delete
 router.post("/", ActivityController.addNewActivity);
 router.put("/cancel/:id", ActivityController.cancelActivityRequest);

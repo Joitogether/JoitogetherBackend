@@ -17,6 +17,7 @@ export const ActivityCreateSchema = z.object({
   price: z.number().min(0),
   require_approval: z.number().int(), 
   status: z.enum(['registrationOpen', 'onGoing', 'completed', 'cancelled']),
+  require_payment: z.number().int(),
 });
 
 export const ActivityCommentSchema = z.object({

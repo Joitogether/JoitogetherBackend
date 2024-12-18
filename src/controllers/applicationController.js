@@ -6,36 +6,21 @@ import {
 
 const createActivityRegistration = async (req, res, next) => {
   try {
-    // 取得資料
-    const { participant_id, comment } = req.body;
+    const { participant_id, comment, register_validated } = req.body;
     const activity_id = parseInt(req.params.activity_id);
-    // 資料驗證
-    ApplicationSchema.parse({ activity_id, participant_id, comment });
+    ApplicationSchema.parse({ activity_id, participant_id, comment, register_validated });
 
-    // 確認是否已有這筆資料，有的話就修改
-    const hasRegistered = await activityService.hasRegistered(
-      participant_id,
-      activity_id
-    );
-    if (hasRegistered) {
-      const response = await activityService.setApplicationStatus(
-        participant_id,
-        activity_id,
-        "registered",
-        comment
-      );
-      return res.status(201).json({
-        message: "資料創建成功",
-        status: 201,
-        data: response,
-      });
+    // 判斷當前活動是否有上限的限制
+    const { require_approval, max_participants, validated_registrations } = await activityService.getActivityLimit(activity_id)
+    if(require_approval == 0 && validated_registrations >= max_participants){
+      res.status(400).json({
+        status: 400,
+        message: '報名上限已達'
+      })
     }
-    // 沒有的話新增
-    const response = await activityService.registerActivity(
-      activity_id,
-      participant_id,
-      comment
-    );
+
+    const response = await activityService.upsertApplication(activity_id, participant_id, comment, register_validated)
+
     res.status(201).json({
       message: "資料創建成功",
       status: 201,

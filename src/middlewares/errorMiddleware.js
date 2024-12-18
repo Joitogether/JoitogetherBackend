@@ -1,5 +1,6 @@
 import { z } from 'zod'
 export const errorMiddleware = (err, req, res, next) => {
+  console.log(err)
   if (err instanceof z.ZodError) {
     return res.status(400).json({
       message: '資料驗證發生錯誤',

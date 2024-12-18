@@ -25,10 +25,12 @@ model activities {
   approval_deadline DateTime?           @db.DateTime(0)
   event_time        DateTime            @db.DateTime(0)
   updated_at        DateTime            @default(now()) @db.DateTime(0)
+  require_payment   Int?                @default(0) @db.TinyInt
   users             users               @relation(fields: [host_id], references: [uid], onUpdate: Restrict, map: "12")
   activity_comments activity_comments[]
   applications      applications[]
   carts_comments    carts_comments[]
+  ratings           ratings[]
 
   @@index([host_id], map: "host_idanduid_idx")
 }
@@ -40,7 +42,7 @@ model users {
   full_name                                   String              @db.VarChar(255)
   display_name                                String              @db.VarChar(255)
   phone_number                                String              @db.VarChar(10)
-  photo_url                                   String?             @db.Text
+  photo_url                                   String?             @default("https://firebasestorage.googleapis.com/v0/b/login-demo1-9d3cb.firebasestorage.app/o/lifephoto%2F1733574359943_defaultimg.jpg?alt=media&token=c5486472-dadd-4276-8666-97a538e46e5f") @db.VarChar(2000)
   created_at                                  DateTime            @default(now()) @db.DateTime(0)
   city                                        String?             @db.VarChar(5)
   age                                         Int?
@@ -69,13 +71,16 @@ model users {
 }
 
 model applications {
-  application_id Int                 @unique(map: "id_UNIQUE") @default(autoincrement()) @db.UnsignedInt
-  activity_id    Int
-  participant_id String              @db.VarChar(255)
-  status         applications_status @default(registered)
-  comment        String?             @db.VarChar(50)
-  activities     activities          @relation(fields: [activity_id], references: [id], onDelete: Cascade, map: "applications_ibfk_1")
-  users          users               @relation(fields: [participant_id], references: [uid], onDelete: Cascade, map: "applications_ibfk_2")
+  application_id     Int                 @unique(map: "id_UNIQUE") @default(autoincrement()) @db.UnsignedInt
+  activity_id        Int
+  participant_id     String              @db.VarChar(255)
+  status             applications_status @default(registered)
+  comment            String?             @db.VarChar(50)
+  register_validated Int                 @default(0) @db.TinyInt
+  created_at         DateTime            @default(now()) @db.DateTime(0)
+  updated_at         DateTime?           @db.DateTime(0)
+  activities         activities          @relation(fields: [activity_id], references: [id], onDelete: Cascade, map: "applications_ibfk_1")
+  users              users               @relation(fields: [participant_id], references: [uid], onDelete: Cascade, map: "applications_ibfk_2")
 
   @@id([activity_id, participant_id])
   @@index([participant_id], map: "participants_ibfk_2")
@@ -93,9 +98,9 @@ model followers {
 }
 
 model ratings {
-  rating_id                    Int      @id @unique(map: "rating_id_UNIQUE") @default(autoincrement())
-  user_id                      String   @db.VarChar(255)
-  host_id                      String   @db.VarChar(255)
+  rating_id                    Int        @unique(map: "rating_id_UNIQUE") @default(autoincrement())
+  user_id                      String     @db.VarChar(255)
+  host_id                      String     @db.VarChar(255)
   rating_heart                 Int
   user_comment                 String   @db.Text
   rating_kindness              Int
@@ -105,6 +110,7 @@ model ratings {
   users_ratings_host_idTousers users    @relation("ratings_host_idTousers", fields: [host_id], references: [uid], onDelete: NoAction, onUpdate: NoAction, map: "bind host id")
   users_ratings_user_idTousers users    @relation("ratings_user_idTousers", fields: [user_id], references: [uid], onDelete: Cascade, map: "bind user id")
 
+  @@id([activity_id, user_id, host_id])
   @@index([host_id], map: "bind host id_idx")
   @@index([user_id], map: "bind id_idx")
 }
@@ -184,12 +190,12 @@ model notifications {
 }
 
 model carts {
-  id            Int              @id @default(autoincrement())
-  user_id       String           @db.VarChar(50)
-  created_at    DateTime         @default(now())
-  updated_at    DateTime         @default(now()) @updatedAt
-  users         users            @relation(fields: [user_id], references: [uid])
-  cart_comments carts_comments[]
+  id             Int              @id @default(autoincrement())
+  user_id        String?          @db.VarChar(255)
+  created_at     DateTime         @default(now())
+  updated_at     DateTime         @default(now())
+  users          users?           @relation(fields: [user_id], references: [uid], onDelete: Cascade, onUpdate: NoAction)
+  carts_comments carts_comments[]
 
   @@index([user_id], map: "carts_user_id_fkey")
 }
@@ -203,8 +209,8 @@ model carts_comments {
   carts       carts      @relation(fields: [cart_id], references: [id])
 
   @@unique([cart_id, activity_id])
-  @@index([cart_id, activity_id])
   @@index([activity_id], map: "carts_comments_activity_id_fkey")
+  @@index([cart_id, activity_id])
 }
 
 enum activities_category {
