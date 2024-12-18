@@ -13,7 +13,7 @@ const createActivityRegistration = async (req, res, next) => {
     // 判斷當前活動是否有上限的限制
     const { require_approval, max_participants, validated_registrations } = await activityService.getActivityLimit(activity_id)
     if(require_approval == 0 && validated_registrations >= max_participants){
-      res.status(400).json({
+      return res.status(400).json({
         status: 400,
         message: '報名上限已達'
       })
