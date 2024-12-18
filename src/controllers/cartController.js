@@ -10,7 +10,7 @@ const fetchCartByUserId = async (req, res, next) => {
         UserIdParamSchema.parse(req.params); // 驗證 userId
         const userId = req.params.userId;
         const cart = await cartService.getCartByUserId(userId);
-
+        
         res.status(200).json({
             status: 200,
             message: '購物車資料獲取成功',

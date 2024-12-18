@@ -1,19 +1,25 @@
 import { prisma } from "../config/db.js";
 
 const getCartByUserId = async (userId) => {
-    try {
-        const cartItems = await prisma.carts_comments.findMany({
+    const cartItems = await prisma.carts_comments.findMany({
             where: { carts: { user_id: userId } },
-            include: { activities: true },
+            include: {
+                activities: {
+                    select:{
+                    name: true, 
+                    location: true, 
+                    img_url: true, 
+                    price: true, 
+                    require_approval: true,
+                    pay_type: true, 
+                    event_time:true
+                    },
+                } 
+            },
         });
-
-        const totalActivities = cartItems.length;
-
-        return { cartItems, totalActivities };
-    } catch (error) {
-        console.error("無法取得購物車:", error);
-        throw new Error(`無法獲取購物車內容: ${error.message}`);
-    }
+        
+        const totalActivities = cartItems.length;            
+        return {cartItems ,totalActivities}
 };
 
 const addToCart = async (userId, activityId) => {
