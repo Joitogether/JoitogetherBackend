@@ -1,11 +1,8 @@
 import { postService } from "../services/postService.js";
 
-const fetchAllPosts = async (req, res, next) => {
+const fetchAllPosts = async (_req, res, next) => {
   try {
-    const page = parseInt(req.query.page, 10) || 1;
-    const pageSize = parseInt(req.query.pageSize, 10) || 15;
-
-    const response = await postService.getAllPosts(page, pageSize);
+    const response = await postService.getAllPosts();
     if (!response) {
       return res.status(404).json({
         status: 404,
@@ -13,8 +10,8 @@ const fetchAllPosts = async (req, res, next) => {
       });
     }
     return res.status(200).json({
-      message: "資料獲取成功",
       status: 200,
+      message: "資料獲取成功",
       data: response,
     });
   } catch (error) {

@@ -128,17 +128,16 @@ export const postService = {
           },
         },
       },
-      // 按照創建時間排序
-      orderBy: {
-        created_at: "desc",
-      },
     });
     const formattedPosts = {
-      data: response.map((post) => ({
-        ...post,
-        commentCount: post._count.post_comments,
-        likeCount: post._count.post_likes,
-      })),
+      data: response
+        .map((post) => ({
+          ...post,
+          commentCount: post._count.post_comments,
+          likeCount: post._count.post_likes,
+        }))
+        .sort((a, b) => b.likeCount - a.likeCount)
+        .slice(0, 15),
     };
 
     return formattedPosts;
