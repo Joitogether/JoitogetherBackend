@@ -22,12 +22,11 @@ const fetchActivityDetails = async (req, res, next) => {
   try {
     const activity_id = parseInt(req.params.id);
 
-    const [result, participants, recent_activities] = await Promise.all([
+    const [activityDetail, recent_activities] = await Promise.all([
       activityService.getActivityById(activity_id),
-      activityService.getParticipantsByActivityId(activity_id),
       activityService.getRecentActivities()
     ]);
-    if (!result || result.length === 0) {
+    if (!activityDetail || activityDetail.length === 0) {
       return res.status(404).json({
         status: 404,
         message: "查無此資料",
@@ -36,7 +35,7 @@ const fetchActivityDetails = async (req, res, next) => {
     res.status(200).json({
       status: 200,
       message: "資料獲取成功",
-      data: { ...result, participants, recent_activities  },
+      data: { ...activityDetail, recent_activities  },
     });
   } catch (error) {
     next(error);

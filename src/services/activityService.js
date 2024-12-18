@@ -57,6 +57,7 @@ export const activityService = {
       where: { id },
       include: {
         users: true,
+        applications: true,
         activity_comments: {
           where: { status: "posted" },
           orderBy: { created_at: "desc" },
