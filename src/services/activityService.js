@@ -126,6 +126,26 @@ export const activityService = {
     });
   },
 
+    // 活動報名
+  async upsertApplication(activity_id, participant_id, comment, register_validated){
+    return await prisma.applications.upsert({
+      where: {activity_id_participant_id: { activity_id, participant_id}},
+      update: {
+        status: 'registered',
+        comment,
+        register_validated: 1,
+        updated_at: new Date()
+      },
+      create: {
+        activity_id,
+        participant_id,
+        comment,
+        register_validated
+      }
+    })
+  }
+
+
   // 取消活動
   async cancelActivity(id) {
     return await prisma.activities.update({
@@ -179,6 +199,7 @@ export const activityService = {
       where: { application_id },
       data: {
         status,
+        updated_at: new Date()
       },
     });
   },
@@ -244,23 +265,6 @@ export const activityService = {
     }
   },
 
-  // 活動報名
-  async upsertApplication(activity_id, participant_id, comment, register_validated){
-    return await prisma.applications.upsert({
-      where: {activity_id_participant_id: { activity_id, participant_id}},
-      update: {
-        status: 'registered',
-        comment,
-        register_validated: 1,
-        updated_at: new Date()
-      },
-      create: {
-        activity_id,
-        participant_id,
-        comment,
-        register_validated
-      }
-    })
-  }
+
 };
 
