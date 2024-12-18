@@ -126,7 +126,7 @@ export const activityService = {
     });
   },
 
-    // 活動報名
+    // 免審核的活動報名
   async upsertApplication(activity_id, participant_id, comment, register_validated){
     return await prisma.applications.upsert({
       where: {activity_id_participant_id: { activity_id, participant_id}},
@@ -138,6 +138,7 @@ export const activityService = {
       },
       create: {
         activity_id,
+        status: 'registered',
         participant_id,
         comment,
         register_validated
