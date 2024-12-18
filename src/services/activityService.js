@@ -143,14 +143,17 @@ export const activityService = {
         register_validated
       }
     })
-  }
+  },
 
 
   // 取消活動
   async cancelActivity(id) {
     return await prisma.activities.update({
       where: { id },
-      data: { status: "cancelled" },
+      data: { 
+        status: "cancelled",
+        updated_at: new Date()
+      },
     });
   },
 
@@ -204,10 +207,10 @@ export const activityService = {
     });
   },
 
-  // 設定報名狀態
-  async setApplicationStatus(participant_id, activity_id, status, comment, register_validated) {
+  // 設定報名狀態 審核之後用這隻
+  async setApplicationStatus( application_id, status, comment, register_validated) {
     return await prisma.applications.update({
-      where: { activity_id_participant_id: { participant_id, activity_id } },
+      where: { application_id },
       data: {
         status,
         comment,
@@ -264,7 +267,5 @@ export const activityService = {
       validated_registrations: _count.applications
     }
   },
-
-
 };
 
