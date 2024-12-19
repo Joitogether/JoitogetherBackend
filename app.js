@@ -6,9 +6,9 @@ import postRouter from "./src/routes/postRoutes.js";
 import ratingRouter from "./src/routes/ratingRoutes.js";
 import cartRouter from "./src/routes/cartRoutes.js";
 import orderRouter from "./src/routes/orderRoutes.js";
+import paymentRouter from "./src/routes/paymentRoutes.js";
 import cors from "cors";
 import { errorMiddleware } from "./src/middlewares/errorMiddleware.js";
-import paymentRouter from "./src/routes/paymentRoutes.js";
 const app = express();
 
 // middlewares
