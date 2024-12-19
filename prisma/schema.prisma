@@ -314,4 +314,6 @@ enum orders_order_status {
   pending
   completed
   failed
+  cancelled
+  deleted
 }

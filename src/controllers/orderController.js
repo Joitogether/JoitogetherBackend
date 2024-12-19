@@ -53,4 +53,88 @@ const addOrder = async (req, res, next) => {
   }
 };
 
-export { fetchAllOrders, fetchOrderById, addOrder };
+const completeOrder = async (req, res, next) => {
+  try {
+    const order_id = parseInt(req.params.order_id);
+    const { order_status } = req.body;
+
+    const response = await orderService.updateOrderStatus(
+      order_id,
+      order_status
+    );
+    res.status(200).json({
+      status: 200,
+      message: `${order_status}`,
+      data: response,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const failOrder = async (req, res, next) => {
+  try {
+    const order_id = parseInt(req.params.order_id);
+    const { order_status } = req.body;
+
+    const response = await orderService.updateOrderStatus(
+      order_id,
+      order_status
+    );
+    res.status(200).json({
+      status: 200,
+      message: `${order_status}`,
+      data: response,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const cancelOrder = async (req, res, next) => {
+  try {
+    const order_id = parseInt(req.params.order_id);
+    const { order_status } = req.body;
+
+    const response = await orderService.updateOrderStatus(
+      order_id,
+      order_status
+    );
+    res.status(200).json({
+      status: 200,
+      message: `${order_status}`,
+      data: response,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const removeOrder = async (req, res, next) => {
+  try {
+    const order_id = parseInt(req.params.order_id);
+    const { order_status } = req.body;
+
+    const response = await orderService.updateOrderStatus(
+      order_id,
+      order_status
+    );
+    res.status(200).json({
+      status: 200,
+      message: `${order_status}`,
+      data: response,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export {
+  fetchAllOrders,
+  fetchOrderById,
+  addOrder,
+  completeOrder,
+  failOrder,
+  cancelOrder,
+  removeOrder,
+};
