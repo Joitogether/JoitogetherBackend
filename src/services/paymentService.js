@@ -16,8 +16,17 @@ const paymentService = {
         balance: depositAmount
       }
     })
+  },
+  // 錢包紀錄
+  async createPaymentRecord(uid, action, amount){
+    return await prisma.walletRecord.create({
+      data: {
+        uid,
+        action,
+        amount
+      }
+    })
   }
-
 }
 
 export default paymentService
