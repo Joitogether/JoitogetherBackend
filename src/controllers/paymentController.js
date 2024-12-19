@@ -35,13 +35,19 @@ const paymentDeposit = async (req, res ,next) => {
   try{
     const { uid } = req.params
     const { deposit } = req.body
+
     PaymentSchema.parse({uid, amount: deposit})
-    const response = await paymentService.addDeposit(uid, deposit)
-    console.log(response)
+
+    const response = await  paymentService.addDeposit(uid, deposit)
+    const record = await paymentService.createPaymentRecord(uid, 'deposit', deposit)
+
     res.status(201).json({
       status: 201,
       message: '儲值成功',
-      data: response
+      data: {
+        balance: response['balance'],
+        record
+      }
     })
   }catch(error){
     next(error)
