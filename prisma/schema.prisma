@@ -236,6 +236,7 @@ enum activities_pay_type {
   free
   AA
   host
+  paymentRequired
 }
 
 enum applications_status {

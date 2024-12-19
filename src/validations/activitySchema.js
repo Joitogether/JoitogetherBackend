@@ -13,7 +13,7 @@ export const ActivityCreateSchema = z.object({
   approval_deadline: z.string().regex(dateTimeRegex).optional().nullable(),
   min_participants: z.number().int(), 
   max_participants: z.number().int(), 
-  pay_type: z.enum(['free', 'AA', 'host']),
+  pay_type: z.enum(['free', 'AA', 'host','paymentRequired']),
   price: z.number().min(0),
   require_approval: z.number().int(), 
   status: z.enum(['registrationOpen', 'onGoing', 'completed', 'cancelled']),
