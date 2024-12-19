@@ -17,3 +17,14 @@ export const CreateOrderSchema = z.object({
     })
   ),
 });
+
+export const UpdateOrderSchema = z.object({
+  order_id: z.number().int(),
+  order_status: z.enum([
+    "pending",
+    "completed",
+    "failed",
+    "cancelled",
+    "deleted",
+  ]),
+});

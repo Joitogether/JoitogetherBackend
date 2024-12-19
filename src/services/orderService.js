@@ -2,6 +2,7 @@ import { prisma } from "../config/db.js";
 import {
   GetOrderSchema,
   CreateOrderSchema,
+  UpdateOrderSchema,
 } from "../validations/orderSchema.js";
 
 export const orderService = {
@@ -48,6 +49,15 @@ export const orderService = {
       include: {
         order_items: true,
       },
+    });
+  },
+
+  // 訂單狀態管理
+  async updateOrderStatus(order_id, order_status) {
+    UpdateOrderSchema.parse({ order_id, order_status });
+    return await prisma.orders.update({
+      where: { order_id },
+      data: { order_status },
     });
   },
 };
