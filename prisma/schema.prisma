@@ -68,6 +68,7 @@ model users {
   posts                                       posts[]
   ratings_ratings_host_idTousers              ratings[]           @relation("ratings_host_idTousers")
   ratings_ratings_user_idTousers              ratings[]           @relation("ratings_user_idTousers")
+  wallet                                      wallet?
 }
 
 model applications {
@@ -98,24 +99,26 @@ model followers {
 }
 
 model ratings {
-  rating_id                    Int        @unique(map: "rating_id_UNIQUE") @default(autoincrement())
-  user_id                      String     @db.VarChar(255)
-  host_id                      String     @db.VarChar(255)
+  rating_id                    Int         @unique(map: "rating_id_UNIQUE") @default(autoincrement())
+  user_id                      String      @db.VarChar(255)
+  host_id                      String      @db.VarChar(255)
   rating_heart                 Int
-  user_comment                 String     @db.Text
+  user_comment                 String      @db.Text
   rating_kindness              Int
   rating_ability               Int
   rating_credit                Int
-  created_at                   DateTime   @default(now()) @db.DateTime(0)
+  created_at                   DateTime    @default(now()) @db.DateTime(0)
   activity_id                  Int
-  activities                   activities @relation(fields: [activity_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "bind activity id")
-  users_ratings_host_idTousers users      @relation("ratings_host_idTousers", fields: [host_id], references: [uid], onDelete: NoAction, onUpdate: NoAction, map: "bind host id")
-  users_ratings_user_idTousers users      @relation("ratings_user_idTousers", fields: [user_id], references: [uid], onDelete: Cascade, map: "bind user id")
+  activitiesId                 Int?
+  users_ratings_host_idTousers users       @relation("ratings_host_idTousers", fields: [host_id], references: [uid], onDelete: NoAction, onUpdate: NoAction, map: "bind host id")
+  users_ratings_user_idTousers users       @relation("ratings_user_idTousers", fields: [user_id], references: [uid], onDelete: Cascade, map: "bind user id")
+  activities                   activities? @relation(fields: [activitiesId], references: [id])
 
   @@id([activity_id, user_id, host_id])
   @@index([host_id], map: "bind host id_idx")
   @@index([user_id], map: "bind id_idx")
   @@index([activity_id], map: "bind activity id_idx")
+  @@index([activitiesId], map: "ratings_activitiesId_fkey")
 }
 
 model activity_comments {
@@ -216,6 +219,24 @@ model carts_comments {
   @@index([cart_id, activity_id])
 }
 
+model wallet {
+  uid          String         @id @unique
+  balance      Decimal        @default(0.00) @db.Decimal(10, 2)
+  users        users          @relation(fields: [uid], references: [uid])
+  walletRecord walletRecord[]
+}
+
+model walletRecord {
+  id        Int                 @id @default(autoincrement())
+  uid       String
+  action    walletRecord_action
+  amount    Decimal             @db.Decimal(10, 2)
+  createdAt DateTime            @default(now())
+  wallet    wallet              @relation(fields: [uid], references: [uid])
+
+  @@index([uid], map: "walletRecord_uid_fkey")
+}
+
 enum activities_category {
   food
   shopping
@@ -288,4 +309,10 @@ enum post_likes_like_status {
 enum post_comments_comment_status {
   active
   deleted
+}
+
+enum walletRecord_action {
+  deposit
+  withdraw
+  spend
 }

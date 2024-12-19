@@ -1,5 +1,8 @@
 import { createSesEncrypt, createShaEncrypt } from "../utils/payment.js";
+import paymentService from "../services/paymentService.js";
+import { PaymentSchema } from "../validations/paymentSchema.js";
 
+// 加密訂單資訊
 const paymentEncrytOrder = async (req, res, next) => {
   try{
     const data = req.body
@@ -27,4 +30,22 @@ const paymentEncrytOrder = async (req, res, next) => {
   }
 }
 
-export { paymentEncrytOrder }
+// 儲值
+const paymentDeposit = async (req, res ,next) => {
+  try{
+    const { uid } = req.params
+    const { deposit } = req.body
+    PaymentSchema.parse({uid, amount: deposit})
+    const response = await paymentService.addDeposit(uid, deposit)
+    console.log(response)
+    res.status(201).json({
+      status: 201,
+      message: '儲值成功',
+      data: response
+    })
+  }catch(error){
+    next(error)
+  }
+}
+
+export { paymentEncrytOrder, paymentDeposit }
