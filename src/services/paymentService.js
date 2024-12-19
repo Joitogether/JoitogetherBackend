@@ -19,9 +19,9 @@ const paymentService = {
   },
   // 錢包紀錄
   async createPaymentRecord(uid, action, amount) {
-    return await prisma.walletRecord.create({
+    return await prisma.wallet_record.create({
       data: {
-        uid,
+        wallet_id: uid,
         action,
         amount,
       },
