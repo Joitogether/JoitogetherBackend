@@ -23,7 +23,7 @@ app.use("/applications", applicationRouter);
 app.use("/posts", postRouter);
 app.use("/ratings", ratingRouter);
 app.use("/carts", cartRouter);
-app.use("/payment", paymentRouter);
+app.use("/payments", paymentRouter);
 app.use("/orders", orderRouter);
 
 // error
