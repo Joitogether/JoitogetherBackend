@@ -8,25 +8,17 @@ import {
 export const orderService = {
   // 獲取用戶所有的訂單
   async getAllOrders() {
-    const response = await prisma.orders.findMany();
-    if (response.length === 0) {
-      return null;
-    }
-    return response;
+    return await prisma.orders.findMany();
   },
 
   // 獲取單一訂單
   async getOrderById(order_id) {
     GetOrderSchema.parse({ order_id });
-    const response = await prisma.orders.findUnique({
+    return await prisma.orders.findUnique({
       where: {
         order_id,
       },
     });
-    if (!response.length === 0) {
-      return null;
-    }
-    return response;
   },
 
   // 創建訂單

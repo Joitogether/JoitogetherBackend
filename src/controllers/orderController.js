@@ -6,10 +6,11 @@ const fetchAllOrders = async (_req, res, next) => {
     if (!response || response.length === 0) {
       return res.status(404).json({
         status: 404,
-        message: "查無資料",
+        message: "查無此資料",
+        data: null,
       });
     }
-    return res.status(200).json({
+    res.status(200).json({
       status: 200,
       message: "資料獲取成功",
       data: response,
@@ -27,6 +28,7 @@ const fetchOrderById = async (req, res, next) => {
       return res.status(404).json({
         status: 404,
         message: "查無此資料",
+        data: null,
       });
     }
     res.status(200).json({
