@@ -29,13 +29,15 @@ const paymentService = {
   },
 
   // 獲取用戶錢包紀錄
-  async getWalletByUid(uid) {
+  async getWalletBalance(uid) {
     GetDepositSchema.parse({ uid });
     return await prisma.wallet.findUnique({ where: { uid } });
   },
 
   // 獲取用戶錢包交易紀錄
-  async getWalletTransactions(uid) {
+  async getTransactionHistory(uid, filters = {}) {
+    const { action, startData, endData } = filters;
+    // 查找用戶錢包
     const wallet = await prisma.wallet.findUnique({ where: { uid } });
     if (!wallet) {
       throw new Error("錢包不存在");
@@ -61,7 +63,7 @@ const paymentService = {
   },
 
   // 扣除儲值金
-  async debitBalance(uid, amount) {
+  async deductWalletBalance(uid, amount) {
     // 驗證參數
     if (!uid || amount <= 0) {
       throw new Error("Uid 或金額不正確");

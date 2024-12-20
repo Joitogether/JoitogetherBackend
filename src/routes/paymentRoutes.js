@@ -8,13 +8,13 @@ router.post("/encrypt", PaymentController.paymentEncrytOrder);
 router.post("/deposit/:uid", PaymentController.paymentDeposit);
 
 // Wallet List
-router.get("/wallet/:uid", PaymentController.fetchWalletByUid);
+router.get("/wallet/:uid", PaymentController.fetchWalletBalance);
 router.get(
   "/wallet/:uid/transactions",
-  PaymentController.fetchWalletTransactions
+  PaymentController.fetchTransactionHistory
 );
 
 // Balance Debit
-router.put("/wallet/:uid/debit", PaymentController.spendBalance);
+router.put("/wallet/:uid/debit", PaymentController.decreaseBalance);
 
 export default router;

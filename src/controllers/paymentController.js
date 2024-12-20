@@ -58,10 +58,10 @@ const paymentDeposit = async (req, res, next) => {
   }
 };
 
-const fetchWalletByUid = async (req, res, next) => {
+const fetchWalletBalance = async (req, res, next) => {
   try {
     const uid = req.params.uid;
-    const response = await paymentService.getWalletByUid(uid);
+    const response = await paymentService.getWalletBalance(uid);
     if (!response || response.length === 0) {
       return res.status(404).json({
         status: 400,
@@ -79,10 +79,15 @@ const fetchWalletByUid = async (req, res, next) => {
   }
 };
 
-const fetchWalletTransactions = async (req, res, next) => {
+const fetchTransactionHistory = async (req, res, next) => {
   try {
     const uid = req.params.uid;
-    const response = await paymentService.getWalletTransactions(uid);
+    const { action, startData, endData } = req.query;
+    const response = await paymentService.getTransactionHistory(uid, {
+      action,
+      startData,
+      endData,
+    });
     if (!response || response.length === 0) {
       return res.status(404).json({
         status: 404,
@@ -100,11 +105,11 @@ const fetchWalletTransactions = async (req, res, next) => {
   }
 };
 
-const spendBalance = async (req, res, next) => {
+const decreaseBalance = async (req, res, next) => {
   try {
     const uid = req.params.uid;
     const { amount } = req.body;
-    const response = await paymentService.debitBalance(uid, amount);
+    const response = await paymentService.deductWalletBalance(uid, amount);
 
     res.status(200).json({
       status: 200,
@@ -119,7 +124,7 @@ const spendBalance = async (req, res, next) => {
 export {
   paymentEncrytOrder,
   paymentDeposit,
-  fetchWalletByUid,
-  fetchWalletTransactions,
-  spendBalance,
+  fetchWalletBalance,
+  fetchTransactionHistory,
+  decreaseBalance,
 };
