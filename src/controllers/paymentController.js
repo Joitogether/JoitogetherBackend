@@ -54,4 +54,8 @@ const paymentDeposit = async (req, res ,next) => {
   }
 }
 
+const paymentConfirmDeposit = async(req, res, next) => {
+  
+}
+
 export { paymentEncrytOrder, paymentDeposit }

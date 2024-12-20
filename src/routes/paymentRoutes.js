@@ -6,5 +6,4 @@ const router = express.Router()
 router.post('/encrypt', paymentController.paymentEncrytOrder)
 router.post('/deposit/:uid', paymentController.paymentDeposit)
 
-
 export default router
