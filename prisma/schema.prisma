@@ -26,10 +26,12 @@ model activities {
   event_time        DateTime            @db.DateTime(0)
   updated_at        DateTime            @default(now()) @db.DateTime(0)
   users             users               @relation(fields: [host_id], references: [uid], onUpdate: Restrict, map: "12")
+  require_payment   Int?                @default(0) @db.TinyInt
   activity_comments activity_comments[]
   applications      applications[]
   carts_comments    carts_comments[]
   order_items       order_items[]
+  ratings           ratings[]
 
   @@index([host_id], map: "host_idanduid_idx")
 }
@@ -41,7 +43,7 @@ model users {
   full_name                                   String              @db.VarChar(255)
   display_name                                String              @db.VarChar(255)
   phone_number                                String              @db.VarChar(10)
-  photo_url                                   String?             @db.Text
+  photo_url                                   String?             @db.VarChar(2000)
   created_at                                  DateTime            @default(now()) @db.DateTime(0)
   city                                        String?             @db.VarChar(5)
   age                                         Int?
@@ -53,8 +55,8 @@ model users {
   hobby                                       String?             @db.VarChar(45)
   expertise                                   String?             @db.VarChar(45)
   interested_in                               String?             @db.VarChar(255)
-  life_photo_1                                String?             @db.Text
-  life_photo_2                                String?             @db.Text
+  life_photo_1                                String?             @default("https://firebasestorage.googleapis.com/v0/b/login-demo1-9d3cb.firebasestorage.app/o/lifephoto%2F1733574359943_defaultimg.jpg?alt=media&token=c5486472-dadd-4276-8666-97a538e46e5f") @db.VarChar(2000)
+  life_photo_2                                String?             @default("https://firebasestorage.googleapis.com/v0/b/login-demo1-9d3cb.firebasestorage.app/o/lifephoto%2F1733574359943_defaultimg.jpg?alt=media&token=c5486472-dadd-4276-8666-97a538e46e5f") @db.VarChar(2000)
   activities                                  activities[]
   activity_comments                           activity_comments[]
   applications                                applications[]
@@ -72,13 +74,16 @@ model users {
 }
 
 model applications {
-  application_id Int                 @unique(map: "id_UNIQUE") @default(autoincrement()) @db.UnsignedInt
-  activity_id    Int
-  participant_id String              @db.VarChar(255)
-  status         applications_status @default(registered)
-  comment        String?             @db.VarChar(50)
-  activities     activities          @relation(fields: [activity_id], references: [id], onDelete: Cascade, map: "applications_ibfk_1")
-  users          users               @relation(fields: [participant_id], references: [uid], onDelete: Cascade, map: "applications_ibfk_2")
+  application_id     Int                 @unique(map: "id_UNIQUE") @default(autoincrement()) @db.UnsignedInt
+  activity_id        Int
+  participant_id     String              @db.VarChar(255)
+  status             applications_status @default(registered)
+  comment            String?             @db.VarChar(50)
+  activities         activities          @relation(fields: [activity_id], references: [id], onDelete: Cascade, map: "applications_ibfk_1")
+  users              users               @relation(fields: [participant_id], references: [uid], onDelete: Cascade, map: "applications_ibfk_2")
+  register_validated Int                 @default(0) @db.TinyInt
+  created_at         DateTime            @default(now()) @db.DateTime(0)
+  updated_at         DateTime?           @db.DateTime(0)
 
   @@id([activity_id, participant_id])
   @@index([participant_id], map: "participants_ibfk_2")
@@ -96,20 +101,26 @@ model followers {
 }
 
 model ratings {
-  rating_id                    Int      @id @unique(map: "rating_id_UNIQUE") @default(autoincrement())
-  user_id                      String   @db.VarChar(255)
-  host_id                      String   @db.VarChar(255)
+  rating_id                    Int         @unique(map: "rating_id_UNIQUE") @default(autoincrement())
+  user_id                      String      @db.VarChar(255)
+  host_id                      String      @db.VarChar(255)
   rating_heart                 Int
-  user_comment                 String   @db.Text
+  user_comment                 String      @db.Text
   rating_kindness              Int
   rating_ability               Int
   rating_credit                Int
-  created_at                   DateTime @default(now()) @db.DateTime(0)
-  users_ratings_host_idTousers users    @relation("ratings_host_idTousers", fields: [host_id], references: [uid], onDelete: NoAction, onUpdate: NoAction, map: "bind host id")
-  users_ratings_user_idTousers users    @relation("ratings_user_idTousers", fields: [user_id], references: [uid], onDelete: Cascade, map: "bind user id")
+  created_at                   DateTime    @default(now()) @db.DateTime(0)
+  activity_id                  Int
+  users_ratings_host_idTousers users       @relation("ratings_host_idTousers", fields: [host_id], references: [uid], onDelete: NoAction, onUpdate: NoAction, map: "bind host id")
+  users_ratings_user_idTousers users       @relation("ratings_user_idTousers", fields: [user_id], references: [uid], onDelete: Cascade, map: "bind user id")
+  activities                   activities? @relation(fields: [activitiesId], references: [id])
+  activitiesId                 Int?
 
+  @@id([activity_id, user_id, host_id])
   @@index([host_id], map: "bind host id_idx")
   @@index([user_id], map: "bind id_idx")
+  @@index([activity_id], map: "bind activity id_idx")
+  @@index([activitiesId], map: "ratings_activitiesId_fkey")
 }
 
 model activity_comments {
@@ -341,4 +352,5 @@ enum activities_pay_type {
   free
   AA
   host
+  paymentRequired
 }
