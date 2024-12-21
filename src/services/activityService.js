@@ -269,5 +269,37 @@ export const activityService = {
       validated_registrations: _count.applications
     }
   },
+
+  async searchActivities(keyword){
+    return await prisma.activities.findMany({
+      where: {
+        status: "registrationOpen",
+        //今天以後的活動
+        event_time: {
+          gte: new Date(),
+        },
+        OR: [
+          {
+            name: {
+              contains: keyword,
+            },
+          },
+          {
+            description: {
+              contains: keyword,
+            },
+          },
+          {
+            location: {
+              contains: keyword,
+            },
+          },
+        ],
+      },
+      orderBy: {
+        event_time: "asc",
+      }
+    })
+  }
 };
 
