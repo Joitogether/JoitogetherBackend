@@ -1,8 +1,11 @@
+import axios from "axios";
 import { activityService } from "../services/activityService.js";
 import {
   ActivityCommentSchema,
   ActivityCreateSchema,
 } from "../validations/activitySchema.js";
+
+const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 
 const fetchAllActiveActivities = async (_req, res, next) => {
   try {
@@ -132,6 +135,62 @@ const removeActivityComment = async (req, res, next) => {
   }
 };
 
+const googleMapGeocode = async (req,res, next) => {
+  const { address } = req.body;
+
+  if (!address) {
+    return res.status(400).json({ error: '地址為空' });
+  }
+
+  try {
+    const response = await axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
+      params: {
+        address,
+        key: GOOGLE_API_KEY
+        },
+    });
+
+    if (response.data.status === 'OK') {
+    const location = response.data.results[0].geometry.location;
+    res.json({ location });
+    } else {
+      res.status(400).json({ error: `地址解析失敗: ${response.data.status}`});
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+const googleAutocomplete = async (req, res, next) => {
+  const { query } = req.body;
+
+  if (!query) {
+    return res.status(400).json({ error: '查詢為空' });
+  }
+
+  try {
+    const response = await axios.get('https://maps.googleapis.com/maps/api/place/autocomplete/json', {
+      params: { 
+        input: query,
+        key: GOOGLE_API_KEY,
+        language: 'zh-TW',
+        components: 'country:TW' 
+      },
+    });
+
+    if (response.data.status === 'OK') {
+      res.json({ predictions: response.data.predictions });
+    } else {
+      res.status(400).json({ error: `地址建議失敗: ${response.data.status}` });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+
 export {
   fetchAllActiveActivities,
   fetchActivityDetails,
@@ -140,4 +199,6 @@ export {
   cancelActivityRequest,
   fetchActivityComments,
   removeActivityComment,
+  googleMapGeocode,
+  googleAutocomplete,
 };

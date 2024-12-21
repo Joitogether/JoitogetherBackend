@@ -16,4 +16,10 @@ router.put("/cancel/:id", ActivityController.cancelActivityRequest);
 router.post("/comment/:activity_id", ActivityController.fetchActivityComments);
 router.delete("/comment/:comment_id", ActivityController.removeActivityComment);
 
+
+// Google Map
+// Google 地址搜尋結果
+router.post('/geocode', ActivityController.googleMapGeocode);
+router.post('/autocomplete', ActivityController.googleAutocomplete);
+
 export default router;
