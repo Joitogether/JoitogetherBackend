@@ -132,6 +132,50 @@ const removeActivityComment = async (req, res, next) => {
   }
 };
 
+const searchActivities = async (req, res, next) => {
+  try{
+    let { keyword } = req.body
+    switch (keyword) {
+      case '運動':
+        keyword = 'sport' 
+        break;
+      case '美食':
+        keyword = 'food'
+        break;
+      case '旅遊':
+        keyword = 'travel' 
+        break;
+      case '購物':
+        keyword = 'shopping'
+        break
+      case '教育':
+        keyword = 'education'
+        break
+      default:
+        break;
+
+    }
+
+    const response = await activityService.searchActivities(keyword)
+
+    if(response.length === 0){
+      return res.status(404).json({
+        message: "查無此資料",
+        status: 404,
+        data: [],
+      })
+    }
+    res.status(200).json({
+      message: "資料獲取成功",
+      status: 200,
+      data: response,
+    })
+    // prism找資料
+  } catch (error) {
+    next(error)
+  }
+}
+
 export {
   fetchAllActiveActivities,
   fetchActivityDetails,
@@ -140,4 +184,5 @@ export {
   cancelActivityRequest,
   fetchActivityComments,
   removeActivityComment,
+  searchActivities,
 };

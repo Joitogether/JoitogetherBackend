@@ -11,6 +11,7 @@ router.get("/category/:category", ActivityController.fetchActivitiesByCategory);
 // Activity Create/Delete
 router.post("/", ActivityController.addNewActivity);
 router.put("/cancel/:id", ActivityController.cancelActivityRequest);
+router.post("/search", ActivityController.searchActivities);
 
 // Activity Comment
 router.post("/comment/:activity_id", ActivityController.fetchActivityComments);
