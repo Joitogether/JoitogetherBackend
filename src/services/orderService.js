@@ -21,7 +21,7 @@ export const orderService = {
     });
   },
 
-  // 獲取 padding 訂單
+  // 檢查是否有未完成的訂單
   async getPendingOrder(uid) {
     return await prisma.orders.findFirst({
       where: {
