@@ -152,7 +152,7 @@ const googleMapGeocode = async (req,res, next) => {
 
     if (response.data.status === 'OK') {
     const location = response.data.results[0].geometry.location;
-    res.json({ location });
+    res.status(201).json({ message:"獲取地址成功",status:"201",data:location});
     } else {
       res.status(400).json({ error: `地址解析失敗: ${response.data.status}`});
     }
@@ -180,7 +180,7 @@ const googleAutocomplete = async (req, res, next) => {
     });
 
     if (response.data.status === 'OK') {
-      res.json({ predictions: response.data.predictions });
+      res.status(201).json({ message:"獲取成功",status:201,predictions: response.data.predictions });
     } else {
       res.status(400).json({ error: `地址建議失敗: ${response.data.status}` });
     }
