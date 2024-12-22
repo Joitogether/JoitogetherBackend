@@ -76,4 +76,22 @@ const removeActivityFromCart = async (req, res, next) => {
   }
 };
 
-export { fetchCartByUserId, addActivityToCart, removeActivityFromCart };
+const removeCartItems = async (req, res, next) => {
+  const { uid } = req.params;
+  try {
+    await cartService.clearCart(uid);
+    res.status(200).json({
+      status: 200,
+      message: "購物車清空成功",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export {
+  fetchCartByUserId,
+  addActivityToCart,
+  removeActivityFromCart,
+  removeCartItems,
+};

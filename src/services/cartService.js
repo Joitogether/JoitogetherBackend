@@ -110,8 +110,15 @@ const removeFromCart = async (userId, activityId) => {
   }
 };
 
+const clearCart = async (uid) => {
+  return await prisma.carts_comments.deleteMany({
+    where: { carts: { user_id: uid } },
+  });
+};
+
 export const cartService = {
   getCartByUserId,
   addToCart,
   removeFromCart,
+  clearCart,
 };
