@@ -21,6 +21,16 @@ export const orderService = {
     });
   },
 
+  // 獲取 padding 訂單
+  async getPendingOrder(uid) {
+    return await prisma.orders.findFirst({
+      where: {
+        uid,
+        order_status: "pending",
+      },
+    });
+  },
+
   // 創建訂單
   async createOrder(data) {
     CreateOrderSchema.parse(data);
