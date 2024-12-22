@@ -46,7 +46,11 @@ const fetchPendingOrder = async (req, res, next) => {
   try {
     const response = await orderService.getPendingOrder(uid);
     if (!response) {
-      return res.status(200).json(null);
+      return res.status(200).json({
+        status: 200,
+        message: "查無此資料",
+        data: {},
+      });
     }
     res.status(200).json({
       status: 200,
