@@ -18,6 +18,17 @@ export const orderService = {
       where: {
         order_id,
       },
+      include: {
+        order_items: {
+          include: {
+            activities: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+      },
     });
   },
 
