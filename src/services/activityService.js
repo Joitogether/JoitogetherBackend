@@ -102,9 +102,24 @@ export const activityService = {
         category,
         status: "registrationOpen",
       },
+
       orderBy: {
         created_at: "desc",
       },
+      select: {
+        id: true,
+        name: true,
+        img_url: true,
+        location: true,
+        event_time: true,
+        max_participants: true,
+        users: {
+          select:{
+            display_name: true,
+            photo_url: true,
+          }
+        }
+      }
     });
     if (response.length === 0) {
       return null;
