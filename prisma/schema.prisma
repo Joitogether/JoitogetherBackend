@@ -25,8 +25,8 @@ model activities {
   approval_deadline DateTime?           @db.DateTime(0)
   event_time        DateTime            @db.DateTime(0)
   updated_at        DateTime            @default(now()) @db.DateTime(0)
-  users             users               @relation(fields: [host_id], references: [uid], onUpdate: Restrict, map: "12")
   require_payment   Int?                @default(0) @db.TinyInt
+  users             users               @relation(fields: [host_id], references: [uid], onUpdate: Restrict, map: "12")
   activity_comments activity_comments[]
   applications      applications[]
   carts_comments    carts_comments[]
@@ -79,11 +79,11 @@ model applications {
   participant_id     String              @db.VarChar(255)
   status             applications_status @default(registered)
   comment            String?             @db.VarChar(50)
-  activities         activities          @relation(fields: [activity_id], references: [id], onDelete: Cascade, map: "applications_ibfk_1")
-  users              users               @relation(fields: [participant_id], references: [uid], onDelete: Cascade, map: "applications_ibfk_2")
   register_validated Int                 @default(0) @db.TinyInt
   created_at         DateTime            @default(now()) @db.DateTime(0)
   updated_at         DateTime?           @db.DateTime(0)
+  activities         activities          @relation(fields: [activity_id], references: [id], onDelete: Cascade, map: "applications_ibfk_1")
+  users              users               @relation(fields: [participant_id], references: [uid], onDelete: Cascade, map: "applications_ibfk_2")
 
   @@id([activity_id, participant_id])
   @@index([participant_id], map: "participants_ibfk_2")
@@ -110,11 +110,11 @@ model ratings {
   rating_ability               Int
   rating_credit                Int
   created_at                   DateTime    @default(now()) @db.DateTime(0)
+  activitiesId                 Int?
   activity_id                  Int
   users_ratings_host_idTousers users       @relation("ratings_host_idTousers", fields: [host_id], references: [uid], onDelete: NoAction, onUpdate: NoAction, map: "bind host id")
   users_ratings_user_idTousers users       @relation("ratings_user_idTousers", fields: [user_id], references: [uid], onDelete: Cascade, map: "bind user id")
   activities                   activities? @relation(fields: [activitiesId], references: [id])
-  activitiesId                 Int?
 
   @@id([activity_id, user_id, host_id])
   @@index([host_id], map: "bind host id_idx")
@@ -213,6 +213,7 @@ model carts_comments {
   cart_id     Int
   activity_id Int
   created_at  DateTime   @default(now())
+  is_selected Boolean?   @default(false)
   activities  activities @relation(fields: [activity_id], references: [id])
   carts       carts      @relation(fields: [cart_id], references: [id])
 
