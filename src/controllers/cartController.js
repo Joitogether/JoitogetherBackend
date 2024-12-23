@@ -89,9 +89,48 @@ const removeCartItems = async (req, res, next) => {
   }
 };
 
+const getSelectedItems = async (req, res, next) => {
+  const { userId } = req.params;
+
+  try {
+    const response = await cartService.getSelectedCartItems(userId);
+    res.status(200).json({
+      status: 200,
+      message: "成功獲取已選擇項目",
+      data: response,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const updateSelection = async (req, res, next) => {
+  const { id } = req.params;
+  const { isSelected } = req.body;
+
+  if (typeof isSelected !== "boolean") {
+    return res.status(400).json({
+      status: 400,
+      message: "isSelected 必須為布林值",
+    });
+  }
+
+  try {
+    const response = await cartService.updateSelectedStatus(id, isSelected);
+    res.status(200).json({
+      status: 200,
+      message: `ID 為 ${id} 的項目成功更新選擇狀態`,
+      data: response,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 export {
   fetchCartByUserId,
   addActivityToCart,
   removeActivityFromCart,
   removeCartItems,
+  getSelectedItems,
+  updateSelection,
 };

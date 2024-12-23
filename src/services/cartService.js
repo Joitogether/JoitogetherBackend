@@ -112,7 +112,49 @@ const removeFromCart = async (userId, activityId) => {
 
 const clearCart = async (uid) => {
   return await prisma.carts_comments.deleteMany({
-    where: { carts: { user_id: uid } },
+    where: {
+      carts: { user_id: uid },
+      is_selected: true,
+    },
+  });
+};
+
+const getSelectedCartItems = async (userId) => {
+  const cart = await prisma.carts.findFirst({
+    where: { user_id: userId },
+  });
+
+  const cartItems = await prisma.carts_comments.findMany({
+    where: { cart_id: cart.id, is_selected: true },
+    include: {
+      activities: {
+        select: {
+          name: true,
+          location: true,
+          img_url: true,
+          price: true,
+          require_approval: true,
+          pay_type: true,
+          event_time: true,
+        },
+      },
+    },
+  });
+
+  // 計算選中項目總數
+  const totalActivities = cartItems.length;
+
+  return { cartItems, totalActivities };
+};
+
+const updateSelectedStatus = async (id, isSelected) => {
+  await prisma.carts_comments.findUnique({
+    where: { id: parseInt(id, 10) },
+  });
+
+  return await prisma.carts_comments.update({
+    where: { id: parseInt(id, 10) },
+    data: { is_selected: isSelected },
   });
 };
 
@@ -121,4 +163,6 @@ export const cartService = {
   addToCart,
   removeFromCart,
   clearCart,
+  getSelectedCartItems,
+  updateSelectedStatus,
 };
