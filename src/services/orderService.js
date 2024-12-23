@@ -51,7 +51,7 @@ export const orderService = {
         total_amount: data.total_amount,
         order_status: data.order_status,
         order_items: {
-          create: data.order_item.map((item) => ({
+          create: data.order_items.map((item) => ({
             activity_id: item.activity_id,
             quantity: item.quantity,
             price: item.price,
