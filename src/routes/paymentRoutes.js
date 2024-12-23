@@ -17,4 +17,7 @@ router.get(
 // Balance Debit
 router.put("/wallet/:uid/debit", PaymentController.decreaseBalance);
 
+// Checkout Process
+router.post("/order/process", PaymentController.handleCheckoutProcess);
+
 export default router;

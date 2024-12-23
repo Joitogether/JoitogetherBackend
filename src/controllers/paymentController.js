@@ -1,5 +1,8 @@
 import { createSesEncrypt, createShaEncrypt } from "../utils/payment.js";
 import paymentService from "../services/paymentService.js";
+import { orderService } from "../services/orderService.js";
+import { cartService } from "../services/cartService.js";
+import { activityService } from "../services/activityService.js";
 import { PaymentSchema } from "../validations/paymentSchema.js";
 
 // 加密訂單資訊
@@ -121,10 +124,106 @@ const decreaseBalance = async (req, res, next) => {
   }
 };
 
+const handleCheckoutProcess = async (req, res, next) => {
+  const {
+    uid,
+    total_amount,
+    order_items,
+    order_status = "pending",
+    activity_id,
+    comment = "",
+    register_validated = 0,
+  } = req.body;
+
+  try {
+    // 驗證參數
+    if (!uid || !total_amount || !order_items || order_items.length === 0) {
+      return res.status(400).json({
+        status: 400,
+        message: "參數不完整",
+        success: false,
+      });
+    }
+
+    // 檢查是否有未完成的訂單
+    const pendingOrder = await orderService.getPendingOrder(uid);
+    if (pendingOrder) {
+      return res.status(409).json({
+        status: 409,
+        message: "已有待處理的訂單",
+        success: false,
+      });
+    }
+
+    // 檢查購物車是否有資料
+    const cartItems = await cartService.getCartByUserId(uid);
+    if (!cartItems || cartItems.length === 0) {
+      return res.status(400).json({
+        status: 400,
+        message: "購物車為空",
+        success: false,
+      });
+    }
+
+    // 創建訂單
+    const createdOrder = await orderService.createOrder({
+      uid,
+      total_amount,
+      order_items,
+      order_status,
+      activity_id,
+      comment,
+      register_validated,
+    });
+
+    // 扣除儲值金
+    const spendBalance = await paymentService.deductWalletBalance(
+      uid,
+      total_amount
+    );
+    if (!spendBalance) {
+      throw new Error("Insufficient wallet balance.");
+    }
+
+    // 清空購物車
+    await cartService.clearCart(uid);
+
+    // 更新訂單狀態為成功
+    await orderService.updateOrderStatus(createdOrder.order_id, "completed");
+
+    // 處理活動報名
+    const registrationResult = [];
+    for (const item of order_items) {
+      const registration = await activityService.upsertApplication(
+        item.activity_id,
+        uid,
+        comment,
+        register_validated
+      );
+      registrationResult.push(registration);
+    }
+
+    // 返回所有處理成功結果
+    return res.status(200).json({
+      status: 200,
+      message: "訂單與報名成功完成",
+      success: true,
+      data: {
+        order: createdOrder,
+        wallet: spendBalance,
+        registrations: registrationResult,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export {
   paymentEncrytOrder,
   paymentDeposit,
   fetchWalletBalance,
   fetchTransactionHistory,
   decreaseBalance,
+  handleCheckoutProcess,
 };
