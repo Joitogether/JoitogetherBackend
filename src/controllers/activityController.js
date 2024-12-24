@@ -3,6 +3,7 @@ import { activityService } from "../services/activityService.js";
 import {
   ActivityCommentSchema,
   ActivityCreateSchema,
+  ActivityGetCategorySchema
 } from "../validations/activitySchema.js";
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
@@ -47,10 +48,12 @@ const fetchActivityDetails = async (req, res, next) => {
 
 const fetchActivitiesByCategory = async (req, res, next) => {
   try {
-    const page = parseInt(req.body.page) || 1;
-    const pageSize = parseInt(req.body.pageSize) || 5;
-    const category = req.params.category;
+    const { type } = req.params
+    const { category, page, pageSize } = req.body
+    ActivityGetCategorySchema.parse({ type, category, page, pageSize });
+
     const response = await activityService.getActivityByCategory(
+      type,
       category,
       page,
       pageSize
