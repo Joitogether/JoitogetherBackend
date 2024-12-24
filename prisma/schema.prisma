@@ -29,7 +29,7 @@ model activities {
   users             users               @relation(fields: [host_id], references: [uid], onUpdate: Restrict, map: "12")
   activity_comments activity_comments[]
   applications      applications[]
-  carts_comments    carts_comments[]
+  carts_items       carts_items[]
   order_items       order_items[]
   ratings           ratings[]
 
@@ -198,28 +198,14 @@ model notifications {
 }
 
 model carts {
-  id            Int              @id @default(autoincrement())
-  user_id       String?          @db.VarChar(255)
-  created_at    DateTime         @default(now())
-  updated_at    DateTime         @default(now()) @updatedAt
-  users         users?           @relation(fields: [user_id], references: [uid], onDelete: Cascade, onUpdate: NoAction)
-  cart_comments carts_comments[]
+  id          Int           @id @default(autoincrement())
+  user_id     String?       @db.VarChar(255)
+  created_at  DateTime      @default(now())
+  updated_at  DateTime      @default(now()) @updatedAt
+  users       users?        @relation(fields: [user_id], references: [uid], onDelete: Cascade, onUpdate: NoAction)
+  carts_items carts_items[]
 
   @@index([user_id], map: "carts_user_id_fkey")
-}
-
-model carts_comments {
-  id          Int        @id @default(autoincrement())
-  cart_id     Int
-  activity_id Int
-  created_at  DateTime   @default(now())
-  is_selected Boolean?   @default(false)
-  activities  activities @relation(fields: [activity_id], references: [id])
-  carts       carts      @relation(fields: [cart_id], references: [id])
-
-  @@unique([cart_id, activity_id])
-  @@index([activity_id], map: "carts_comments_activity_id_fkey")
-  @@index([cart_id, activity_id])
 }
 
 model order_items {
@@ -266,6 +252,20 @@ model wallet_record {
   wallet     wallet                @relation(fields: [wallet_id], references: [uid], onDelete: NoAction, onUpdate: NoAction, map: "fk_walletRecord_wallet_id")
 
   @@index([wallet_id], map: "fk_walletRecord_wallet_id_idx")
+}
+
+model carts_items {
+  id          Int        @id @default(autoincrement())
+  cart_id     Int
+  activity_id Int
+  created_at  DateTime   @default(now())
+  is_selected Boolean?   @default(false)
+  activities  activities @relation(fields: [activity_id], references: [id], map: "carts_items_activity_id_fkey")
+  carts       carts      @relation(fields: [cart_id], references: [id], map: "carts_items_cart_id_fkey")
+
+  @@unique([cart_id, activity_id])
+  @@index([activity_id], map: "carts_items_activity_id_fkey")
+  @@index([cart_id, activity_id])
 }
 
 enum activities_category {
