@@ -6,6 +6,7 @@ const router = express.Router();
 // Order List
 router.get("/", OrderController.fetchAllOrders);
 router.get("/:order_id", OrderController.fetchOrderById);
+router.get("/pending/:uid", OrderController.fetchPendingOrder);
 
 // Order Create/Delete
 router.post("/", OrderController.addOrder);

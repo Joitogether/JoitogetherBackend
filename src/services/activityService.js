@@ -95,67 +95,34 @@ export const activityService = {
   async getActivityByCategory(type, category, page, pageSize) {
     ActivityGetCategorySchema.parse({ type, category, page, pageSize });
     const skip = (page - 1) * pageSize;
-    if(type == 'region'){
-       const response = await prisma.activities.findMany({
-        skip,
-        take: pageSize,
-        where: {
-          status: "registrationOpen",
-          location: { contains: category },
-        },
-        select: {
-          id: true,
-          name: true,
-          img_url: true,
-          location: true,
-          event_time: true,
-          max_participants: true,
-          users: {
-            select: {
-              display_name: true,
-              photo_url: true,
-            },
-          }
-        },
-        orderBy: {
-          created_at: "desc",
-        },
+    const response = await prisma.activities.findMany({
+      skip,
+      take: pageSize,
+      where: {
+        category,
+        status: "registrationOpen",
+      },
 
-        });
-        if (response.length === 0) {
-          return null;
-        }
-        return response
-    }else{
-      const response = await prisma.activities.findMany({
-        skip,
-        take: pageSize,
-        where: {
-          category,
-          status: "registrationOpen",
-        },
-        select: {
-          id: true,
-          name: true,
-          img_url: true,
-          location: true,
-          event_time: true,
-          max_participants: true,
-          users: {
-            select: {
-              display_name: true,
-              photo_url: true,
-            },
+      orderBy: {
+        created_at: "desc",
+      },
+      select: {
+        id: true,
+        name: true,
+        img_url: true,
+        location: true,
+        event_time: true,
+        max_participants: true,
+        users: {
+          select:{
+            display_name: true,
+            photo_url: true,
           }
-        },
-        orderBy: {
-          created_at: "desc",
-        },
-      });   
-      if (response.length === 0) {
-        return null;
+        }
       }
-      return response
+    });
+    if (response.length === 0) {
+      return null;
     }
   },
   // 新增活動

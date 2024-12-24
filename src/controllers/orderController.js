@@ -41,6 +41,27 @@ const fetchOrderById = async (req, res, next) => {
   }
 };
 
+const fetchPendingOrder = async (req, res, next) => {
+  const { uid } = req.params;
+  try {
+    const response = await orderService.getPendingOrder(uid);
+    if (!response) {
+      return res.status(200).json({
+        status: 200,
+        message: "查無此資料",
+        data: {},
+      });
+    }
+    res.status(200).json({
+      status: 200,
+      message: "資料獲取成功",
+      data: response,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const addOrder = async (req, res, next) => {
   try {
     const data = req.body;
@@ -134,6 +155,7 @@ const removeOrder = async (req, res, next) => {
 export {
   fetchAllOrders,
   fetchOrderById,
+  fetchPendingOrder,
   addOrder,
   completeOrder,
   failOrder,
