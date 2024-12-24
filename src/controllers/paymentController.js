@@ -12,7 +12,7 @@ const paymentEncrytOrder = async (req, res, next) => {
     const { email, amount, itemDesc } = data
     const TimeStamp = Math.round(new Date().getTime() / 1000);        
     const order = {
-      Email: email.trim(),
+      Email: email,
       Amt: parseInt(amount),
       ItemDesc: itemDesc,
       TimeStamp,

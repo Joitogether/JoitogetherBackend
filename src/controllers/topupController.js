@@ -1,6 +1,5 @@
 import { TopupService } from "../services/topupService.js";
 
-
 export const saveTopupDetail = async(req, res, next) => {
     const data = req.body;
     try {
@@ -34,3 +33,26 @@ export const getTopupRecord = async(req, res, next) => {
     }
 
 }
+
+export const handleNewebpayReturn = async (req, res, next) => {
+    try {
+        const { Status } = req.body;
+        console.log('收到藍新狀態：', Status);
+
+        if (Status === 'SUCCESS') {
+            return res.status(200).json({
+            success: true,
+            message: "藍新交易成功",
+            status: Status
+            });
+        } else {
+            return res.status(400).json({
+            success: false,
+            message: "藍新交易失敗"
+            });
+        }
+        } catch (error) {
+        console.error('處理藍新回傳時發生錯誤：', error);
+        next(error);
+        }
+    };

@@ -19,15 +19,29 @@ export const TopupService = {
                     },
                 });
             return newTopupRecord;  
-            } 
+        }},
+    async getTopupById(user_id) {
+        return await prisma.topup_record.findMany({
+        where: { 
+            user_id,
+            status: "PENDING"
         },
-        async getTopupById(user_id) {
-            return await prisma.topup_record.findMany({
-            where: { 
-                user_id,
-                status: "PENDING"
-            },
-            
-            });
-        }, 
+    })},
+    async saveNewebpay(saveData) {
+        const validatedData = newebpayPaymentSchema.parse(saveData)    
+            if(saveData) {
+                // const isoDate = new Date(validatedData.topup_date.replace(" ", "T")).toISOString();
+                const newwebpayPayment = await prisma.pay_payment.create({
+                    data: {
+                    orderId: validatedData.orderId,
+                    userId: validatedData.userId,
+                    amount: validatedData.amount,
+                    paidAt: validatedData.paidAt,
+                    tradeNo: validatedData.tradeNo,
+                    createdAt: validatedData.createdAt,
+                    updatedAt: validatedData.updatedAt,
+                    },
+                });
+            return newwebpayPayment;  
+        }},
 } 
