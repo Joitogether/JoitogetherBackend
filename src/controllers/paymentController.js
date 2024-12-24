@@ -129,7 +129,7 @@ const handleCheckoutProcess = async (req, res, next) => {
     uid,
     total_amount,
     order_items,
-    order_status = "pending",
+    order_status = "completed",
     activity_id,
     comment = "",
     register_validated = 0,
@@ -145,24 +145,13 @@ const handleCheckoutProcess = async (req, res, next) => {
       });
     }
 
-    // 檢查是否有未完成的訂單
-    const pendingOrder = await orderService.getPendingOrder(uid);
-    if (pendingOrder) {
-      return res.status(409).json({
-        status: 409,
-        message: "已有待處理的訂單",
-        success: false,
-      });
-    }
-
-    // 檢查購物車是否有資料
-    const cartItems = await cartService.getCartByUserId(uid);
-    if (!cartItems || cartItems.length === 0) {
-      return res.status(400).json({
-        status: 400,
-        message: "購物車為空",
-        success: false,
-      });
+    // 扣除儲值金
+    const spendBalance = await paymentService.deductWalletBalance(
+      uid,
+      total_amount
+    );
+    if (!spendBalance) {
+      throw new Error("Insufficient wallet balance.");
     }
 
     // 創建訂單
@@ -176,20 +165,8 @@ const handleCheckoutProcess = async (req, res, next) => {
       register_validated,
     });
 
-    // 扣除儲值金
-    const spendBalance = await paymentService.deductWalletBalance(
-      uid,
-      total_amount
-    );
-    if (!spendBalance) {
-      throw new Error("Insufficient wallet balance.");
-    }
-
     // 清空購物車
     await cartService.clearCart(uid);
-
-    // 更新訂單狀態為成功
-    await orderService.updateOrderStatus(createdOrder.order_id, "completed");
 
     // 處理活動報名
     const registrationResult = [];
@@ -198,7 +175,7 @@ const handleCheckoutProcess = async (req, res, next) => {
         item.activity_id,
         uid,
         comment,
-        register_validated
+        item.require_approval ? 0 : 1
       );
       registrationResult.push(registration);
     }
