@@ -25,7 +25,7 @@ function genDataChain(order) {
   order.TimeStamp
   }&Version=${process.env.Version}&RespondType=${RespondType}&MerchantOrderNo=${
   order.MerchantOrderNo
-  }&Amt=${order.Amount}&NotifyURL=${encodeURIComponent(
+  }&Amt=${order.Amt}&NotifyURL=${encodeURIComponent(
   process.env.NotifyUrl,
   )}&ReturnURL=${encodeURIComponent(process.env.ReturnUrl)}&ItemDesc=${encodeURIComponent(
   order.ItemDesc,

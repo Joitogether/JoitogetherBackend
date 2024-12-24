@@ -1,17 +1,24 @@
 import { createSesEncrypt, createShaEncrypt } from "../utils/payment.js";
 import paymentService from "../services/paymentService.js";
 import { PaymentSchema } from "../validations/paymentSchema.js";
+import "dotenv/config";
+
 
 // 加密訂單資訊
 const paymentEncrytOrder = async (req, res, next) => {
   try {
     const data = req.body;
-    const TimeStamp = Math.round(new Date().getTime() / 1000);
+    
+    const { email, amount, itemDesc } = data
+    const TimeStamp = Math.round(new Date().getTime() / 1000);        
     const order = {
-      ...data,
+      Email: email.trim(),
+      Amt: parseInt(amount),
+      ItemDesc: itemDesc,
       TimeStamp,
-      Amt: parseInt(data.Amount),
+      MerchantID: process.env.MerchantID,
       MerchantOrderNo: TimeStamp,
+      Version: process.env.Version
     };
 
     const aesEncrypt = createSesEncrypt(order);
