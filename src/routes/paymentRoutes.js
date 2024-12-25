@@ -10,7 +10,7 @@ router.post(
   PaymentController.paymentEncrytOrder
 );
 router.post(
-  "/deposit/:uid",
+  "/wallet/:uid/deposit",
   /* #swagger.tags = ['Balance'] */
   PaymentController.paymentDeposit
 );
@@ -29,7 +29,7 @@ router.get(
 
 // Balance Debit
 router.put(
-  "/wallet/:uid/debit",
+  "/wallet/:uid/spend",
   /* #swagger.tags = ['Balance'] */
   PaymentController.decreaseBalance
 );

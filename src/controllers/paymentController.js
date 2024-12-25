@@ -37,15 +37,15 @@ const paymentEncrytOrder = async (req, res, next) => {
 const paymentDeposit = async (req, res, next) => {
   try {
     const { uid } = req.params;
-    const { deposit } = req.body;
+    const { amount } = req.body;
 
-    PaymentSchema.parse({ uid, amount: deposit });
+    PaymentSchema.parse({ uid, amount });
 
-    const response = await paymentService.addDeposit(uid, deposit);
+    const response = await paymentService.addDeposit(uid, amount);
     const record = await paymentService.createPaymentRecord(
       uid,
       "deposit",
-      deposit,
+      amount,
       response.balance
     );
 
