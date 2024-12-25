@@ -1,5 +1,8 @@
 import { createSesEncrypt, createShaEncrypt } from "../utils/payment.js";
 import paymentService from "../services/paymentService.js";
+import { orderService } from "../services/orderService.js";
+import { cartService } from "../services/cartService.js";
+import { activityService } from "../services/activityService.js";
 import { PaymentSchema } from "../validations/paymentSchema.js";
 import "dotenv/config";
 
@@ -41,15 +44,16 @@ const paymentEncrytOrder = async (req, res, next) => {
 const paymentDeposit = async (req, res, next) => {
   try {
     const { uid } = req.params;
-    const { deposit } = req.body;
+    const { amount } = req.body;
 
-    PaymentSchema.parse({ uid, amount: deposit });
+    PaymentSchema.parse({ uid, amount });
 
-    const response = await paymentService.addDeposit(uid, deposit);
+    const response = await paymentService.addDeposit(uid, amount);
     const record = await paymentService.createPaymentRecord(
       uid,
       "deposit",
-      deposit
+      amount,
+      response.balance
     );
 
     res.status(201).json({
@@ -128,10 +132,83 @@ const decreaseBalance = async (req, res, next) => {
   }
 };
 
+const handleCheckoutProcess = async (req, res, next) => {
+  const {
+    uid,
+    total_amount,
+    order_items,
+    order_status = "completed",
+    activity_id,
+    comment = "",
+    register_validated = 0,
+  } = req.body;
+
+  try {
+    // 驗證參數
+    if (!uid || !total_amount || !order_items || order_items.length === 0) {
+      return res.status(400).json({
+        status: 400,
+        message: "參數不完整",
+        success: false,
+      });
+    }
+
+    // 扣除儲值金
+    const spendBalance = await paymentService.deductWalletBalance(
+      uid,
+      total_amount
+    );
+    if (!spendBalance) {
+      throw new Error("Insufficient wallet balance.");
+    }
+
+    // 創建訂單
+    const createdOrder = await orderService.createOrder({
+      uid,
+      total_amount,
+      order_items,
+      order_status,
+      activity_id,
+      comment,
+      register_validated,
+    });
+
+    // 清空購物車
+    await cartService.clearCart(uid);
+
+    // 處理活動報名
+    const registrationResult = [];
+    for (const item of order_items) {
+      const registration = await activityService.upsertApplication(
+        item.activity_id,
+        uid,
+        comment,
+        item.require_approval ? 0 : 1
+      );
+      registrationResult.push(registration);
+    }
+
+    // 返回所有處理成功結果
+    return res.status(200).json({
+      status: 200,
+      message: "訂單與報名成功完成",
+      success: true,
+      data: {
+        order: createdOrder,
+        wallet: spendBalance,
+        registrations: registrationResult,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export {
   paymentEncrytOrder,
   paymentDeposit,
   fetchWalletBalance,
   fetchTransactionHistory,
   decreaseBalance,
+  handleCheckoutProcess,
 };

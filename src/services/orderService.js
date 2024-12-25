@@ -18,6 +18,27 @@ export const orderService = {
       where: {
         order_id,
       },
+      include: {
+        order_items: {
+          include: {
+            activities: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    });
+  },
+
+  // 檢查是否有未完成的訂單
+  async getPendingOrder(uid) {
+    return await prisma.orders.findFirst({
+      where: {
+        uid,
+        order_status: "pending",
+      },
     });
   },
 
@@ -30,7 +51,7 @@ export const orderService = {
         total_amount: data.total_amount,
         order_status: data.order_status,
         order_items: {
-          create: data.order_item.map((item) => ({
+          create: data.order_items.map((item) => ({
             activity_id: item.activity_id,
             quantity: item.quantity,
             price: item.price,

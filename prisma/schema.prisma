@@ -25,9 +25,13 @@ model activities {
   approval_deadline DateTime?           @db.DateTime(0)
   event_time        DateTime            @db.DateTime(0)
   updated_at        DateTime            @default(now()) @db.DateTime(0)
+  require_payment   Int?                @default(0) @db.TinyInt
   users             users               @relation(fields: [host_id], references: [uid], onUpdate: Restrict, map: "12")
   activity_comments activity_comments[]
   applications      applications[]
+  carts_items       carts_items[]
+  order_items       order_items[]
+  ratings           ratings[]
 
   @@index([host_id], map: "host_idanduid_idx")
 }
@@ -67,13 +71,16 @@ model users {
 }
 
 model applications {
-  application_id Int                 @unique(map: "id_UNIQUE") @default(autoincrement()) @db.UnsignedInt
-  activity_id    Int
-  participant_id String              @db.VarChar(255)
-  status         applications_status @default(registered)
-  comment        String?             @db.VarChar(50)
-  activities     activities          @relation(fields: [activity_id], references: [id], onDelete: Cascade, map: "applications_ibfk_1")
-  users          users               @relation(fields: [participant_id], references: [uid], onDelete: Cascade, map: "applications_ibfk_2")
+  application_id     Int                 @unique(map: "id_UNIQUE") @default(autoincrement()) @db.UnsignedInt
+  activity_id        Int
+  participant_id     String              @db.VarChar(255)
+  status             applications_status @default(registered)
+  comment            String?             @db.VarChar(50)
+  register_validated Int                 @default(0) @db.TinyInt
+  created_at         DateTime            @default(now()) @db.DateTime(0)
+  updated_at         DateTime?           @db.DateTime(0)
+  activities         activities          @relation(fields: [activity_id], references: [id], onDelete: Cascade, map: "applications_ibfk_1")
+  users              users               @relation(fields: [participant_id], references: [uid], onDelete: Cascade, map: "applications_ibfk_2")
 
   @@id([activity_id, participant_id])
   @@index([participant_id], map: "participants_ibfk_2")
@@ -99,10 +106,14 @@ model ratings {
   rating_kindness              Int
   rating_ability               Int
   rating_credit                Int
-  created_at                   DateTime @default(now()) @db.DateTime(0)
-  users_ratings_host_idTousers users    @relation("ratings_host_idTousers", fields: [host_id], references: [uid], onDelete: NoAction, onUpdate: NoAction, map: "bind host id")
-  users_ratings_user_idTousers users    @relation("ratings_user_idTousers", fields: [user_id], references: [uid], onDelete: Cascade, map: "bind user id")
+  created_at                   DateTime    @default(now()) @db.DateTime(0)
+  activitiesId                 Int?
+  activity_id                  Int
+  users_ratings_host_idTousers users       @relation("ratings_host_idTousers", fields: [host_id], references: [uid], onDelete: NoAction, onUpdate: NoAction, map: "bind host id")
+  users_ratings_user_idTousers users       @relation("ratings_user_idTousers", fields: [user_id], references: [uid], onDelete: Cascade, map: "bind user id")
+  activities                   activities? @relation(fields: [activitiesId], references: [id])
 
+  @@id([activity_id, user_id, host_id])
   @@index([host_id], map: "bind host id_idx")
   @@index([user_id], map: "bind id_idx")
 }
@@ -151,11 +162,71 @@ model posts {
 }
 
 model post_likes {
-  like_id    Int       @id @default(autoincrement())
-  post_id    Int
-  comment_id Int
-  uid        String    @db.VarChar(255)
-  created_at DateTime? @default(now()) @db.Timestamp(0)
+  like_id     Int                    @id @default(autoincrement())
+  post_id     Int
+  uid         String                 @db.VarChar(255)
+  created_at  DateTime?              @default(now()) @db.Timestamp(0)
+  like_status post_likes_like_status
+  posts       posts                  @relation(fields: [post_id], references: [post_id], onDelete: Cascade, map: "fk_post_likes_posts")
+
+  @@index([post_id], map: "fk_post_likes_posts")
+}
+
+model notifications {
+  id                                  Int                       @id @unique(map: "id_UNIQUE") @default(autoincrement())
+  user_id                             String                    @db.VarChar(255)
+  actor_id                            String                    @db.VarChar(255)
+  action                              notifications_action
+  target_type                         notifications_target_type
+  target_id                           Int
+  message                             String?                   @db.Text
+  is_read                             Int?                      @default(0) @db.TinyInt
+  created_at                          DateTime?                 @default(now()) @db.DateTime(0)
+  link                                String                    @db.VarChar(45)
+  users_notifications_actor_idTousers users                     @relation("notifications_actor_idTousers", fields: [actor_id], references: [uid], onDelete: NoAction, map: "FK_noti_users_actorId")
+  users_notifications_user_idTousers  users                     @relation("notifications_user_idTousers", fields: [user_id], references: [uid], onDelete: NoAction, map: "FK_noti_users_userId")
+
+  @@index([actor_id], map: "FK_noti_users_actorId_idx")
+  @@index([user_id], map: "FK_noti_users_userId_idx")
+}
+
+model carts {
+  id          Int           @id @default(autoincrement())
+  user_id     String?       @db.VarChar(255)
+  created_at  DateTime      @default(now())
+  updated_at  DateTime      @default(now()) @updatedAt
+  users       users?        @relation(fields: [user_id], references: [uid], onDelete: Cascade, onUpdate: NoAction)
+  carts_items carts_items[]
+
+  @@index([user_id], map: "carts_user_id_fkey")
+}
+
+model order_items {
+  order_item_id Int        @id @default(autoincrement())
+  order_id      Int
+  activity_id   Int
+  quantity      Int
+  price         Decimal    @db.Decimal(10, 2)
+  subtotal      Decimal    @db.Decimal(10, 2)
+  created_at    DateTime?  @default(now()) @db.Timestamp(0)
+  activities    activities @relation(fields: [activity_id], references: [id], onDelete: NoAction, map: "fk_order_items_activity_id")
+  orders        orders     @relation(fields: [order_id], references: [order_id], onDelete: Cascade, map: "fk_order_items_order_id")
+
+  @@index([activity_id], map: "fk_order_items_activity_id")
+  @@index([order_id], map: "fk_order_items_order_id")
+}
+
+model orders {
+  order_id     Int                 @id @default(autoincrement())
+  uid          String              @db.VarChar(255)
+  total_amount Decimal             @db.Decimal(10, 2)
+  order_status orders_order_status
+  created_at   DateTime?           @default(now()) @db.Timestamp(0)
+  updated_at   DateTime?           @default(now()) @db.Timestamp(0)
+  order_items  order_items[]
+  users        users               @relation(fields: [uid], references: [uid], onDelete: Cascade, onUpdate: NoAction, map: "orders_ibfk_1")
+
+  @@index([uid], map: "uid")
 }
 
 model wallet {
@@ -166,27 +237,29 @@ model wallet {
 }
 
 model wallet_record {
-  id         Int                   @id @default(autoincrement())
-  wallet_id  String                @db.VarChar(255)
-  action     wallet_record_action?
-  amount     Decimal               @db.Decimal(10, 2)
-  created_at DateTime              @default(now()) @db.DateTime(0)
-  wallet     wallet                @relation(fields: [wallet_id], references: [uid], onDelete: NoAction, onUpdate: NoAction, map: "fk_walletRecord_wallet_id")
+  id              Int                   @id @default(autoincrement())
+  wallet_id       String                @db.VarChar(255)
+  action          wallet_record_action?
+  amount          Decimal               @db.Decimal(10, 2)
+  created_at      DateTime              @default(now()) @db.DateTime(0)
+  updated_balance Decimal               @db.Decimal(10, 2)
+  wallet          wallet                @relation(fields: [wallet_id], references: [uid], onDelete: NoAction, onUpdate: NoAction, map: "fk_walletRecord_wallet_id")
 
   @@index([wallet_id], map: "fk_walletRecord_wallet_id_idx")
 }
 
-model topup_record {
-  id           Int                 @id @default(autoincrement())
-  user_id      String              @db.VarChar(255)
-  topup_date   DateTime            @default(now()) @db.DateTime(0)
-  topup_number Int
-  amount       Int
-  type         String              @db.VarChar(10)
-  status       topup_record_status
-  users        users               @relation(fields: [user_id], references: [uid], onDelete: NoAction, onUpdate: NoAction, map: "1")
+model carts_items {
+  id          Int        @id @default(autoincrement())
+  cart_id     Int
+  activity_id Int
+  created_at  DateTime   @default(now())
+  is_selected Boolean?   @default(false)
+  activities  activities @relation(fields: [activity_id], references: [id], map: "carts_items_activity_id_fkey")
+  carts       carts      @relation(fields: [cart_id], references: [id], map: "carts_items_cart_id_fkey")
 
-  @@index([user_id], map: "uid_idx")
+  @@unique([cart_id, activity_id])
+  @@index([activity_id], map: "carts_items_activity_id_fkey")
+  @@index([cart_id, activity_id])
 }
 
 enum activities_category {
@@ -242,10 +315,5 @@ enum activities_pay_type {
   free
   AA
   host
-}
-
-enum topup_record_status {
-  PENDING
-  SUCCESS
-  FAIL
+  paymentRequired
 }

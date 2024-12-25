@@ -5,7 +5,7 @@ const router = express.Router();
 // Activity List
 router.get("/", ActivityController.fetchAllActiveActivities);
 router.get("/:id", ActivityController.fetchActivityDetails);
-router.get("/category/:category", ActivityController.fetchActivitiesByCategory);
+router.get("/category/:type", ActivityController.fetchActivitiesByCategory);
 
 
 // Activity Create/Delete
