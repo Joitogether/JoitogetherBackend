@@ -1,11 +1,11 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "My API",
-    "description": "Description",
+    "title": "Joitogether API",
+    "description": "Joitogether API 集大成！",
     "version": "1.0.0"
   },
-  "host": "localhost:3000",
+  "host": "localhost:3030",
   "basePath": "/",
   "schemes": [
     "http"
@@ -13,6 +13,9 @@
   "paths": {
     "/activities/": {
       "get": {
+        "tags": [
+          "Activity"
+        ],
         "description": "",
         "responses": {
           "200": {
@@ -21,6 +24,9 @@
         }
       },
       "post": {
+        "tags": [
+          "Activity"
+        ],
         "description": "",
         "responses": {
           "201": {
@@ -31,6 +37,9 @@
     },
     "/activities/{id}": {
       "get": {
+        "tags": [
+          "Activity"
+        ],
         "description": "",
         "parameters": [
           {
@@ -52,6 +61,9 @@
     },
     "/activities/category/{type}": {
       "get": {
+        "tags": [
+          "Activity"
+        ],
         "description": "",
         "parameters": [
           {
@@ -73,6 +85,9 @@
     },
     "/activities/cancel/{id}": {
       "put": {
+        "tags": [
+          "Activity"
+        ],
         "description": "",
         "parameters": [
           {
@@ -91,6 +106,9 @@
     },
     "/activities/search": {
       "post": {
+        "tags": [
+          "Activity"
+        ],
         "description": "",
         "parameters": [
           {
@@ -118,6 +136,9 @@
     },
     "/activities/comment/{activity_id}": {
       "post": {
+        "tags": [
+          "Activity"
+        ],
         "description": "",
         "parameters": [
           {
@@ -151,6 +172,9 @@
     },
     "/activities/comment/{comment_id}": {
       "delete": {
+        "tags": [
+          "Activity"
+        ],
         "description": "",
         "parameters": [
           {
@@ -163,60 +187,6 @@
         "responses": {
           "200": {
             "description": "OK"
-          }
-        }
-      }
-    },
-    "/activities/geocode": {
-      "post": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "address": {
-                  "example": "any"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Created"
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
-    },
-    "/activities/autocomplete": {
-      "post": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "query": {
-                  "example": "any"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Created"
-          },
-          "400": {
-            "description": "Bad Request"
           }
         }
       }
@@ -477,6 +447,9 @@
     },
     "/applications/register/{activity_id}": {
       "post": {
+        "tags": [
+          "Application"
+        ],
         "description": "",
         "parameters": [
           {
@@ -516,6 +489,9 @@
     },
     "/applications/cancel/{activity_id}": {
       "put": {
+        "tags": [
+          "Application"
+        ],
         "description": "",
         "parameters": [
           {
@@ -546,6 +522,9 @@
     },
     "/applications/{activity_id}": {
       "get": {
+        "tags": [
+          "Application"
+        ],
         "description": "",
         "parameters": [
           {
@@ -564,6 +543,9 @@
     },
     "/applications/verify/{application_id}": {
       "put": {
+        "tags": [
+          "Application"
+        ],
         "description": "",
         "parameters": [
           {
@@ -594,6 +576,9 @@
     },
     "/posts/": {
       "get": {
+        "tags": [
+          "Post"
+        ],
         "description": "",
         "responses": {
           "200": {
@@ -605,6 +590,9 @@
         }
       },
       "post": {
+        "tags": [
+          "Post"
+        ],
         "description": "",
         "responses": {
           "201": {
@@ -615,6 +603,9 @@
     },
     "/posts/latest": {
       "get": {
+        "tags": [
+          "Post"
+        ],
         "description": "",
         "responses": {
           "200": {
@@ -628,6 +619,9 @@
     },
     "/posts/popular": {
       "get": {
+        "tags": [
+          "Post"
+        ],
         "description": "",
         "responses": {
           "200": {
@@ -641,6 +635,9 @@
     },
     "/posts/{post_id}": {
       "get": {
+        "tags": [
+          "Post"
+        ],
         "description": "",
         "parameters": [
           {
@@ -660,6 +657,9 @@
         }
       },
       "put": {
+        "tags": [
+          "Post"
+        ],
         "description": "",
         "parameters": [
           {
@@ -679,6 +679,9 @@
         }
       },
       "delete": {
+        "tags": [
+          "Post"
+        ],
         "description": "",
         "parameters": [
           {
@@ -697,6 +700,9 @@
     },
     "/posts/category/{category}": {
       "get": {
+        "tags": [
+          "Post"
+        ],
         "description": "",
         "parameters": [
           {
@@ -718,6 +724,9 @@
     },
     "/posts/comments/{post_id}": {
       "get": {
+        "tags": [
+          "Post_Comment"
+        ],
         "description": "",
         "parameters": [
           {
@@ -739,6 +748,9 @@
     },
     "/posts/comment/{post_id}": {
       "post": {
+        "tags": [
+          "Post_Comment"
+        ],
         "description": "",
         "parameters": [
           {
@@ -757,6 +769,9 @@
     },
     "/posts/comment/{comment_id}": {
       "delete": {
+        "tags": [
+          "Post_Comment"
+        ],
         "description": "",
         "parameters": [
           {
@@ -775,6 +790,9 @@
     },
     "/posts/likes/{post_id}": {
       "get": {
+        "tags": [
+          "Post_Like"
+        ],
         "description": "",
         "parameters": [
           {
@@ -796,6 +814,9 @@
     },
     "/posts/like/{post_id}": {
       "post": {
+        "tags": [
+          "Post_Like"
+        ],
         "description": "",
         "parameters": [
           {
@@ -826,6 +847,9 @@
     },
     "/posts/like/{like_id}": {
       "delete": {
+        "tags": [
+          "Post_Like"
+        ],
         "description": "",
         "parameters": [
           {
@@ -844,6 +868,9 @@
     },
     "/ratings/{host_id}": {
       "get": {
+        "tags": [
+          "Rating"
+        ],
         "description": "",
         "parameters": [
           {
@@ -865,6 +892,9 @@
     },
     "/ratings/hostDetails/{host_id}": {
       "get": {
+        "tags": [
+          "Rating"
+        ],
         "description": "",
         "parameters": [
           {
@@ -886,6 +916,9 @@
     },
     "/ratings/userDetails/{user_id}": {
       "get": {
+        "tags": [
+          "Rating"
+        ],
         "description": "",
         "parameters": [
           {
@@ -907,6 +940,9 @@
     },
     "/ratings/activity/{activity_id}": {
       "get": {
+        "tags": [
+          "Rating"
+        ],
         "description": "",
         "parameters": [
           {
@@ -928,6 +964,9 @@
     },
     "/ratings/": {
       "post": {
+        "tags": [
+          "Rating"
+        ],
         "description": "",
         "responses": {
           "201": {
@@ -938,6 +977,9 @@
     },
     "/carts/{userId}": {
       "get": {
+        "tags": [
+          "Cart"
+        ],
         "description": "",
         "parameters": [
           {
@@ -954,6 +996,9 @@
         }
       },
       "post": {
+        "tags": [
+          "Cart"
+        ],
         "description": "",
         "parameters": [
           {
@@ -984,6 +1029,9 @@
     },
     "/carts/{userId}/{activityId}": {
       "delete": {
+        "tags": [
+          "Cart"
+        ],
         "description": "",
         "parameters": [
           {
@@ -1011,6 +1059,9 @@
     },
     "/carts/{uid}/clear": {
       "delete": {
+        "tags": [
+          "Cart"
+        ],
         "description": "",
         "parameters": [
           {
@@ -1029,6 +1080,9 @@
     },
     "/carts/{userId}/selected": {
       "get": {
+        "tags": [
+          "Cart"
+        ],
         "description": "",
         "parameters": [
           {
@@ -1047,6 +1101,9 @@
     },
     "/carts/{id}/update-selection": {
       "put": {
+        "tags": [
+          "Cart"
+        ],
         "description": "",
         "parameters": [
           {
@@ -1080,6 +1137,9 @@
     },
     "/payments/encrypt": {
       "post": {
+        "tags": [
+          "Balance"
+        ],
         "description": "",
         "parameters": [
           {
@@ -1104,6 +1164,9 @@
     },
     "/payments/deposit/{uid}": {
       "post": {
+        "tags": [
+          "Balance"
+        ],
         "description": "",
         "parameters": [
           {
@@ -1134,6 +1197,9 @@
     },
     "/payments/wallet/{uid}": {
       "get": {
+        "tags": [
+          "Balance"
+        ],
         "description": "",
         "parameters": [
           {
@@ -1155,6 +1221,9 @@
     },
     "/payments/wallet/{uid}/transactions": {
       "get": {
+        "tags": [
+          "Balance"
+        ],
         "description": "",
         "parameters": [
           {
@@ -1191,6 +1260,9 @@
     },
     "/payments/wallet/{uid}/debit": {
       "put": {
+        "tags": [
+          "Balance"
+        ],
         "description": "",
         "parameters": [
           {
@@ -1221,6 +1293,9 @@
     },
     "/payments/order/process": {
       "post": {
+        "tags": [
+          "Checkout Process"
+        ],
         "description": "",
         "parameters": [
           {
@@ -1266,6 +1341,9 @@
     },
     "/orders/": {
       "get": {
+        "tags": [
+          "Order"
+        ],
         "description": "",
         "responses": {
           "200": {
@@ -1277,6 +1355,9 @@
         }
       },
       "post": {
+        "tags": [
+          "Order"
+        ],
         "description": "",
         "responses": {
           "201": {
@@ -1287,6 +1368,9 @@
     },
     "/orders/{order_id}": {
       "get": {
+        "tags": [
+          "Order"
+        ],
         "description": "",
         "parameters": [
           {
@@ -1308,6 +1392,9 @@
     },
     "/orders/pending/{uid}": {
       "get": {
+        "tags": [
+          "Order"
+        ],
         "description": "",
         "parameters": [
           {
@@ -1326,6 +1413,9 @@
     },
     "/orders/{order_id}/delete": {
       "delete": {
+        "tags": [
+          "Order"
+        ],
         "description": "",
         "parameters": [
           {
@@ -1356,6 +1446,9 @@
     },
     "/orders/{order_id}/complete": {
       "put": {
+        "tags": [
+          "Order"
+        ],
         "description": "",
         "parameters": [
           {
@@ -1386,6 +1479,9 @@
     },
     "/orders/{order_id}/fail": {
       "put": {
+        "tags": [
+          "Order"
+        ],
         "description": "",
         "parameters": [
           {
@@ -1416,6 +1512,9 @@
     },
     "/orders/{order_id}/cancel": {
       "put": {
+        "tags": [
+          "Order"
+        ],
         "description": "",
         "parameters": [
           {

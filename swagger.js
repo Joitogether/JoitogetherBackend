@@ -2,10 +2,10 @@ import swaggerAutogen from "swagger-autogen";
 
 const doc = {
   info: {
-    title: "My API",
-    description: "Description",
+    title: "Joitogether API",
+    description: "Joitogether API 集大成！",
   },
-  host: "localhost:3000",
+  host: "localhost:3030",
 };
 
 const outputFile = "./swagger-output.json";

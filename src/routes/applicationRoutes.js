@@ -4,15 +4,22 @@ const router = express.Router();
 
 router.post(
   "/register/:activity_id",
+  /* #swagger.tags = ['Application'] */
   ApplicationController.createActivityRegistration
 );
 router.put(
   "/cancel/:activity_id",
+  /* #swagger.tags = ['Application'] */
   ApplicationController.removeActivityRegistration
 );
-router.get("/:activity_id", ApplicationController.fetchActivityRegistrations);
+router.get(
+  "/:activity_id",
+  /* #swagger.tags = ['Application'] */
+  ApplicationController.fetchActivityRegistrations
+);
 router.put(
   "/verify/:application_id",
+  /* #swagger.tags = ['Application'] */
   ApplicationController.approveActivityParticipant
 );
 
