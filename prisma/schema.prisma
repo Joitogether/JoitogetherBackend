@@ -244,12 +244,13 @@ model wallet {
 }
 
 model wallet_record {
-  id         Int                   @id @default(autoincrement())
-  wallet_id  String                @db.VarChar(255)
-  action     wallet_record_action?
-  amount     Decimal               @db.Decimal(10, 2)
-  created_at DateTime              @default(now()) @db.DateTime(0)
-  wallet     wallet                @relation(fields: [wallet_id], references: [uid], onDelete: NoAction, onUpdate: NoAction, map: "fk_walletRecord_wallet_id")
+  id              Int                   @id @default(autoincrement())
+  wallet_id       String                @db.VarChar(255)
+  action          wallet_record_action?
+  amount          Decimal               @db.Decimal(10, 2)
+  created_at      DateTime              @default(now()) @db.DateTime(0)
+  updated_balance Decimal               @db.Decimal(10, 2)
+  wallet          wallet                @relation(fields: [wallet_id], references: [uid], onDelete: NoAction, onUpdate: NoAction, map: "fk_walletRecord_wallet_id")
 
   @@index([wallet_id], map: "fk_walletRecord_wallet_id_idx")
 }

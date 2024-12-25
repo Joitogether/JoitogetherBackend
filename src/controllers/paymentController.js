@@ -45,7 +45,8 @@ const paymentDeposit = async (req, res, next) => {
     const record = await paymentService.createPaymentRecord(
       uid,
       "deposit",
-      deposit
+      deposit,
+      response.balance
     );
 
     res.status(201).json({
