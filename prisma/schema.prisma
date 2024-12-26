@@ -37,37 +37,41 @@ model activities {
 }
 
 model users {
-  uid                                    String              @id @unique(map: "uid_UNIQUE") @db.VarChar(255)
-  email                                  String              @unique(map: "email_UNIQUE") @db.VarChar(255)
-  email_verified                         Boolean             @default(false)
-  full_name                              String              @db.VarChar(255)
-  display_name                           String              @db.VarChar(255)
-  phone_number                           String              @db.VarChar(10)
-  photo_url                              String?             @db.Text
-  created_at                             DateTime            @default(now()) @db.DateTime(0)
-  city                                   String?             @db.VarChar(5)
-  age                                    Int?
-  career                                 String?             @db.VarChar(45)
-  favorite_sentence                      String?             @db.VarChar(45)
-  tags                                   String?             @db.VarChar(255)
-  self_introduction                      String?             @db.VarChar(45)
-  zodiac                                 String?             @db.VarChar(3)
-  hobby                                  String?             @db.VarChar(45)
-  expertise                              String?             @db.VarChar(45)
-  interested_in                          String?             @db.VarChar(255)
-  life_photo_1                           String?             @db.Text
-  life_photo_2                           String?             @db.Text
-  activities                             activities[]
-  activity_comments                      activity_comments[]
-  applications                           applications[]
-  followers_followers_follower_idTousers followers[]         @relation("followers_follower_idTousers")
-  followers_followers_user_idTousers     followers[]         @relation("followers_user_idTousers")
-  post_comments                          post_comments[]
-  posts                                  posts[]
-  ratings_ratings_host_idTousers         ratings[]           @relation("ratings_host_idTousers")
-  ratings_ratings_user_idTousers         ratings[]           @relation("ratings_user_idTousers")
-  topup_record                           topup_record[]
-  wallet                                 wallet?
+  uid                                         String              @id @unique(map: "uid_UNIQUE") @db.VarChar(255)
+  email                                       String              @unique(map: "email_UNIQUE") @db.VarChar(255)
+  email_verified                              Boolean             @default(false)
+  full_name                                   String              @db.VarChar(255)
+  display_name                                String              @db.VarChar(255)
+  phone_number                                String              @db.VarChar(10)
+  photo_url                                   String?             @db.VarChar(2000)
+  created_at                                  DateTime            @default(now()) @db.DateTime(0)
+  city                                        String?             @db.VarChar(5)
+  age                                         Int?
+  career                                      String?             @db.VarChar(45)
+  favorite_sentence                           String?             @db.VarChar(45)
+  tags                                        String?             @db.VarChar(255)
+  self_introduction                           String?             @db.VarChar(45)
+  zodiac                                      String?             @db.VarChar(3)
+  hobby                                       String?             @db.VarChar(45)
+  expertise                                   String?             @db.VarChar(45)
+  interested_in                               String?             @db.VarChar(255)
+  life_photo_1                                String?             @default("https://firebasestorage.googleapis.com/v0/b/login-demo1-9d3cb.firebasestorage.app/o/lifephoto%2F1733574359943_defaultimg.jpg?alt=media&token=c5486472-dadd-4276-8666-97a538e46e5f") @db.VarChar(2000)
+  life_photo_2                                String?             @default("https://firebasestorage.googleapis.com/v0/b/login-demo1-9d3cb.firebasestorage.app/o/lifephoto%2F1733574359943_defaultimg.jpg?alt=media&token=c5486472-dadd-4276-8666-97a538e46e5f") @db.VarChar(2000)
+  activities                                  activities[]
+  activity_comments                           activity_comments[]
+  applications                                applications[]
+  carts                                       carts[]
+  followers_followers_follower_idTousers      followers[]         @relation("followers_follower_idTousers")
+  followers_followers_user_idTousers          followers[]         @relation("followers_user_idTousers")
+  notifications_notifications_actor_idTousers notifications[]     @relation("notifications_actor_idTousers")
+  notifications_notifications_user_idTousers  notifications[]     @relation("notifications_user_idTousers")
+  orders                                      orders[]
+  post_comments                               post_comments[]
+  posts                                       posts[]
+  ratings_ratings_host_idTousers              ratings[]           @relation("ratings_host_idTousers")
+  ratings_ratings_user_idTousers              ratings[]           @relation("ratings_user_idTousers")
+  topup_record                                topup_record[]
+  wallet                                      wallet?
 }
 
 model applications {
@@ -87,7 +91,7 @@ model applications {
 }
 
 model followers {
-  id                                 Int    @id @unique(map: "id_UNIQUE") @default(autoincrement())
+  id                                 Int    @id @unique(map: "id_UNIQUE")
   user_id                            String @db.VarChar(255)
   follower_id                        String @db.VarChar(255)
   users_followers_follower_idTousers users  @relation("followers_follower_idTousers", fields: [follower_id], references: [uid], onDelete: Cascade, map: "followers bind follower id")
@@ -98,11 +102,11 @@ model followers {
 }
 
 model ratings {
-  rating_id                    Int      @id @unique(map: "rating_id_UNIQUE") @default(autoincrement())
-  user_id                      String   @db.VarChar(255)
-  host_id                      String   @db.VarChar(255)
+  rating_id                    Int         @unique(map: "rating_id_UNIQUE") @default(autoincrement())
+  user_id                      String      @db.VarChar(255)
+  host_id                      String      @db.VarChar(255)
   rating_heart                 Int
-  user_comment                 String   @db.Text
+  user_comment                 String      @db.Text
   rating_kindness              Int
   rating_ability               Int
   rating_credit                Int
@@ -116,6 +120,8 @@ model ratings {
   @@id([activity_id, user_id, host_id])
   @@index([host_id], map: "bind host id_idx")
   @@index([user_id], map: "bind id_idx")
+  @@index([activity_id], map: "bind activity id_idx")
+  @@index([activitiesId], map: "ratings_activitiesId_fkey")
 }
 
 model activity_comments {
@@ -133,13 +139,14 @@ model activity_comments {
 }
 
 model post_comments {
-  comment_id      Int      @id @default(autoincrement())
+  comment_id      Int                          @id @default(autoincrement())
   post_id         Int
-  comment_content String   @db.Text
-  uid             String   @db.VarChar(255)
-  created_at      DateTime @default(now()) @db.DateTime(0)
-  users           users    @relation(fields: [uid], references: [uid], onDelete: NoAction, onUpdate: NoAction, map: "FK_postComments_users")
-  posts           posts    @relation(fields: [post_id], references: [post_id], onDelete: NoAction, map: "FK_postComments_users-postid")
+  comment_content String                       @db.Text
+  uid             String                       @db.VarChar(255)
+  created_at      DateTime                     @default(now()) @db.DateTime(0)
+  comment_status  post_comments_comment_status
+  users           users                        @relation(fields: [uid], references: [uid], onDelete: NoAction, onUpdate: NoAction, map: "FK_postComments_users")
+  posts           posts                        @relation(fields: [post_id], references: [post_id], onDelete: NoAction, map: "FK_postComments_users-postid")
 
   @@index([post_id], map: "FK_postComments_users-postid_idx")
   @@index([uid], map: "FK_postComments_users_idx")
@@ -156,6 +163,7 @@ model posts {
   post_status   posts_post_status
   post_img      String?             @db.Text
   post_comments post_comments[]
+  post_likes    post_likes[]
   users         users               @relation(fields: [uid], references: [uid], map: "FK_posts_users-uid")
 
   @@index([uid], map: "FK_posts_users-uid_idx")
@@ -262,6 +270,19 @@ model carts_items {
   @@index([cart_id, activity_id])
 }
 
+model topup_record {
+  id           Int                 @id @default(autoincrement())
+  topuper_id   String              @db.VarChar(255)
+  topup_date   DateTime            @default(now()) @db.DateTime(0)
+  topup_number Int
+  amount       Int
+  type         String              @db.VarChar(45)
+  status       topup_record_status
+  users        users               @relation(fields: [topuper_id], references: [uid], onDelete: NoAction, onUpdate: NoAction, map: "fk_topuperId_to_usersUid")
+
+  @@index([topuper_id], map: "fk_topuperId_to_usersUid_idx")
+}
+
 enum activities_category {
   food
   shopping
@@ -305,6 +326,38 @@ enum posts_post_category {
   others
 }
 
+enum notifications_action {
+  like
+  comment
+  register
+  review
+  rate
+}
+
+enum notifications_target_type {
+  post
+  activity
+  rating
+}
+
+enum post_likes_like_status {
+  liked
+  unlike
+}
+
+enum post_comments_comment_status {
+  active
+  deleted
+}
+
+enum orders_order_status {
+  pending
+  completed
+  failed
+  cancelled
+  deleted
+}
+
 enum wallet_record_action {
   spend
   withdraw
@@ -316,4 +369,10 @@ enum activities_pay_type {
   AA
   host
   paymentRequired
+}
+
+enum topup_record_status {
+  PENDING
+  SUCCESS
+  FAIL
 }
