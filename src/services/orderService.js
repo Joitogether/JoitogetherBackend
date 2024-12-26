@@ -42,7 +42,7 @@ export const orderService = {
     });
   },
 
-  // 創建訂單
+  // 建立訂單
   async createOrder(data) {
     CreateOrderSchema.parse(data);
     return await prisma.orders.create({

@@ -68,7 +68,7 @@ const addOrder = async (req, res, next) => {
     const response = await orderService.createOrder(data);
     res.status(201).json({
       status: 201,
-      message: "資料創建成功",
+      message: "資料建立成功",
       data: response,
     });
   } catch (error) {

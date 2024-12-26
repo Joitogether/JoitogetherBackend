@@ -22,7 +22,7 @@ const createActivityRegistration = async (req, res, next) => {
     const response = await activityService.upsertApplication(activity_id, participant_id, comment, register_validated)
 
     res.status(201).json({
-      message: "資料創建成功",
+      message: "資料建立成功",
       status: 201,
       data: response,
     });
