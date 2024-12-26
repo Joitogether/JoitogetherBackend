@@ -343,6 +343,20 @@ export const activityService = {
           },
         ],
       },
+      select: {
+        id: true,
+        name: true,
+        img_url: true,
+        location: true,
+        event_time: true,
+        max_participants: true,
+        users: {
+          select: {
+            display_name: true,
+            photo_url: true,
+          },
+        }
+      },
       orderBy: {
         event_time: "asc",
       }
