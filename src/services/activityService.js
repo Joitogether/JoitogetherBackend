@@ -174,14 +174,14 @@ export const activityService = {
     });
   },
 
-    // 免審核的活動報名
+    // 活動報名
   async upsertApplication(activity_id, participant_id, comment, register_validated){
     return await prisma.applications.upsert({
       where: {activity_id_participant_id: { activity_id, participant_id}},
       update: {
         status: 'registered',
         comment,
-        register_validated: 1,
+        register_validated,
         updated_at: new Date()
       },
       create: {
