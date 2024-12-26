@@ -9,7 +9,7 @@ export const TopupService = {
                 // const isoDate = new Date(validatedData.topup_date.replace(" ", "T")).toISOString();
                 const newTopupRecord = await prisma.topup_record.create({
                     data: {
-                    user_id: validatedData.user_id,
+                    topuper_id: validatedData.topuper_id,
                     topup_date: validatedData.topup_date,
                     topup_number: validatedData.topup_number,
                     amount: validatedData.amount,
@@ -20,10 +20,10 @@ export const TopupService = {
                 });
             return newTopupRecord;  
         }},
-    async getTopupById(user_id) {
+    async getTopupRecordById(topuper_id) {
         return await prisma.topup_record.findMany({
         where: { 
-            user_id,
+            topuper_id,
             status: "PENDING"
         },
     })},
