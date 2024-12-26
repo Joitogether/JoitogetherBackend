@@ -5,7 +5,7 @@ const router = express.Router();
 
 // Balance Add
 router.post("/encrypt", PaymentController.paymentEncrytOrder);
-router.post("/deposit/:uid", PaymentController.paymentDeposit);
+router.post("/wallet/:uid/deposit", PaymentController.paymentDeposit);
 
 // Wallet List
 router.get("/wallet/:uid", PaymentController.fetchWalletBalance);
@@ -15,7 +15,7 @@ router.get(
 );
 
 // Balance Debit
-router.put("/wallet/:uid/debit", PaymentController.decreaseBalance);
+router.put("/wallet/:uid/spend", PaymentController.decreaseBalance);
 
 // Checkout Process
 router.post("/order/process", PaymentController.handleCheckoutProcess);
