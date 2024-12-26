@@ -14,9 +14,9 @@ export const saveTopupDetail = async(req, res, next) => {
     }
 }
 
-export const getTopupRecord = async(req, res, next) => {
+export const getWalletRecord = async(req, res, next) => {
     try {
-        const result = await TopupService.getTopupById(req.params.uid)
+        const result = await TopupService.getTopupRecordById(req.params.uid)
         if (!result || result.length === 0) {
             return res.status(404).json({
                 message: "查無此資料",
