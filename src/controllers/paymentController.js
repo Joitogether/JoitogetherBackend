@@ -65,17 +65,19 @@ const paymentDeposit = async (req, res, next) => {
 const fetchWalletBalance = async (req, res, next) => {
   try {
     const uid = req.params.uid;
+
     const response = await paymentService.getWalletBalance(uid);
+
     if (!response || response.length === 0) {
-      return res.status(404).json({
-        status: 400,
-        message: "查無此資料",
-        data: null,
+      return res.status(200).json({
+        status: 200,
+        message: "查無資料",
+        data: [],
       });
     }
     res.status(200).json({
       status: 200,
-      message: "資料獲取成功",
+      message: "成功取得資料",
       data: response,
     });
   } catch (error) {
@@ -87,21 +89,23 @@ const fetchTransactionHistory = async (req, res, next) => {
   try {
     const uid = req.params.uid;
     const { action, startData, endData } = req.query;
+
     const response = await paymentService.getTransactionHistory(uid, {
       action,
       startData,
       endData,
     });
+
     if (!response || response.length === 0) {
-      return res.status(404).json({
-        status: 404,
-        message: "查無此資料",
-        data: null,
+      return res.status(200).json({
+        status: 200,
+        message: "查無資料",
+        data: [],
       });
     }
     res.status(200).json({
       status: 200,
-      message: "資料獲取成功",
+      message: "成功取得資料",
       data: response,
     });
   } catch (error) {
@@ -113,6 +117,7 @@ const decreaseBalance = async (req, res, next) => {
   try {
     const uid = req.params.uid;
     const { amount } = req.body;
+
     const response = await paymentService.deductWalletBalance(uid, amount);
 
     res.status(200).json({
@@ -126,17 +131,17 @@ const decreaseBalance = async (req, res, next) => {
 };
 
 const handleCheckoutProcess = async (req, res, next) => {
-  const {
-    uid,
-    total_amount,
-    order_items,
-    order_status = "completed",
-    activity_id,
-    comment = "",
-    register_validated = 0,
-  } = req.body;
-
   try {
+    const {
+      uid,
+      total_amount,
+      order_items,
+      order_status = "completed",
+      activity_id,
+      comment = "",
+      register_validated = 0,
+    } = req.body;
+
     // 驗證參數
     if (!uid || !total_amount || !order_items || order_items.length === 0) {
       return res.status(400).json({
@@ -151,11 +156,12 @@ const handleCheckoutProcess = async (req, res, next) => {
       uid,
       total_amount
     );
+
     if (!spendBalance) {
       throw new Error("Insufficient wallet balance.");
     }
 
-    // 創建訂單
+    // 建立訂單
     const createdOrder = await orderService.createOrder({
       uid,
       total_amount,

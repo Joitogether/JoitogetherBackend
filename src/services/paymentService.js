@@ -29,19 +29,19 @@ const paymentService = {
     });
   },
 
-  // 獲取用戶錢包紀錄
+  // 取得用戶錢包紀錄
   async getWalletBalance(uid) {
     GetDepositSchema.parse({ uid });
     return await prisma.wallet.findUnique({ where: { uid } });
   },
 
-  // 獲取用戶錢包交易紀錄
+  // 取得用戶錢包交易紀錄
   async getTransactionHistory(uid, filters = {}) {
     const { action, startData, endData } = filters;
     // 查找用戶錢包
     const wallet = await prisma.wallet.findUnique({ where: { uid } });
     if (!wallet) {
-      throw new Error("錢包不存在");
+      return [];
     }
 
     const transactions = await prisma.wallet_record.findMany({
@@ -99,7 +99,7 @@ const paymentService = {
         wallet_id: wallet.uid,
         action: "spend",
         amount,
-        updated_balance: updateWallet.balance
+        updated_balance: updateWallet.balance,
       },
     });
 

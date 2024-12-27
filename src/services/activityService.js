@@ -6,7 +6,7 @@ import {
 
 // Service 層
 export const activityService = {
-  // 獲取所有活動
+  // 取得所有活動
   async getAllActivities() {
     return await prisma.activities.findMany({
       where: { status: "registrationOpen" },
@@ -33,25 +33,25 @@ export const activityService = {
     });
   },
 
-  // 獲取近期活動資料
-  async getRecentActivities(){
+  // 取得近期活動資料
+  async getRecentActivities() {
     return await prisma.activities.findMany({
-      include:{
+      include: {
         users: {
           select: {
             display_name: true,
-            photo_url: true
-          }
-        }
+            photo_url: true,
+          },
+        },
       },
       orderBy: {
-        created_at: "desc"
+        created_at: "desc",
       },
-      take: 15
-    })
+      take: 15,
+    });
   },
 
-  // 獲取單一活動
+  // 取得單一活動
   async getActivityById(id) {
     const response = await prisma.activities.findUnique({
       where: { id },
@@ -95,8 +95,8 @@ export const activityService = {
   async getActivityByCategory(type, category, page, pageSize) {
     ActivityGetCategorySchema.parse({ type, category, page, pageSize });
     const skip = (page - 1) * pageSize;
-    if(type == 'region'){
-       const response = await prisma.activities.findMany({
+    if (type == "region") {
+      const response = await prisma.activities.findMany({
         skip,
         take: pageSize,
         where: {
@@ -115,18 +115,17 @@ export const activityService = {
               display_name: true,
               photo_url: true,
             },
-          }
+          },
         },
         orderBy: {
           created_at: "desc",
         },
-
-        });
-        if (response.length === 0) {
-          return null;
-        }
-        return response
-    }else{
+      });
+      if (response.length === 0) {
+        return null;
+      }
+      return response;
+    } else {
       const response = await prisma.activities.findMany({
         skip,
         take: pageSize,
@@ -146,16 +145,16 @@ export const activityService = {
               display_name: true,
               photo_url: true,
             },
-          }
+          },
         },
         orderBy: {
           created_at: "desc",
         },
-      });   
+      });
       if (response.length === 0) {
         return null;
       }
-      return response
+      return response;
     }
   },
   // 新增活動
@@ -174,48 +173,51 @@ export const activityService = {
     });
   },
 
-    // 免審核的活動報名
-  async upsertApplication(activity_id, participant_id, comment, register_validated){
+  // 免審核的活動報名
+  async upsertApplication(
+    activity_id,
+    participant_id,
+    comment,
+    register_validated
+  ) {
     return await prisma.applications.upsert({
-      where: {activity_id_participant_id: { activity_id, participant_id}},
+      where: { activity_id_participant_id: { activity_id, participant_id } },
       update: {
-        status: 'registered',
+        status: "registered",
         comment,
         register_validated: 1,
-        updated_at: new Date()
+        updated_at: new Date(),
       },
       create: {
         activity_id,
-        status: 'registered',
+        status: "registered",
         participant_id,
         comment,
-        register_validated
-      }
-    })
+        register_validated,
+      },
+    });
   },
-
 
   // 取消活動
   async cancelActivity(id) {
     return await prisma.activities.update({
       where: { id },
-      data: { 
+      data: {
         status: "cancelled",
-        updated_at: new Date()
+        updated_at: new Date(),
       },
     });
   },
-
 
   // 取消報名
   async cancelRegister(participant_id, activity_id) {
     return await prisma.applications.update({
       where: { activity_id_participant_id: { participant_id, activity_id } },
-      data: { 
-        status: "participant_cancelled", 
-        comment: null, 
+      data: {
+        status: "participant_cancelled",
+        comment: null,
         register_validated: 0,
-        updated_at: new Date()
+        updated_at: new Date(),
       },
     });
   },
@@ -244,27 +246,31 @@ export const activityService = {
     return formattedData;
   },
 
-
   // 審核
   async verifyParticipant(application_id, status) {
     return await prisma.applications.update({
       where: { application_id },
       data: {
         status,
-        updated_at: new Date()
+        updated_at: new Date(),
       },
     });
   },
 
   // 設定報名狀態 審核之後用這隻
-  async setApplicationStatus( application_id, status, comment, register_validated) {
+  async setApplicationStatus(
+    application_id,
+    status,
+    comment,
+    register_validated
+  ) {
     return await prisma.applications.update({
       where: { application_id },
       data: {
         status,
         comment,
         register_validated,
-        updated_at: new Date()
+        updated_at: new Date(),
       },
     });
   },
@@ -289,35 +295,34 @@ export const activityService = {
     });
   },
 
-
-  // 獲取活動的限制狀態
-  async getActivityLimit(activity_id){
-      const res = await prisma.activities.findUnique({
-        where: { id: activity_id  },
-        select: {
-          require_approval: true,
-          max_participants: true,
-          _count: {
-            select: {
-              applications: {
-                where: {
-                  register_validated: 1,
-                  status: 'registered'
-                }
+  // 取得活動的限制狀態
+  async getActivityLimit(activity_id) {
+    const res = await prisma.activities.findUnique({
+      where: { id: activity_id },
+      select: {
+        require_approval: true,
+        max_participants: true,
+        _count: {
+          select: {
+            applications: {
+              where: {
+                register_validated: 1,
+                status: "registered",
               },
-            }
-          }
-        }
-    })
-    const { require_approval, max_participants, _count } = res
+            },
+          },
+        },
+      },
+    });
+    const { require_approval, max_participants, _count } = res;
     return {
       require_approval,
       max_participants,
-      validated_registrations: _count.applications
-    }
+      validated_registrations: _count.applications,
+    };
   },
 
-  async searchActivities(keyword){
+  async searchActivities(keyword) {
     return await prisma.activities.findMany({
       where: {
         status: "registrationOpen",
@@ -345,8 +350,7 @@ export const activityService = {
       },
       orderBy: {
         event_time: "asc",
-      }
-    })
-  }
+      },
+    });
+  },
 };
-

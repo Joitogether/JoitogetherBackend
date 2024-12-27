@@ -7,14 +7,23 @@ import {
 
 const fetchCartByUserId = async (req, res, next) => {
   try {
-    UserIdParamSchema.parse(req.params); // 驗證 userId
+    UserIdParamSchema.parse(req.params);
     const userId = req.params.userId;
-    const cart = await cartService.getCartByUserId(userId);
+
+    const response = await cartService.getCartByUserId(userId);
+
+    if (!response || response.length === 0) {
+      return res.status(200).json({
+        status: 200,
+        message: "查無資料",
+        data: [],
+      });
+    }
 
     res.status(200).json({
       status: 200,
-      message: "購物車資料獲取成功",
-      data: cart,
+      message: "購物車成功取得資料",
+      data: response,
     });
   } catch (error) {
     next(error);
@@ -23,18 +32,20 @@ const fetchCartByUserId = async (req, res, next) => {
 
 const addActivityToCart = async (req, res, next) => {
   try {
-    UserIdParamSchema.parse(req.params); // 驗證 userId
-    AddToCartSchema.parse(req.body); // 驗證 body 資料
+    UserIdParamSchema.parse(req.params);
+    AddToCartSchema.parse(req.body);
 
     const userId = req.params.userId;
-    const { activityId } = req.body; // 僅接收活動 ID
-    const cart = await cartService.addToCart(userId, activityId);
+    const { activityId } = req.body;
+
+    const response = await cartService.addToCart(userId, activityId);
 
     // 檢查 cart 是否為錯誤訊息（例如 status 403）
-    if (cart.status && cart.status === 403) {
-      return res.status(cart.status).json({
-        status: cart.status,
-        message: cart.message,
+    if (response.status && response.status === 403) {
+      return res.status(response.status).json({
+        status: response.status,
+        message: response.message,
+        data: null,
       });
     }
 
@@ -42,7 +53,7 @@ const addActivityToCart = async (req, res, next) => {
     res.status(201).json({
       status: 201,
       message: "成功新增至購物車",
-      data: cart,
+      data: response,
     });
   } catch (error) {
     next(error);
@@ -59,17 +70,20 @@ const removeActivityFromCart = async (req, res, next) => {
 
     const userId = req.params.userId;
     const activityId = parseInt(req.params.activityId, 10);
-    const result = await cartService.removeFromCart(userId, activityId);
 
-    if (result.status == 404) {
+    const response = await cartService.removeFromCart(userId, activityId);
+
+    if (response.status == 404) {
       return res.status(404).json({
         status: 404,
-        message: result.message,
+        message: response.message,
+        data: null,
       });
     }
     res.status(200).json({
       status: 200,
       message: "成功移除購物車項目",
+      data: response,
     });
   } catch (error) {
     next(error);
@@ -80,9 +94,11 @@ const removeCartItems = async (req, res, next) => {
   const { uid } = req.params;
   try {
     await cartService.clearCart(uid);
+
     res.status(200).json({
       status: 200,
       message: "購物車清空成功",
+      data: null,
     });
   } catch (error) {
     next(error);
@@ -94,9 +110,18 @@ const getSelectedItems = async (req, res, next) => {
 
   try {
     const response = await cartService.getSelectedCartItems(userId);
+
+    if (!response || response.length === 0) {
+      return res.status(200).json({
+        status: 200,
+        message: "查無資料",
+        data: [],
+      });
+    }
+
     res.status(200).json({
       status: 200,
-      message: "成功獲取已選擇項目",
+      message: "成功取得已選擇項目",
       data: response,
     });
   } catch (error) {
@@ -112,11 +137,21 @@ const updateSelection = async (req, res, next) => {
     return res.status(400).json({
       status: 400,
       message: "isSelected 必須為布林值",
+      data: null,
     });
   }
 
   try {
     const response = await cartService.updateSelectedStatus(id, isSelected);
+
+    if (!response) {
+      return res.status(404).json({
+        status: 404,
+        message: `ID 為 ${id} 的項目更新失敗`,
+        data: null,
+      });
+    }
+
     res.status(200).json({
       status: 200,
       message: `ID 為 ${id} 的項目成功更新選擇狀態`,

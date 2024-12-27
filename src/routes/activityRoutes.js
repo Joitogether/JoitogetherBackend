@@ -40,7 +40,7 @@ router.post(
 router.post(
   "/comment/:activity_id",
   /* #swagger.tags = ['Activity'] */
-  ActivityController.fetchActivityComments
+  ActivityController.addActivityComments
 );
 router.delete(
   "/comment/:comment_id",
