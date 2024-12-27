@@ -5,6 +5,7 @@ import { z } from 'zod'
 export const ApplicationReviewSchema = z.object({ 
   status: z.enum(['registered', 'approved', 'host_declined', 'participant_cancelled']),
   application_id: z.number().int(), 
+  register_validated: z.number().min(0).max(1)
 })   
 
 

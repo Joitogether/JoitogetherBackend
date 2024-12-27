@@ -246,12 +246,13 @@ export const activityService = {
 
 
   // 審核
-  async verifyParticipant(application_id, status) {
+  async verifyParticipant(application_id, status, register_validated) {
     return await prisma.applications.update({
       where: { application_id },
       data: {
         status,
-        updated_at: new Date()
+        updated_at: new Date(),
+        register_validated
       },
     });
   },
