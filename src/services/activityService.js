@@ -185,7 +185,7 @@ export const activityService = {
       update: {
         status: "registered",
         comment,
-        register_validated: 1,
+        register_validated,
         updated_at: new Date(),
       },
       create: {
@@ -247,12 +247,13 @@ export const activityService = {
   },
 
   // 審核
-  async verifyParticipant(application_id, status) {
+  async verifyParticipant(application_id, status, register_validated) {
     return await prisma.applications.update({
       where: { application_id },
       data: {
         status,
         updated_at: new Date(),
+        register_validated,
       },
     });
   },
@@ -347,6 +348,20 @@ export const activityService = {
             },
           },
         ],
+      },
+      select: {
+        id: true,
+        name: true,
+        img_url: true,
+        location: true,
+        event_time: true,
+        max_participants: true,
+        users: {
+          select: {
+            display_name: true,
+            photo_url: true,
+          },
+        },
       },
       orderBy: {
         event_time: "asc",

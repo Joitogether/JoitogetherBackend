@@ -13,7 +13,7 @@ router.get(
   /* #swagger.tags = ['Activity'] */
   ActivityController.fetchActivityDetails
 );
-router.get(
+router.post(
   "/category/:type",
   /* #swagger.tags = ['Activity'] */
   ActivityController.fetchActivitiesByCategory
