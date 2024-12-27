@@ -209,7 +209,6 @@ const googleMapGeocode = async (req, res, next) => {
       data: null,
     });
   }
-  xs;
 
   try {
     const response = await axios.get(
