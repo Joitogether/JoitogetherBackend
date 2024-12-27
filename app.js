@@ -9,6 +9,8 @@ import orderRouter from "./src/routes/orderRoutes.js";
 import paymentRouter from "./src/routes/paymentRoutes.js";
 import cors from "cors";
 import { errorMiddleware } from "./src/middlewares/errorMiddleware.js";
+import swaggerUi from "swagger-ui-express";
+
 const app = express();
 
 // middlewares
@@ -25,6 +27,14 @@ app.use("/ratings", ratingRouter);
 app.use("/carts", cartRouter);
 app.use("/payments", paymentRouter);
 app.use("/orders", orderRouter);
+
+// swagger
+import fs from "fs";
+
+const swaggerDocument = JSON.parse(
+  fs.readFileSync(new URL("./swagger-output.json", import.meta.url), "utf-8")
+);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // error
 app.use(errorMiddleware);
