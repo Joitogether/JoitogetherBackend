@@ -6,12 +6,12 @@ import {
 } from "../validations/orderSchema.js";
 
 export const orderService = {
-  // 獲取用戶所有的訂單
+  // 取得用戶所有的訂單
   async getAllOrders() {
     return await prisma.orders.findMany();
   },
 
-  // 獲取單一訂單
+  // 取得單一訂單
   async getOrderById(order_id) {
     GetOrderSchema.parse({ order_id });
     return await prisma.orders.findUnique({
@@ -42,7 +42,7 @@ export const orderService = {
     });
   },
 
-  // 創建訂單
+  // 建立訂單
   async createOrder(data) {
     CreateOrderSchema.parse(data);
     return await prisma.orders.create({

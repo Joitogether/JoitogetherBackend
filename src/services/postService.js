@@ -32,7 +32,7 @@ export const postService = {
           },
         },
       },
-      // 按照創建時間排序
+      // 按照建立時間排序
       orderBy: {
         created_at: "desc",
       },
@@ -77,7 +77,7 @@ export const postService = {
           },
         },
       },
-      // 按照創建時間排序
+      // 按照建立時間排序
       orderBy: {
         created_at: "desc",
       },
@@ -99,7 +99,7 @@ export const postService = {
     return formattedResponse;
   },
 
-  // 獲取十五天內的熱門文章（依讚數排序）
+  // 取得十五天內的熱門文章（依讚數排序）
   async getPopularPosts() {
     // 設定天數
     const fifteenDaysAgo = new Date();

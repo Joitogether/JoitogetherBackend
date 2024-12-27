@@ -15,17 +15,17 @@ export const userService = {
     return await prisma.users.findMany();
   },
 
-  // 依照 uid 獲取單一使用者資料
+  // 依照 uid 取得單一使用者資料
   async getUserById(uid) {
     return await prisma.users.findUnique({
       where: { uid },
     });
   },
 
-  async getUserByEmail(email){
+  async getUserByEmail(email) {
     return await prisma.users.findUnique({
-      where: {email}
-    })
+      where: { email },
+    });
   },
   // 使用者註冊
   async userRegister(userData) {
@@ -42,7 +42,7 @@ export const userService = {
     });
   },
 
-  // 依照 uid 獲取單一使用者報名資料
+  // 依照 uid 取得單一使用者報名資料
   async getApplicationsByUserId(uid) {
     UserUidSchema.parse({ uid });
     const response = await prisma.applications.findMany({
@@ -67,7 +67,7 @@ export const userService = {
     return response;
   },
 
-  // 依照 uid 獲取單一使用者貼文
+  // 依照 uid 取得單一使用者貼文
   async getUserPosts(uid) {
     UserUidSchema.parse({ uid });
     const response = await prisma.posts.findMany({
