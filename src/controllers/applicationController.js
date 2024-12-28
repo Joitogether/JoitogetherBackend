@@ -22,7 +22,7 @@ const createActivityRegistration = async (req, res, next) => {
     const response = await activityService.upsertApplication(activity_id, participant_id, comment, register_validated)
 
     res.status(201).json({
-      message: "資料創建成功",
+      message: "資料建立成功",
       status: 201,
       data: response,
     });
@@ -77,12 +77,13 @@ const fetchActivityRegistrations = async (req, res, next) => {
 const approveActivityParticipant = async (req, res, next) => {
   try {
     const application_id = parseInt(req.params.application_id);
-    const { status } = req.body;
-    ApplicationReviewSchema.parse({ status, application_id });
+    const { status, register_validated } = req.body;
+    ApplicationReviewSchema.parse({ status, application_id, register_validated });
 
     const response = await activityService.verifyParticipant(
       application_id,
-      status
+      status,
+      register_validated
     );
 
     res.status(200).json({

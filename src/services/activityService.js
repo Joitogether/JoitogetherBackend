@@ -92,24 +92,71 @@ export const activityService = {
   },
 
   // 照 category 獲得活動(條件為:開放報名 順序:新到舊)
-  async getActivityByCategory(category, page, pageSize) {
-    ActivityGetCategorySchema.parse({ category, page, pageSize });
+  async getActivityByCategory(type, category, page, pageSize) {
+    ActivityGetCategorySchema.parse({ type, category, page, pageSize });
     const skip = (page - 1) * pageSize;
-    const response = await prisma.activities.findMany({
-      skip,
-      take: pageSize,
-      where: {
-        category,
-        status: "registrationOpen",
-      },
-      orderBy: {
-        created_at: "desc",
-      },
-    });
-    if (response.length === 0) {
-      return null;
+    if(type == 'region'){
+       const response = await prisma.activities.findMany({
+        skip,
+        take: pageSize,
+        where: {
+          status: "registrationOpen",
+          location: { contains: category },
+        },
+        select: {
+          id: true,
+          name: true,
+          img_url: true,
+          location: true,
+          event_time: true,
+          max_participants: true,
+          users: {
+            select: {
+              display_name: true,
+              photo_url: true,
+            },
+          }
+        },
+        orderBy: {
+          created_at: "desc",
+        },
+
+        });
+        if (response.length === 0) {
+          return null;
+        }
+        return response
+    }else{
+      const response = await prisma.activities.findMany({
+        skip,
+        take: pageSize,
+        where: {
+          category,
+          status: "registrationOpen",
+        },
+        select: {
+          id: true,
+          name: true,
+          img_url: true,
+          location: true,
+          event_time: true,
+          max_participants: true,
+          users: {
+            select: {
+              display_name: true,
+              photo_url: true,
+            },
+          }
+        },
+        orderBy: {
+          created_at: "desc",
+        },
+      });   
+      if (response.length === 0) {
+        return null;
+      }
+      return response
     }
-    return response;
   },
   // 新增活動
   async createActivity(activityData) {
@@ -127,14 +174,14 @@ export const activityService = {
     });
   },
 
-    // 免審核的活動報名
+    // 活動報名
   async upsertApplication(activity_id, participant_id, comment, register_validated){
     return await prisma.applications.upsert({
       where: {activity_id_participant_id: { activity_id, participant_id}},
       update: {
         status: 'registered',
         comment,
-        register_validated: 1,
+        register_validated,
         updated_at: new Date()
       },
       create: {
@@ -199,12 +246,13 @@ export const activityService = {
 
 
   // 審核
-  async verifyParticipant(application_id, status) {
+  async verifyParticipant(application_id, status, register_validated) {
     return await prisma.applications.update({
       where: { application_id },
       data: {
         status,
-        updated_at: new Date()
+        updated_at: new Date(),
+        register_validated
       },
     });
   },
@@ -269,5 +317,51 @@ export const activityService = {
       validated_registrations: _count.applications
     }
   },
+
+  async searchActivities(keyword){
+    return await prisma.activities.findMany({
+      where: {
+        status: "registrationOpen",
+        //今天以後的活動
+        event_time: {
+          gte: new Date(),
+        },
+        OR: [
+          {
+            name: {
+              contains: keyword,
+            },
+          },
+          {
+            description: {
+              contains: keyword,
+            },
+          },
+          {
+            location: {
+              contains: keyword,
+            },
+          },
+        ],
+      },
+      select: {
+        id: true,
+        name: true,
+        img_url: true,
+        location: true,
+        event_time: true,
+        max_participants: true,
+        users: {
+          select: {
+            display_name: true,
+            photo_url: true,
+          },
+        }
+      },
+      orderBy: {
+        event_time: "asc",
+      }
+    })
+  }
 };
 

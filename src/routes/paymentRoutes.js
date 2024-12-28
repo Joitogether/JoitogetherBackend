@@ -1,9 +1,23 @@
-import express from 'express'
-import * as paymentController from '../controllers/paymentController.js'
+import express from "express";
+import * as PaymentController from "../controllers/paymentController.js";
 
-const router = express.Router()
+const router = express.Router();
 
-router.post('/encrypt', paymentController.paymentEncrytOrder)
-router.post('/deposit/:uid', paymentController.paymentDeposit)
+// Balance Add
+router.post("/encrypt", PaymentController.paymentEncrytOrder);
+router.post("/wallet/:uid/deposit", PaymentController.paymentDeposit);
 
-export default router
+// Wallet List
+router.get("/wallet/:uid", PaymentController.fetchWalletBalance);
+router.get(
+  "/wallet/:uid/transactions",
+  PaymentController.fetchTransactionHistory
+);
+
+// Balance Debit
+router.put("/wallet/:uid/spend", PaymentController.decreaseBalance);
+
+// Checkout Process
+router.post("/order/process", PaymentController.handleCheckoutProcess);
+
+export default router;

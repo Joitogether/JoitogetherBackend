@@ -1,7 +1,7 @@
 import { prisma } from "../config/db.js";
 
 const getCartByUserId = async (userId) => {
-  const cartItems = await prisma.carts_comments.findMany({
+  const cartItems = await prisma.carts_items.findMany({
     where: { carts: { user_id: userId } },
     include: {
       activities: {
@@ -43,7 +43,7 @@ const addToCart = async (userId, activityId) => {
       where: { user_id: userId },
     });
 
-    // 如果購物車不存在，創建新的購物車
+    // 如果購物車不存在，建立新的購物車
     if (!cart) {
       cart = await prisma.carts.create({
         data: {
@@ -53,7 +53,7 @@ const addToCart = async (userId, activityId) => {
     }
 
     // 檢查是否已存在於購物車中
-    const existingItem = await prisma.carts_comments.findFirst({
+    const existingItem = await prisma.carts_items.findFirst({
       where: { cart_id: cart.id, activity_id: activityId },
     });
 
@@ -62,7 +62,7 @@ const addToCart = async (userId, activityId) => {
     }
 
     // 新增活動到購物車
-    const newItem = await prisma.carts_comments.create({
+    const newItem = await prisma.carts_items.create({
       data: { cart_id: cart.id, activity_id: activityId },
     });
 
@@ -84,7 +84,7 @@ const removeFromCart = async (userId, activityId) => {
       throw new Error("購物車不存在");
     }
     // 檢查購物車中是否包含該活動
-    const existingItem = await prisma.carts_comments.findFirst({
+    const existingItem = await prisma.carts_items.findFirst({
       where: { cart_id: cart.id, activity_id: activityId },
     });
 
@@ -96,7 +96,7 @@ const removeFromCart = async (userId, activityId) => {
     }
 
     // 如果存在，刪除該活動
-    await prisma.carts_comments.delete({
+    await prisma.carts_items.delete({
       where: { id: existingItem.id },
     });
 
@@ -110,8 +110,60 @@ const removeFromCart = async (userId, activityId) => {
   }
 };
 
+const clearCart = async (uid) => {
+  return await prisma.carts_items.deleteMany({
+    where: {
+      carts: { user_id: uid },
+      is_selected: true,
+    },
+  });
+};
+
+const getSelectedCartItems = async (userId) => {
+  const cart = await prisma.carts.findFirst({
+    where: { user_id: userId },
+  });
+
+  const cartItems = await prisma.carts_items.findMany({
+    where: { cart_id: cart.id, is_selected: true },
+    include: {
+      activities: {
+        select: {
+          name: true,
+          location: true,
+          img_url: true,
+          price: true,
+          require_approval: true,
+          pay_type: true,
+          event_time: true,
+          require_approval: true,
+        },
+      },
+    },
+  });
+
+  // 計算選中項目總數
+  const totalActivities = cartItems.length;
+
+  return { cartItems, totalActivities };
+};
+
+const updateSelectedStatus = async (id, isSelected) => {
+  await prisma.carts_items.findUnique({
+    where: { id: parseInt(id, 10) },
+  });
+
+  return await prisma.carts_items.update({
+    where: { id: parseInt(id, 10) },
+    data: { is_selected: isSelected },
+  });
+};
+
 export const cartService = {
   getCartByUserId,
   addToCart,
   removeFromCart,
+  clearCart,
+  getSelectedCartItems,
+  updateSelectedStatus,
 };

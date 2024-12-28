@@ -1,10 +1,11 @@
 import { Server } from "socket.io"
 import { userService } from "../services/userService.js"
+import "dotenv/config";
 
 export const initSocket = (server) => {
   const io = new Server(server, {
     cors: {
-      origin: "http://localhost:5173", // 前端地址
+      origin: process.env.FRONTEND_URL, // 前端地址
       methods: ["GET", "POST"],
       credentials: true
     }

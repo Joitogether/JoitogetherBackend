@@ -102,7 +102,7 @@ const addPost = async (req, res, next) => {
     const data = req.body;
     const response = await postService.createPost(data);
     res.status(201).json({
-      message: "資料創建成功",
+      message: "資料建立成功",
       status: 201,
       data: response,
     });
@@ -175,7 +175,7 @@ const addPostComment = async (req, res, next) => {
     const data = { ...req.body, post_id };
     const response = await postService.createPostComment(data);
     res.status(201).json({
-      message: "資料創建成功",
+      message: "資料建立成功",
       status: 201,
       data: response,
     });

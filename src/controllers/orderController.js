@@ -6,10 +6,11 @@ const fetchAllOrders = async (_req, res, next) => {
     if (!response || response.length === 0) {
       return res.status(404).json({
         status: 404,
-        message: "查無資料",
+        message: "查無此資料",
+        data: null,
       });
     }
-    return res.status(200).json({
+    res.status(200).json({
       status: 200,
       message: "資料獲取成功",
       data: response,
@@ -27,6 +28,28 @@ const fetchOrderById = async (req, res, next) => {
       return res.status(404).json({
         status: 404,
         message: "查無此資料",
+        data: null,
+      });
+    }
+    res.status(200).json({
+      status: 200,
+      message: "資料獲取成功",
+      data: response,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const fetchPendingOrder = async (req, res, next) => {
+  const { uid } = req.params;
+  try {
+    const response = await orderService.getPendingOrder(uid);
+    if (!response) {
+      return res.status(200).json({
+        status: 200,
+        message: "查無此資料",
+        data: {},
       });
     }
     res.status(200).json({
@@ -45,7 +68,7 @@ const addOrder = async (req, res, next) => {
     const response = await orderService.createOrder(data);
     res.status(201).json({
       status: 201,
-      message: "資料創建成功",
+      message: "資料建立成功",
       data: response,
     });
   } catch (error) {
@@ -132,6 +155,7 @@ const removeOrder = async (req, res, next) => {
 export {
   fetchAllOrders,
   fetchOrderById,
+  fetchPendingOrder,
   addOrder,
   completeOrder,
   failOrder,

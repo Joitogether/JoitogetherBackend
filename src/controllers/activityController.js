@@ -1,8 +1,12 @@
+import axios from "axios";
 import { activityService } from "../services/activityService.js";
 import {
   ActivityCommentSchema,
   ActivityCreateSchema,
+  ActivityGetCategorySchema
 } from "../validations/activitySchema.js";
+
+const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 
 const fetchAllActiveActivities = async (_req, res, next) => {
   try {
@@ -44,10 +48,12 @@ const fetchActivityDetails = async (req, res, next) => {
 
 const fetchActivitiesByCategory = async (req, res, next) => {
   try {
-    const page = parseInt(req.body.page) || 1;
-    const pageSize = parseInt(req.body.pageSize) || 5;
-    const category = req.params.category;
+    const { type } = req.params
+    const { category, page, pageSize } = req.body
+    ActivityGetCategorySchema.parse({ type, category, page, pageSize });
+
     const response = await activityService.getActivityByCategory(
+      type,
       category,
       page,
       pageSize
@@ -76,7 +82,7 @@ const addNewActivity = async (req, res, next) => {
 
     res.status(201).json({
       status: 201,
-      message: "資料創建成功",
+      message: "資料建立成功",
       data: result,
     });
   } catch (error) {
@@ -109,7 +115,7 @@ const fetchActivityComments = async (req, res, next) => {
       comment
     );
     res.status(201).json({
-      message: "資料創建成功",
+      message: "資料建立成功",
       status: 201,
       data: response,
     });
@@ -132,6 +138,106 @@ const removeActivityComment = async (req, res, next) => {
   }
 };
 
+const searchActivities = async (req, res, next) => {
+  try{
+    let { keyword } = req.body
+    switch (keyword) {
+      case '運動':
+        keyword = 'sport' 
+        break;
+      case '美食':
+        keyword = 'food'
+        break;
+      case '旅遊':
+        keyword = 'travel' 
+        break;
+      case '購物':
+        keyword = 'shopping'
+        break
+      case '教育':
+        keyword = 'education'
+        break
+      default:
+        break;
+
+    }
+
+    const response = await activityService.searchActivities(keyword)
+
+    if(response.length === 0){
+      return res.status(404).json({
+        message: "查無此資料",
+        status: 404,
+        data: [],
+      })
+    }
+    res.status(200).json({
+      message: "資料獲取成功",
+      status: 200,
+      data: response,
+    })
+    // prism找資料
+  } catch (error) {
+    next(error)
+  }
+}
+
+const googleMapGeocode = async (req,res, next) => {
+  const { address } = req.body;
+
+  if (!address) {
+    return res.status(400).json({ error: '地址為空' });
+  }
+
+  try {
+    const response = await axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
+      params: {
+        address,
+        key: GOOGLE_API_KEY
+        },
+    });
+
+    if (response.data.status === 'OK') {
+    const location = response.data.results[0].geometry.location;
+    res.status(201).json({ message:"獲取地址成功",status:"201",data:location});
+    } else {
+      res.status(400).json({ error: `地址解析失敗: ${response.data.status}`});
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+const googleAutocomplete = async (req, res, next) => {
+  const { query } = req.body;
+
+  if (!query) {
+    return res.status(400).json({ error: '查詢為空' });
+  }
+
+  try {
+    const response = await axios.get('https://maps.googleapis.com/maps/api/place/autocomplete/json', {
+      params: { 
+        input: query,
+        key: GOOGLE_API_KEY,
+        language: 'zh-TW',
+        components: 'country:TW' 
+      },
+    });
+
+    if (response.data.status === 'OK') {
+      res.status(201).json({ message:"獲取成功",status:201,predictions: response.data.predictions });
+    } else {
+      res.status(400).json({ error: `地址建議失敗: ${response.data.status}` });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+
 export {
   fetchAllActiveActivities,
   fetchActivityDetails,
@@ -140,4 +246,7 @@ export {
   cancelActivityRequest,
   fetchActivityComments,
   removeActivityComment,
+  googleMapGeocode,
+  googleAutocomplete,
+  searchActivities,
 };
