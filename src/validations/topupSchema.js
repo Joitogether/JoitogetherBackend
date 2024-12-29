@@ -1,12 +1,18 @@
 import { z } from "zod";
 
-// const dateTimeRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/;
-
-export const PaymentDetailSchema = z.object({
+export const newebpayOrderSchema = z.object({
     topuper_id: z.string().max(255),
-    topup_date: z.coerce.date(),
-    topup_number: z.number().int(),
-    amount: z.number().int(),
-    type: z.string().max(10),
-    status: z.enum(['PENDING', 'SUCCESS', 'FAIL']),
+    merchantOrderNo: z.number(),
+    payment_status: z.enum(['PENDING', 'SUCCESS', 'FAILED', 'REFUNDED', 'EXPIRED']),
+    amount: z.number(),
+    email: z.string().max(99),
+    tradeNo: z.number().optional(),
+    payment_type: z.enum(['CREDIT', 'VACC', 'WEBATM', 'CVS', 'BARCODE']).optional(),
+    pay_time: z.coerce.date().optional(),
+    payer_ip: z.string().max(45).optional(),
+    bank_code: z.string().max(10).optional(),
+    card_last_four: z.string().max(4).optional(),
+    escrow_bank: z.string().max(10).optional(),
+    created_at: z.coerce.date().optional(),
+    updated_at: z.coerce.date().optional(),
 })

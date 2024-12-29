@@ -70,7 +70,6 @@ model users {
   posts                                       posts[]
   ratings_ratings_host_idTousers              ratings[]           @relation("ratings_host_idTousers")
   ratings_ratings_user_idTousers              ratings[]           @relation("ratings_user_idTousers")
-  topup_record                                topup_record[]
   wallet                                      wallet?
 }
 
@@ -270,17 +269,27 @@ model carts_items {
   @@index([cart_id, activity_id])
 }
 
-model topup_record {
-  id           Int                 @id @default(autoincrement())
-  topuper_id   String              @db.VarChar(255)
-  topup_date   DateTime            @default(now()) @db.DateTime(0)
-  topup_number Int
-  amount       Int
-  type         String              @db.VarChar(45)
-  status       topup_record_status
-  users        users               @relation(fields: [topuper_id], references: [uid], onDelete: NoAction, onUpdate: NoAction, map: "fk_topuperId_to_usersUid")
+model newebpay_transactions {
+  id              Int                                  @id @default(autoincrement())
+  topuper_id      String                               @db.VarChar(255)
+  merchantOrderNo Int
+  payment_status  newebpay_transactions_payment_status
+  amount          Decimal                              @db.Decimal(10, 2)
+  email           String                               @db.VarChar(99)
+  tradeNo         Int?
+  payment_type    newebpay_transactions_payment_type?
+  pay_time        DateTime?                            @db.DateTime(0)
+  payer_ip        String?                              @db.VarChar(45)
+  bank_code       String?                              @db.VarChar(10)
+  card_last_four  String?                              @db.VarChar(4)
+  escrow_bank     String?                              @db.VarChar(10)
+  created_at      DateTime?                            @default(now()) @db.Timestamp(0)
+  updated_at      DateTime?                            @updatedAt @db.Timestamp(0)
 
-  @@index([topuper_id], map: "fk_topuperId_to_usersUid_idx")
+  @@index([merchantOrderNo], map: "idx_merchant_order_no")
+  @@index([pay_time], map: "idx_pay_time")
+  @@index([payment_status], map: "idx_payment_status")
+  @@index([tradeNo], map: "idx_trade_no")
 }
 
 enum activities_category {
@@ -371,8 +380,18 @@ enum activities_pay_type {
   paymentRequired
 }
 
-enum topup_record_status {
+enum newebpay_transactions_payment_type {
+  CREDIT
+  VACC
+  WEBATM
+  CVS
+  BARCODE
+}
+
+enum newebpay_transactions_payment_status {
   PENDING
   SUCCESS
-  FAIL
+  FAILED
+  REFUNDED
+  EXPIRED
 }

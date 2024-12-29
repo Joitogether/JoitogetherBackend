@@ -1,47 +1,80 @@
 import { prisma } from "../config/db.js";
-import { PaymentDetailSchema } from "../validations/topupSchema.js";
+import { newebpayOrderSchema } from "../validations/topupSchema.js";
 
 ///儲值紀錄
 export const TopupService = {
-    async createTopup(topupData) {
-        const validatedData = PaymentDetailSchema.parse(topupData)    
-            if(topupData) {
-                // const isoDate = new Date(validatedData.topup_date.replace(" ", "T")).toISOString();
-                const newTopupRecord = await prisma.topup_record.create({
+    async createTopup(data) {
+        console.log('service收到的data:',data);
+
+        const validatedData = newebpayOrderSchema.parse(data)  
+        console.log("validatedData", validatedData);
+        
+            if(validatedData) {
+                const newTopupRecord = await prisma.newebpay_transactions.create({
                     data: {
                     topuper_id: validatedData.topuper_id,
-                    topup_date: validatedData.topup_date,
-                    topup_number: validatedData.topup_number,
-                    amount: validatedData.amount,
+                    merchantOrderNo: validatedData.merchantOrderNo,
                     email: validatedData.email,
-                    type: validatedData.type,
-                    status: validatedData.status,
+                    payment_status: validatedData.payment_status,
+                    amount: validatedData.amount
                     },
                 });
             return newTopupRecord;  
         }},
     async getTopupRecordById(topuper_id) {
-        return await prisma.topup_record.findMany({
-        where: { 
-            topuper_id,
-            status: "PENDING"
-        },
-    })},
-    async saveNewebpay(saveData) {
-        const validatedData = newebpayPaymentSchema.parse(saveData)    
-            if(saveData) {
-                // const isoDate = new Date(validatedData.topup_date.replace(" ", "T")).toISOString();
-                const newwebpayPayment = await prisma.pay_payment.create({
-                    data: {
-                    orderId: validatedData.orderId,
-                    userId: validatedData.userId,
-                    amount: validatedData.amount,
-                    paidAt: validatedData.paidAt,
-                    tradeNo: validatedData.tradeNo,
-                    createdAt: validatedData.createdAt,
-                    updatedAt: validatedData.updatedAt,
-                    },
-                });
-            return newwebpayPayment;  
-        }},
+        return await prisma.newebpay_transactions.findMany({
+            where: { 
+                topuper_id,
+                status: "SUCCESS"
+            },
+        })
+    },
+    async updateNewebpayOrder(id, topuper_id, data) {
+        const updateData = {
+            payment_status: data.PaymentStatus === 'PENDING' ? 'SUCCESS' : data.PaymentStatus,
+            trade_no: data.TradeNo,
+            payment_type: data.PaymentType,
+            pay_time: data.PayTime,
+            payer_ip: data.IP || undefined,  
+            bank_code: data.BankCode || undefined,
+            card_last_four: data.CardLastFour || undefined,
+            escrow_bank: data.EscrowBank || undefined,
+            };
+        
+            // 移除 undefined 的欄位，這樣不會覆蓋原有的值
+            const cleanedData = Object.fromEntries(
+            Object.entries(updateData).filter(([_, value]) => value !== undefined)
+            );
+        
+            return await prisma.newebpay_transactions.update({
+            where: { 
+                id,
+                topuper_id 
+            },
+            data: cleanedData,
+            select: {
+                topuper_id: true,
+                amount: true,
+                payment_status: true,  
+                trade_no: true      
+            }
+            });
+        }
+    // async createNewebpayOrder(data) {
+    //     const created = await prisma.newebpay_transactions.create({
+    //         merchant_order_no: data.merchant_order_no,
+    //         trade_no: data.trade_no,
+    //         payment_status: data.payment_status,
+    //         amount: data.amount,
+    //         payment_type: data.payment,
+    //         pay_time: data.pay_time,
+    //         payer_ip: data.payer_ip,
+    //         bank_code: data.bank_code,
+    //         card_last_four: data.card_last_four,
+    //         escrow_bank: data.escrow_bank,
+    //         created_at: data.created_at,
+    //         updated_at: data.updated_at
+    //     })
+    //     return created
+    // }
 } 
