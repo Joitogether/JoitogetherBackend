@@ -47,7 +47,7 @@ const registerUser = async (req, res, next) => {
     const result = await userService.userRegister(userData);
     res.status(201).json({
       status: 201,
-      message: "資料創建成功",
+      message: "資料建立成功",
       data: result,
     });
   } catch (error) {

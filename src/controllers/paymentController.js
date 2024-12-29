@@ -128,7 +128,7 @@ const handleCheckoutProcess = async (req, res, next) => {
       throw new Error("Insufficient wallet balance.");
     }
 
-    // 創建訂單
+    // 建立訂單
     const createdOrder = await orderService.createOrder({
       uid,
       total_amount,

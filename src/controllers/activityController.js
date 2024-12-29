@@ -82,7 +82,7 @@ const addNewActivity = async (req, res, next) => {
 
     res.status(201).json({
       status: 201,
-      message: "資料創建成功",
+      message: "資料建立成功",
       data: result,
     });
   } catch (error) {
@@ -115,7 +115,7 @@ const fetchActivityComments = async (req, res, next) => {
       comment
     );
     res.status(201).json({
-      message: "資料創建成功",
+      message: "資料建立成功",
       status: 201,
       data: response,
     });

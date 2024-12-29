@@ -43,7 +43,7 @@ const addToCart = async (userId, activityId) => {
       where: { user_id: userId },
     });
 
-    // 如果購物車不存在，創建新的購物車
+    // 如果購物車不存在，建立新的購物車
     if (!cart) {
       cart = await prisma.carts.create({
         data: {

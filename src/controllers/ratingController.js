@@ -90,7 +90,7 @@ const createRating = async (req, res, next) => {
     const data = req.body;
     const response = await ratingService.createRating(data);
     res.status(201).json({
-      message: "資料創建成功",
+      message: "資料建立成功",
       status: 201,
       data: response,
     });
