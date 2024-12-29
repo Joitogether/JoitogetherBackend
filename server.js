@@ -11,6 +11,6 @@ initSocket(server);
 
 cronJobs.dailyUpdates();
 
-server.listen(port, () => {
+server.listen(port, "::", () => {
   console.log(`server running on port ${port}`);
 });
