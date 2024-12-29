@@ -25,8 +25,13 @@ export const TopupService = {
         return await prisma.newebpay_transactions.findMany({
             where: { 
                 topuper_id,
-                status: "SUCCESS"
+                payment_status: "SUCCESS"
             },
+            include: {
+                wallet: {
+                    select: { balance: true },
+                }
+            }
         })
     },
     async updateNewebpayOrder(id, topuper_id, data) {
