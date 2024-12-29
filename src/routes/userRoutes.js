@@ -25,4 +25,6 @@ router.put("/notifications/:uid", UserController.markUserNotifications);
 router.get("/userFollowers/:user_id", UserController.fetchUserFollowers);
 router.get("/following/:follower_id", UserController.fetchUserFollowing);
 
+router.get("/summary/:uid", UserController.fetchUserSummaries);
+
 export default router;

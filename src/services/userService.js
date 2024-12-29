@@ -22,10 +22,10 @@ export const userService = {
     });
   },
 
-  async getUserByEmail(email){
+  async getUserByEmail(email) {
     return await prisma.users.findUnique({
-      where: {email}
-    })
+      where: { email },
+    });
   },
   // 使用者註冊
   async userRegister(userData) {
@@ -261,6 +261,38 @@ export const userService = {
             display_name: true,
             photo_url: true,
             favorite_sentence: true,
+          },
+        },
+      },
+    });
+  },
+
+  // 取得使用者整理過的數據
+  async getUserSummaries(uid) {
+    return await prisma.users.findUnique({
+      where: {
+        uid,
+      },
+      select: {
+        display_name: true,
+        photo_url: true,
+        city: true,
+        age: true,
+        career: true,
+        _count: {
+          select: {
+            activities: {
+              where: {
+                OR: [{ status: "registrationOpen" }, { status: "completed" }],
+              },
+            },
+            applications: {
+              where: {
+                register_validated: 1,
+              },
+            },
+            followers_followers_user_idTousers: true,
+            posts: true,
           },
         },
       },

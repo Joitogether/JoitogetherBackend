@@ -3,8 +3,9 @@ import { activityService } from "../services/activityService.js";
 import {
   ActivityCommentSchema,
   ActivityCreateSchema,
-  ActivityGetCategorySchema
+  ActivityGetCategorySchema,
 } from "../validations/activitySchema.js";
+import { fetchSummaryFn } from "./ratingController.js";
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 
@@ -28,8 +29,10 @@ const fetchActivityDetails = async (req, res, next) => {
 
     const [activityDetail, recent_activities] = await Promise.all([
       activityService.getActivityById(activity_id),
-      activityService.getRecentActivities()
+      activityService.getRecentActivities(),
     ]);
+
+    const ratings = await fetchSummaryFn(activityDetail.host_id);
     if (!activityDetail || activityDetail.length === 0) {
       return res.status(404).json({
         status: 404,
@@ -39,7 +42,7 @@ const fetchActivityDetails = async (req, res, next) => {
     res.status(200).json({
       status: 200,
       message: "資料獲取成功",
-      data: { ...activityDetail, recent_activities  },
+      data: { ...activityDetail, recent_activities, ratings },
     });
   } catch (error) {
     next(error);
@@ -48,8 +51,8 @@ const fetchActivityDetails = async (req, res, next) => {
 
 const fetchActivitiesByCategory = async (req, res, next) => {
   try {
-    const { type } = req.params
-    const { category, page, pageSize } = req.body
+    const { type } = req.params;
+    const { category, page, pageSize } = req.body;
     ActivityGetCategorySchema.parse({ type, category, page, pageSize });
 
     const response = await activityService.getActivityByCategory(
@@ -139,95 +142,105 @@ const removeActivityComment = async (req, res, next) => {
 };
 
 const searchActivities = async (req, res, next) => {
-  try{
-    let { keyword } = req.body
+  try {
+    let { keyword } = req.body;
     switch (keyword) {
-      case '運動':
-        keyword = 'sport' 
+      case "運動":
+        keyword = "sport";
         break;
-      case '美食':
-        keyword = 'food'
+      case "美食":
+        keyword = "food";
         break;
-      case '旅遊':
-        keyword = 'travel' 
+      case "旅遊":
+        keyword = "travel";
         break;
-      case '購物':
-        keyword = 'shopping'
-        break
-      case '教育':
-        keyword = 'education'
-        break
+      case "購物":
+        keyword = "shopping";
+        break;
+      case "教育":
+        keyword = "education";
+        break;
       default:
         break;
-
     }
 
-    const response = await activityService.searchActivities(keyword)
+    const response = await activityService.searchActivities(keyword);
 
-    if(response.length === 0){
+    if (response.length === 0) {
       return res.status(404).json({
         message: "查無此資料",
         status: 404,
         data: [],
-      })
+      });
     }
     res.status(200).json({
       message: "資料獲取成功",
       status: 200,
       data: response,
-    })
+    });
     // prism找資料
   } catch (error) {
-    next(error)
+    next(error);
   }
-}
+};
 
-const googleMapGeocode = async (req,res, next) => {
+const googleMapGeocode = async (req, res, next) => {
   const { address } = req.body;
 
   if (!address) {
-    return res.status(400).json({ error: '地址為空' });
+    return res.status(400).json({ error: "地址為空" });
   }
 
   try {
-    const response = await axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
-      params: {
-        address,
-        key: GOOGLE_API_KEY
+    const response = await axios.get(
+      "https://maps.googleapis.com/maps/api/geocode/json",
+      {
+        params: {
+          address,
+          key: GOOGLE_API_KEY,
         },
-    });
+      }
+    );
 
-    if (response.data.status === 'OK') {
-    const location = response.data.results[0].geometry.location;
-    res.status(201).json({ message:"獲取地址成功",status:"201",data:location});
+    if (response.data.status === "OK") {
+      const location = response.data.results[0].geometry.location;
+      res
+        .status(201)
+        .json({ message: "獲取地址成功", status: "201", data: location });
     } else {
-      res.status(400).json({ error: `地址解析失敗: ${response.data.status}`});
+      res.status(400).json({ error: `地址解析失敗: ${response.data.status}` });
     }
   } catch (error) {
     next(error);
   }
 };
 
-
 const googleAutocomplete = async (req, res, next) => {
   const { query } = req.body;
 
   if (!query) {
-    return res.status(400).json({ error: '查詢為空' });
+    return res.status(400).json({ error: "查詢為空" });
   }
 
   try {
-    const response = await axios.get('https://maps.googleapis.com/maps/api/place/autocomplete/json', {
-      params: { 
-        input: query,
-        key: GOOGLE_API_KEY,
-        language: 'zh-TW',
-        components: 'country:TW' 
-      },
-    });
+    const response = await axios.get(
+      "https://maps.googleapis.com/maps/api/place/autocomplete/json",
+      {
+        params: {
+          input: query,
+          key: GOOGLE_API_KEY,
+          language: "zh-TW",
+          components: "country:TW",
+        },
+      }
+    );
 
-    if (response.data.status === 'OK') {
-      res.status(201).json({ message:"獲取成功",status:201,predictions: response.data.predictions });
+    if (response.data.status === "OK") {
+      res.status(201).json({
+        message: "獲取成功",
+        status: 201,
+        predictions: response.data.predictions,
+      });
     } else {
       res.status(400).json({ error: `地址建議失敗: ${response.data.status}` });
     }
@@ -235,8 +248,6 @@ const googleAutocomplete = async (req, res, next) => {
     next(error);
   }
 };
-
-
 
 export {
   fetchAllActiveActivities,
