@@ -4,7 +4,6 @@ import * as PaymentController from "../controllers/paymentController.js";
 const router = express.Router();
 
 // Balance Add
-router.post("/encrypt", PaymentController.paymentEncrytOrder);
 router.post("/wallet/:uid/deposit", PaymentController.paymentDeposit);
 
 // Wallet List

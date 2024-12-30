@@ -58,6 +58,7 @@ const paymentService = {
         action: record.action,
         amount: record.amount,
         created_at: record.created_at,
+        updated_balance: record.updated_balance
       })),
     };
     return formattedResponse;
