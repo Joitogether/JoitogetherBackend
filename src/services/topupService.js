@@ -36,16 +36,18 @@ export const TopupService = {
     },
     async updateNewebpayOrder(data) {
         console.log('藍新notify傳來的資料', data);
+        const { Result, Status } = data
         const updateData = {
-            payment_status: data.PaymentStatus === 'PENDING' ? 'SUCCESS' : data.PaymentStatus,
-            trade_no: data.TradeNo,
-            payment_type: data.PaymentType,
-            pay_time: data.PayTime,
-            payer_ip: data.IP || undefined,  
-            bank_code: data.BankCode || undefined,
-            card_last_four: data.CardLastFour || undefined,
-            escrow_bank: data.EscrowBank || undefined,
+            payment_status: Status === 'PENDING' ? 'SUCCESS' : Status,
+            trade_no: Result.TradeNo,
+            payment_type: Result.PaymentType,
+            pay_time: Result.PayTime,
+            payer_ip: Result.IP || undefined,  
+            bank_code: Result.PayBankCode || undefined,
+            card_last_four: Result.PayerAccount5Code || undefined,
+            escrow_bank: Result.EscrowBank || undefined,
             };
+        console.log('updateData', updateData);
         
             // 移除 undefined 的欄位，這樣不會覆蓋原有的值
             const cleanedData = Object.fromEntries(
