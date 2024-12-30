@@ -266,4 +266,31 @@ export const userService = {
       },
     });
   },
+
+  // 取得使用者整理過的數據
+  async getUserSummaries(uid) {
+    return await prisma.users.findUnique({
+      where: {
+        uid,
+      },
+      select: {
+        _count: {
+          select: {
+            activities: {
+              where: {
+                OR: [{ status: "registrationOpen" }, { status: "completed" }],
+              },
+            },
+            applications: {
+              where: {
+                register_validated: 1,
+              },
+            },
+            followers_followers_user_idTousers: true,
+            posts: true,
+          },
+        },
+      },
+    });
+  },
 };

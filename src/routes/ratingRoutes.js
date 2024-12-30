@@ -22,6 +22,11 @@ router.get(
   /* #swagger.tags = ['Rating'] */
   RatingController.fetchActivityAndHostRating
 );
+router.get(
+  "/summary/:host_id",
+  /* #swagger.tags = ['Rating'] */
+  RatingController.fetchSummary
+);
 
 router.post(
   "/",

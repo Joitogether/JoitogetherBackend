@@ -5,6 +5,7 @@ import {
   ActivityCreateSchema,
   ActivityGetCategorySchema,
 } from "../validations/activitySchema.js";
+import { fetchSummaryFn } from "./ratingController.js";
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 
@@ -38,6 +39,8 @@ const fetchActivityDetails = async (req, res, next) => {
       activityService.getActivityById(activity_id),
       activityService.getRecentActivities(),
     ]);
+
+    const ratings = await fetchSummaryFn(activityDetail.host_id);
     if (!activityDetail || activityDetail.length === 0) {
       return res.status(200).json({
         status: 200,
@@ -47,8 +50,8 @@ const fetchActivityDetails = async (req, res, next) => {
     }
     res.status(200).json({
       status: 200,
-      message: "成功取得資料",
-      data: { ...activityDetail, recent_activities },
+      message: "資料獲取成功",
+      data: { ...activityDetail, recent_activities, ratings },
     });
   } catch (error) {
     next(error);

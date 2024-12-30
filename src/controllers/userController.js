@@ -239,6 +239,33 @@ const fetchUserFollowing = async (req, res, next) => {
   }
 };
 
+const fetchUserSummaries = async (req, res, next) => {
+  try {
+    const uid = req.params.uid;
+    const response = await userService.getUserSummaries(uid);
+
+    const {
+      activities,
+      posts,
+      applications,
+      followers_followers_user_idTousers,
+    } = response._count;
+    response._count = {
+      activities: activities + applications,
+      posts,
+      followers: followers_followers_user_idTousers,
+    };
+
+    res.status(200).json({
+      status: 200,
+      message: "資料獲取成功",
+      data: response,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export {
   fetchAllUsers,
   fetchUserById,
@@ -250,4 +277,5 @@ export {
   markUserNotifications,
   fetchUserFollowers,
   fetchUserFollowing,
+  fetchUserSummaries,
 };

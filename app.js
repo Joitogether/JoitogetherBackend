@@ -7,6 +7,7 @@ import ratingRouter from "./src/routes/ratingRoutes.js";
 import cartRouter from "./src/routes/cartRoutes.js";
 import orderRouter from "./src/routes/orderRoutes.js";
 import paymentRouter from "./src/routes/paymentRoutes.js";
+import topupRouter from "./src/routes/topupRoutes.js"
 import cors from "cors";
 import { errorMiddleware } from "./src/middlewares/errorMiddleware.js";
 import swaggerUi from "swagger-ui-express";
@@ -27,6 +28,7 @@ app.use("/ratings", ratingRouter);
 app.use("/carts", cartRouter);
 app.use("/payments", paymentRouter);
 app.use("/orders", orderRouter);
+app.use("/topups", topupRouter)
 
 // swagger
 import fs from "fs";

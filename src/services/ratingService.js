@@ -1,4 +1,7 @@
-import { CreateRatingSchema, GetRatingSchema } from "../validations/ratingSchema.js";
+import {
+  CreateRatingSchema,
+  GetRatingSchema,
+} from "../validations/ratingSchema.js";
 import { prisma } from "../config/db.js";
 
 export const ratingService = {
@@ -24,7 +27,7 @@ export const ratingService = {
         rating_ability: true,
         rating_credit: true,
         created_at: true,
-        users_ratings_host_idTousers: {
+        users_ratings_user_idTousers: {
           select: {
             display_name: true,
             photo_url: true,
@@ -68,57 +71,69 @@ export const ratingService = {
         users: {
           select: {
             display_name: true,
-            photo_url: true
-          }
-        }
-      }
-    })
+            photo_url: true,
+          },
+        },
+      },
+    });
 
-    if(!activity) {
-      return null
+    if (!activity) {
+      return null;
     }
 
     const hostRatingAverage = await prisma.ratings.aggregate({
-      where:{
-        host_id: activity.host_id
+      where: {
+        host_id: activity.host_id,
       },
       _avg: {
         rating_heart: true,
         rating_kindness: true,
         rating_ability: true,
-        rating_credit: true
-      }
-    })
+        rating_credit: true,
+      },
+    });
 
     //目前只拿一個
     const latestHostRating = await prisma.ratings.findFirst({
       where: {
-        host_id: activity.host_id
+        host_id: activity.host_id,
       },
       include: {
         users_ratings_user_idTousers: {
           select: {
             display_name: true,
-            photo_url: true
-          }
-        }
+            photo_url: true,
+          },
+        },
       },
       orderBy: {
-        created_at: 'desc'
+        created_at: "desc",
       },
-    })
+    });
     return {
       activity,
       latestHostRating,
-      hostRatingAverage
-    }
+      hostRatingAverage,
+    };
   },
 
- async createRating(data){
+  async createRating(data) {
     // 先校驗
     CreateRatingSchema.parse(data);
     return await prisma.ratings.create({
-      data
-    })
-  }
+      data,
+    });
+  },
+
+  async getSummary(host_id) {
+    return await prisma.ratings.groupBy({
+      where: {
+        host_id,
+      },
+      by: ["rating_heart"],
+      _count: {
+        rating_heart: true,
+      },
+    });
+  },
 };

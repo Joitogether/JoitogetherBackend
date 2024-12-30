@@ -64,4 +64,6 @@ router.get(
   UserController.fetchUserFollowing
 );
 
+router.get("/summary/:uid", UserController.fetchUserSummaries);
+
 export default router;

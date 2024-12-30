@@ -4,11 +4,11 @@ import crypto from "crypto";
 const RespondType = 'JSON'
 
 // 使用 aes 對信用卡號等重要交易資訊行加密
-export function createSesEncrypt(TradeInfo) {
-  // encrypt是加密器,enc才是加密過後的字串
+export function createSesEncrypt(TradeInfo, id) {
+  // encrypt是加密器,enc才是加密過後的字串  
   const encrypt = crypto.createCipheriv('aes-256-cbc', process.env.HASHKEY, process.env.HASHIV);
   // update開始加密，final完成加密，genDataChain將物件轉換成適合加密的格式
-  const enc = encrypt.update(genDataChain(TradeInfo), 'utf8', 'hex');
+  const enc = encrypt.update(genDataChain(TradeInfo, id), 'utf8', 'hex');
   return enc + encrypt.final('hex');
 }
 
@@ -20,14 +20,23 @@ export function createShaEncrypt(aesEncrypt) {
   return hash.update(plainText).digest('hex').toUpperCase();
 }
 
-function genDataChain(order) {
+function genDataChain(order, id) {
   return `MerchantID=${process.env.MerchantID}&TimeStamp=${
   order.TimeStamp
   }&Version=${process.env.Version}&RespondType=${RespondType}&MerchantOrderNo=${
-  order.MerchantOrderNo
-  }&Amt=${order.Amount}&NotifyURL=${encodeURIComponent(
+  order.merchantOrderNo
+  }&Amt=${order.Amt}&NotifyURL=${encodeURIComponent(
   process.env.NotifyUrl,
-  )}&ReturnURL=${encodeURIComponent(process.env.ReturnUrl)}&ItemDesc=${encodeURIComponent(
+  )}&ReturnURL=${encodeURIComponent(process.env.ReturnUrl + `/${id}`)}&ItemDesc=${encodeURIComponent(
   order.ItemDesc,
   )}&Email=${encodeURIComponent(order.Email)}`;
+}
+//解密
+export function createSesDecrypt(TradeInfo) {
+  const decrypt = crypto.createDecipheriv('aes256', process.env.HASHKEY, process.env.HASHIV);
+  decrypt.setAutoPadding(false);
+  const text = decrypt.update(TradeInfo, 'hex', 'utf8');
+  const plainText = text + decrypt.final('utf8');
+  const result = plainText.replace(/[\x00-\x20]+/g, '');
+  return JSON.parse(result);
 }
