@@ -235,7 +235,7 @@ export const userService = {
   async getFollowersByUserId(user_id) {
     GetFollowersSchema.parse({ user_id });
     return await prisma.followers.findMany({
-      where: { user_id },
+      where: { user_id, isFollowing: true },
       select: {
         follower_id: true,
         users_followers_follower_idTousers: {
@@ -253,7 +253,7 @@ export const userService = {
   async getFollowingByFollowerId(follower_id) {
     GetFollowingSchema.parse({ follower_id });
     return await prisma.followers.findMany({
-      where: { follower_id },
+      where: { follower_id, isFollowing: true },
       select: {
         user_id: true,
         users_followers_user_idTousers: {
@@ -290,6 +290,36 @@ export const userService = {
             posts: true,
           },
         },
+      },
+    });
+  },
+
+  async followUser(user_id, follower_id) {
+    return await prisma.followers.upsert({
+      create: {
+        user_id,
+        follower_id,
+        isFollowing: true,
+      },
+      update: {
+        isFollowing: true,
+      },
+      where: {
+        follower_id_user_id: {
+          follower_id,
+          user_id,
+        },
+      },
+    });
+  },
+
+  async unfollowUser(id) {
+    return await prisma.followers.update({
+      where: {
+        id,
+      },
+      data: {
+        isFollowing: false,
       },
     });
   },

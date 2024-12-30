@@ -90,14 +90,17 @@ model applications {
 }
 
 model followers {
-  id                                 Int    @id @unique(map: "id_UNIQUE") @default(autoincrement())
-  user_id                            String @db.VarChar(255)
-  follower_id                        String @db.VarChar(255)
-  users_followers_follower_idTousers users  @relation("followers_follower_idTousers", fields: [follower_id], references: [uid], onDelete: Cascade, map: "followers bind follower id")
-  users_followers_user_idTousers     users  @relation("followers_user_idTousers", fields: [user_id], references: [uid], onDelete: NoAction, onUpdate: NoAction, map: "followers bind user id")
+  id                                 Int     @id @unique(map: "id_UNIQUE") @default(autoincrement())
+  user_id                            String  @db.VarChar(255)
+  follower_id                        String  @db.VarChar(255)
+  users_followers_follower_idTousers users   @relation("followers_follower_idTousers", fields: [follower_id], references: [uid], onDelete: Cascade, map: "followers bind follower id")
+  users_followers_user_idTousers     users   @relation("followers_user_idTousers", fields: [user_id], references: [uid], onDelete: NoAction, onUpdate: NoAction, map: "followers bind user id")
+  isFollowing                        Boolean @default(true)
 
+  @@unique([follower_id, user_id], map: "unique_follower_user")
   @@index([follower_id], map: "bind follower id_idx")
   @@index([user_id], map: "bind user id_idx")
+  @@index([follower_id, user_id])
 }
 
 model ratings {

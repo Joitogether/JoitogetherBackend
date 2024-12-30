@@ -266,7 +266,37 @@ const fetchUserSummaries = async (req, res, next) => {
   }
 };
 
+const followUser = async (req, res, next) => {
+  try {
+    const { user_id, follower_id } = req.body;
+    const response = await userService.followUser(user_id, follower_id);
+    res.status(201).json({
+      status: 201,
+      message: "追蹤成功",
+      data: response,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const unFollowUser = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const followId = parseInt(id);
+    const response = await userService.unfollowUser(followId);
+    res.status(200).json({
+      status: 200,
+      message: "取消追蹤成功",
+      data: response,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 export {
+  unFollowUser,
+  followUser,
   fetchAllUsers,
   fetchUserById,
   registerUser,

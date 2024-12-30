@@ -64,6 +64,9 @@ router.get(
   UserController.fetchUserFollowing
 );
 
+router.post("/follow", UserController.followUser);
+router.post("/unfollow/:id", UserController.unFollowUser);
+
 router.get("/summary/:uid", UserController.fetchUserSummaries);
 
 export default router;
