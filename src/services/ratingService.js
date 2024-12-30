@@ -27,7 +27,7 @@ export const ratingService = {
         rating_ability: true,
         rating_credit: true,
         created_at: true,
-        users_ratings_host_idTousers: {
+        users_ratings_user_idTousers: {
           select: {
             display_name: true,
             photo_url: true,
