@@ -67,7 +67,7 @@ export const handleNewebpayNotify = async (req, res, next) => {
         const createResponse = await TopupService.updateNewebpayOrder(decryptData)
         if(createResponse.payment_status == 'SUCCESS') {
             //增加錢包餘額＋新增一筆錢包deposit紀錄
-            const addDepositResponse = await paymentService.addDeposit(topuper_id, createResponse.amount);
+            const addDepositResponse = await paymentService.addDeposit(createResponse.topuper_id, createResponse.amount);
                 const record = await paymentService.createPaymentRecord(
                 topuper_id,
                 "deposit",
