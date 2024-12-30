@@ -57,7 +57,7 @@
       }
     },
     "/activities/category/{type}": {
-      "get": {
+      "post": {
         "tags": [
           "Activity"
         ],
@@ -68,6 +68,24 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "category": {
+                  "example": "any"
+                },
+                "page": {
+                  "example": "any"
+                },
+                "pageSize": {
+                  "example": "any"
+                }
+              }
+            }
           }
         ],
         "responses": {
@@ -418,6 +436,24 @@
         }
       }
     },
+    "/users/summary/{uid}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "uid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/applications/{activity_id}": {
       "get": {
         "tags": [
@@ -534,6 +570,9 @@
               "type": "object",
               "properties": {
                 "status": {
+                  "example": "any"
+                },
+                "register_validated": {
                   "example": "any"
                 }
               }
@@ -887,6 +926,27 @@
         "parameters": [
           {
             "name": "activity_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/ratings/summary/{host_id}": {
+      "get": {
+        "tags": [
+          "Rating"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "host_id",
             "in": "path",
             "required": true,
             "type": "string"
@@ -1470,6 +1530,81 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      }
+    },
+    "/topups/records/{uid}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "uid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/topups/process": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "any"
+                },
+                "amount": {
+                  "example": "any"
+                },
+                "type": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/topups/newebpay_notify": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "TradeInfo": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
           }
         }
       }
