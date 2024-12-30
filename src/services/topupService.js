@@ -35,6 +35,7 @@ export const TopupService = {
         })
     },
     async updateNewebpayOrder(id, topuper_id, data) {
+        console.log('藍新notify傳來的資料', data);
         const updateData = {
             payment_status: data.PaymentStatus === 'PENDING' ? 'SUCCESS' : data.PaymentStatus,
             trade_no: data.TradeNo,
