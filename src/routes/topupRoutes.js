@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get("/records/:uid", TopupController.getTopuperRecord);
 
-router.post("/process", TopupController.handleTopupProcess)
+router.post("/encrypt/process", TopupController.handleTopupProcess)
 router.post("/newebpay_notify", TopupController.handleNewebpayNotify)
 
 
