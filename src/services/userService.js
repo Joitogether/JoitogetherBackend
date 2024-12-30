@@ -274,11 +274,6 @@ export const userService = {
         uid,
       },
       select: {
-        display_name: true,
-        photo_url: true,
-        city: true,
-        age: true,
-        career: true,
         _count: {
           select: {
             activities: {
