@@ -49,9 +49,8 @@ export const TopupService = {
             };
         console.log('updateData', updateData);
         if (updateData.pay_time) {
-            updateData.pay_time = updateData.pay_time.slice(0, 10) + "T" + pay_time.slice(10);
+            updateData.pay_time = updateData.pay_time.slice(0, 10) + "T" + updateData.pay_time.slice(10);
         
-            // 確保是合法日期
             if (isNaN(Date.parse(updateData.pay_time))) {
                 throw new Error("Invalid pay_time format");
             }
