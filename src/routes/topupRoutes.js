@@ -1,13 +1,25 @@
 import express from "express";
-import * as TopupController from "../controllers/topupController.js"
+import * as TopupController from "../controllers/topupController.js";
 
 const router = express.Router();
 
-router.get("/records/:uid", TopupController.getTopuperRecord);
+router.get(
+  "/records/:uid",
+  /* #swagger.tags = ['Top Up'] */
 
-router.post("/encrypt/process", TopupController.handleTopupProcess)
-router.post("/newebpay_notify", TopupController.handleNewebpayNotify)
+  TopupController.getTopuperRecord
+);
 
+router.post(
+  "/encrypt/process",
+  /* #swagger.tags = ['Top Up'] */
+  TopupController.handleTopupProcess
+);
 
+router.post(
+  "/newebpay_notify",
+  /* #swagger.tags = ['Top Up'] */
+  TopupController.handleNewebpayNotify
+);
 
 export default router;

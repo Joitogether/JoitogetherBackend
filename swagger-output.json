@@ -8,7 +8,7 @@
   "host": "localhost:3030",
   "basePath": "/",
   "schemes": [
-    "http"
+    "http//localhost:3030"
   ],
   "paths": {
     "/activities/": {
@@ -1334,7 +1334,7 @@
         "tags": [
           "Rating"
         ],
-        "description": "",
+        "description": "取得評論資料",
         "parameters": [
           {
             "name": "host_id",
@@ -1345,7 +1345,72 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "成功取得使用者資料",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 200
+                },
+                "message": {
+                  "type": "string",
+                  "example": "成功取得資料"
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "rating_id": {
+                        "type": "number",
+                        "example": 1
+                      },
+                      "user_id": {
+                        "type": "string",
+                        "example": "XRS2wbAZv3NqQ42uvoSh68veitv2"
+                      },
+                      "host_id": {
+                        "type": "string",
+                        "example": "KcYkDTxGZPQNzNbbTdOeO8en0Ah1"
+                      },
+                      "rating_heart": {
+                        "type": "number",
+                        "example": 5
+                      },
+                      "user_comment": {
+                        "type": "string",
+                        "example": "good"
+                      },
+                      "rating_kindness": {
+                        "type": "number",
+                        "example": 3
+                      },
+                      "rating_ability": {
+                        "type": "number",
+                        "example": 4
+                      },
+                      "rating_credit": {
+                        "type": "number",
+                        "example": 5
+                      },
+                      "created_at": {
+                        "type": "string",
+                        "example": "2024-12-29T14:54:48.000Z"
+                      },
+                      "activitiesId": {},
+                      "activity_id": {
+                        "type": "number",
+                        "example": 34
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -1355,7 +1420,7 @@
         "tags": [
           "Rating"
         ],
-        "description": "",
+        "description": "取得評論者個人資料",
         "parameters": [
           {
             "name": "host_id",
@@ -1366,7 +1431,80 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "成功取得使用者資料",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 200
+                },
+                "message": {
+                  "type": "string",
+                  "example": "成功取得資料"
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "rating_id": {
+                        "type": "number",
+                        "example": 1
+                      },
+                      "user_id": {
+                        "type": "string",
+                        "example": "XRS2wbAZv3NqQ42uvoSh68veitv2"
+                      },
+                      "rating_heart": {
+                        "type": "number",
+                        "example": 5
+                      },
+                      "user_comment": {
+                        "type": "string",
+                        "example": "good"
+                      },
+                      "rating_kindness": {
+                        "type": "number",
+                        "example": 3
+                      },
+                      "rating_ability": {
+                        "type": "number",
+                        "example": 4
+                      },
+                      "rating_credit": {
+                        "type": "number",
+                        "example": 5
+                      },
+                      "created_at": {
+                        "type": "string",
+                        "example": "2024-12-29T14:54:48.000Z"
+                      },
+                      "users_ratings_user_idTousers": {
+                        "type": "object",
+                        "properties": {
+                          "display_name": {
+                            "type": "string",
+                            "example": "沙拉貓"
+                          },
+                          "photo_url": {
+                            "type": "string",
+                            "example": "https://firebasestorage.googleapis.com/v0/b/login-demo1-9d3cb.firebasestorage.app/o/avatars%2F1735439695053_images%20(2).jpeg?alt=media&token=347b9eb2-8af7-4381-9aea-de763f29df09"
+                          },
+                          "city": {
+                            "type": "string",
+                            "example": "新北市"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -2011,6 +2149,9 @@
     },
     "/topups/records/{uid}": {
       "get": {
+        "tags": [
+          "Top Up"
+        ],
         "description": "",
         "parameters": [
           {
@@ -2032,6 +2173,9 @@
     },
     "/topups/encrypt/process": {
       "post": {
+        "tags": [
+          "Top Up"
+        ],
         "description": "",
         "parameters": [
           {
@@ -2062,6 +2206,9 @@
     },
     "/topups/newebpay_notify": {
       "post": {
+        "tags": [
+          "Top Up"
+        ],
         "description": "",
         "parameters": [
           {

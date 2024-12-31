@@ -9,6 +9,7 @@ router.get(
   /* #swagger.ignore = true */
   UserController.fetchAllUsers
 );
+
 router.get(
   "/:uid",
   /* #swagger.tags = ['User'] */
@@ -99,6 +100,7 @@ router.post(
       description: "建立使用者資料成功" } */
   UserController.registerUser
 );
+
 router.put(
   "/update/:uid",
   /* #swagger.tags = ['User'] */
@@ -241,6 +243,7 @@ router.get(
   /* #swagger.tags = ['User_Notification'] */
   UserController.fetchUserNotifications
 );
+
 router.put(
   "/notifications/:uid",
   /* #swagger.tags = ['User_Notification'] */
@@ -253,6 +256,7 @@ router.get(
   /* #swagger.tags = ['User_Follow'] */
   UserController.fetchUserFollowers
 );
+
 router.get(
   "/following/:follower_id",
   /* #swagger.tags = ['User_Follow'] */
@@ -264,6 +268,7 @@ router.post(
   /* #swagger.tags = ['User_Follow'] */
   UserController.followUser
 );
+
 router.post(
   "/unfollow/:id",
   /* #swagger.tags = ['User_Follow'] */
