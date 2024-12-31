@@ -66,11 +66,13 @@ export const handleNewebpayNotify = async (req, res, next) => {
         const decryptData = createSesDecrypt(response.TradeInfo);
         console.log('解密後的資料', decryptData);
         const createResponse = await TopupService.updateNewebpayOrder(decryptData)
+        console.log('createResponse:', createResponse);
+        
         if(createResponse.payment_status == 'SUCCESS') {
             //增加錢包餘額＋新增一筆錢包deposit紀錄
             const addDepositResponse = await paymentService.addDeposit(createResponse.topuper_id, createResponse.amount);
                 const record = await paymentService.createPaymentRecord(
-                topuper_id,
+                createResponse.topuper_id,
                 "deposit",
                 createResponse.amount,
                 addDepositResponse.balance
