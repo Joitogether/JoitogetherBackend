@@ -8,7 +8,7 @@
   "host": "localhost:3030",
   "basePath": "/",
   "schemes": [
-    "http//localhost:3030"
+    "http"
   ],
   "paths": {
     "/activities/": {
@@ -1334,7 +1334,7 @@
         "tags": [
           "Rating"
         ],
-        "description": "取得評論資料",
+        "description": "取得被評論者的評論資料",
         "parameters": [
           {
             "name": "host_id",
@@ -1420,7 +1420,7 @@
         "tags": [
           "Rating"
         ],
-        "description": "取得評論者個人資料",
+        "description": "取得被評論者個人資料",
         "parameters": [
           {
             "name": "host_id",
@@ -1509,33 +1509,12 @@
         }
       }
     },
-    "/ratings/userDetails/{user_id}": {
-      "get": {
-        "tags": [
-          "Rating"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "user_id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/ratings/activity/{activity_id}": {
       "get": {
         "tags": [
           "Rating"
         ],
-        "description": "",
+        "description": "取得活動評論資料(含活動資料與評論者個人資料)",
         "parameters": [
           {
             "name": "activity_id",
@@ -1546,7 +1525,203 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "成功取得評論資料",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 200
+                },
+                "message": {
+                  "type": "string",
+                  "example": "成功取得資料"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "activity": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "number",
+                          "example": 34
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "養狗"
+                        },
+                        "img_url": {
+                          "type": "string",
+                          "example": "https://ih1.redbubble.net/image.4994245202.0402/bg,f8f8f8-flat,750x,075,f-pad,750x1000,f8f8f8.jpg"
+                        },
+                        "location": {
+                          "type": "string",
+                          "example": "台灣台北市信義區101大樓2樓連通天橋"
+                        },
+                        "host_id": {
+                          "type": "string",
+                          "example": "lNLo8eDmqoTcWghXpPA5H4P1iG02"
+                        },
+                        "description": {
+                          "type": "string",
+                          "example": "嘗試領養狗"
+                        },
+                        "max_participants": {
+                          "type": "number",
+                          "example": 20
+                        },
+                        "min_participants": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "category": {
+                          "type": "string",
+                          "example": "travel"
+                        },
+                        "status": {
+                          "type": "string",
+                          "example": "registrationOpen"
+                        },
+                        "price": {
+                          "type": "string",
+                          "example": "250"
+                        },
+                        "pay_type": {
+                          "type": "string",
+                          "example": "AA"
+                        },
+                        "require_approval": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "example": "2024-12-06T07:59:17.000Z"
+                        },
+                        "approval_deadline": {
+                          "type": "string",
+                          "example": "2024-12-06T20:00:00.000Z"
+                        },
+                        "event_time": {
+                          "type": "string",
+                          "example": "2024-12-12T20:59:00.000Z"
+                        },
+                        "updated_at": {
+                          "type": "string",
+                          "example": "2024-12-06T07:59:17.000Z"
+                        },
+                        "require_payment": {
+                          "type": "number",
+                          "example": 0
+                        },
+                        "users": {
+                          "type": "object",
+                          "properties": {
+                            "display_name": {
+                              "type": "string",
+                              "example": "黃俊龍"
+                            },
+                            "photo_url": {
+                              "type": "string",
+                              "example": "https://lh3.googleusercontent.com/a/ACg8ocIvgSvTl286GHd25o1C_74ayYw4N1Axn18NOl7HTGb21rqfTQ=s96-c"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "latestHostRating": {
+                      "type": "object",
+                      "properties": {
+                        "rating_id": {
+                          "type": "number",
+                          "example": 2
+                        },
+                        "user_id": {
+                          "type": "string",
+                          "example": "XRS2wbAZv3NqQ42uvoSh68veitv2"
+                        },
+                        "host_id": {
+                          "type": "string",
+                          "example": "lNLo8eDmqoTcWghXpPA5H4P1iG02"
+                        },
+                        "rating_heart": {
+                          "type": "number",
+                          "example": 4
+                        },
+                        "user_comment": {
+                          "type": "string",
+                          "example": "讚"
+                        },
+                        "rating_kindness": {
+                          "type": "number",
+                          "example": 3
+                        },
+                        "rating_ability": {
+                          "type": "number",
+                          "example": 3
+                        },
+                        "rating_credit": {
+                          "type": "number",
+                          "example": 3
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "example": "2024-12-30T07:47:56.000Z"
+                        },
+                        "activitiesId": {},
+                        "activity_id": {
+                          "type": "number",
+                          "example": 40
+                        },
+                        "users_ratings_user_idTousers": {
+                          "type": "object",
+                          "properties": {
+                            "display_name": {
+                              "type": "string",
+                              "example": "沙拉貓"
+                            },
+                            "photo_url": {
+                              "type": "string",
+                              "example": "https://firebasestorage.googleapis.com/v0/b/login-demo1-9d3cb.firebasestorage.app/o/avatars%2F1735439695053_images%20(2).jpeg?alt=media&token=347b9eb2-8af7-4381-9aea-de763f29df09"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "hostRatingAverage": {
+                      "type": "object",
+                      "properties": {
+                        "_avg": {
+                          "type": "object",
+                          "properties": {
+                            "rating_heart": {
+                              "type": "number",
+                              "example": 4
+                            },
+                            "rating_kindness": {
+                              "type": "number",
+                              "example": 3
+                            },
+                            "rating_ability": {
+                              "type": "number",
+                              "example": 3
+                            },
+                            "rating_credit": {
+                              "type": "number",
+                              "example": 3
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -1556,7 +1731,7 @@
         "tags": [
           "Rating"
         ],
-        "description": "",
+        "description": "取得評分資料",
         "parameters": [
           {
             "name": "host_id",
@@ -1567,7 +1742,82 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "成功取得評論資料",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "成功取得資料"
+                },
+                "status": {
+                  "type": "number",
+                  "example": 200
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "heartCounts": {
+                      "type": "object",
+                      "properties": {
+                        "heart1": {
+                          "type": "number",
+                          "example": 0
+                        },
+                        "heart2": {
+                          "type": "number",
+                          "example": 0
+                        },
+                        "heart3": {
+                          "type": "number",
+                          "example": 0
+                        },
+                        "heart4": {
+                          "type": "number",
+                          "example": 0
+                        },
+                        "heart5": {
+                          "type": "number",
+                          "example": 1
+                        }
+                      }
+                    },
+                    "ratingPercentages": {
+                      "type": "object",
+                      "properties": {
+                        "heart1": {
+                          "type": "string",
+                          "example": "0.00"
+                        },
+                        "heart2": {
+                          "type": "string",
+                          "example": "0.00"
+                        },
+                        "heart3": {
+                          "type": "string",
+                          "example": "0.00"
+                        },
+                        "heart4": {
+                          "type": "string",
+                          "example": "0.00"
+                        },
+                        "heart5": {
+                          "type": "string",
+                          "example": "100.00"
+                        }
+                      }
+                    },
+                    "averageHeart": {
+                      "type": "string",
+                      "example": "5.0"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
