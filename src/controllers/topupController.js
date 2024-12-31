@@ -9,7 +9,8 @@ export const handleTopupProcess = async(req, res, next) => {
         console.log('data',data);
         
         
-        const TimeStamp = Math.round(new Date().getTime() / 1000);        
+        const TimeStamp = Math.round(new Date().getTime() / 1000);       
+        const splice_uid = (data.topuper_id).slice(25) 
         const order = {
             ...data,
             Email: data.email,
@@ -17,7 +18,7 @@ export const handleTopupProcess = async(req, res, next) => {
             ItemDesc: data.type,
             TimeStamp,
             MerchantID: process.env.MerchantID,
-            merchantOrderNo: TimeStamp,
+            merchantOrderNo: `Joi${TimeStamp}Deposit${splice_uid}`,
             Version: process.env.Version,
             };
             const newTopupRecord = await TopupService.createTopup(order);
@@ -75,7 +76,7 @@ export const handleNewebpayNotify = async (req, res, next) => {
                 addDepositResponse.balance
                 );
                 if(record){
-                    return res.end();
+                    return res.end("1|OK");
                 }
         }
         } catch (error) {
