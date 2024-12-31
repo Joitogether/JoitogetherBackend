@@ -37,29 +37,33 @@ export const TopupService = {
     async updateNewebpayOrder(data) {
         console.log('藍新notify傳來的資料', data);
         const { Result, Status } = data
+        let pay_time = Result.PayTime;
+
+        // 修正格式
+        if (pay_time) {
+            pay_time = pay_time.slice(0, 10) + "T" + pay_time.slice(10);
+
+            // 確保是合法日期
+            const parsedDate = new Date(pay_time);
+            if (isNaN(parsedDate.getTime())) {
+                throw new Error("Invalid pay_time format");
+            }
+
+            // 轉為 ISO 格式
+            pay_time = parsedDate.toISOString();
+        }
         const updateData = {
             payment_status: Status === 'PENDING' ? 'SUCCESS' : Status,
             tradeNo: Result.TradeNo,
             payment_type: Result.PaymentType,
-            pay_time: new Date(Result.PayTime).toISOString(),
+            pay_time: pay_time,
             payer_ip: Result.IP || undefined,  
             bank_code: Result.PayBankCode || undefined,
             card_last_four: Result.PayerAccount5Code || undefined,
             escrow_bank: Result.EscrowBank || undefined,
             };
         console.log('updateData', updateData);
-        // if (updateData.pay_time) {
-        //     updateData.pay_time = updateData.pay_time.slice(0, 10) + "T" + updateData.pay_time.slice(10);
-        // console.log('加上T的', updateData.pay_time);
         
-        //     if (isNaN(Date.parse(updateData.pay_time))) {
-        //         throw new Error("Invalid pay_time format");
-        //     }
-        
-        //     updateData.pay_time = new Date(updateData.pay_time); // 轉為 Date 物件
-        //     console.log('轉換後的', updateData.pay_time);
-
-        // }
             // 移除 undefined 的欄位，這樣不會覆蓋原有的值
             const cleanedData = Object.fromEntries(
             Object.entries(updateData).filter(([_, value]) => value !== undefined)
