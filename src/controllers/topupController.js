@@ -1,16 +1,14 @@
 import { TopupService } from "../services/topupService.js";
 import paymentService from "../services/paymentService.js";
 import { createSesEncrypt, createShaEncrypt, createSesDecrypt } from "../utils/payment.js";
-import { userService } from "../services/userService.js";
 
 //建立訂單＋加密訂單資料回傳前端
 export const handleTopupProcess = async(req, res, next) => {
     try {
         const data = req.body;
         console.log('data',data);
-        
-        await userService.addDeposit(data.topuper_id, 0)
-        
+        await paymentService.addDeposit(data.topuper_id, 0)
+
         const TimeStamp = Math.round(new Date().getTime() / 1000);       
         const splice_uid = (data.topuper_id).slice(25) 
         const order = {
