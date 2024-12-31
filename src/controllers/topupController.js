@@ -7,8 +7,8 @@ export const handleTopupProcess = async(req, res, next) => {
     try {
         const data = req.body;
         console.log('data',data);
-        
-        
+        await paymentService.addDeposit(data.topuper_id, 0)
+
         const TimeStamp = Math.round(new Date().getTime() / 1000);       
         const splice_uid = (data.topuper_id).slice(25) 
         const order = {
@@ -66,20 +66,31 @@ export const handleNewebpayNotify = async (req, res, next) => {
         const decryptData = createSesDecrypt(response.TradeInfo);
         console.log('解密後的資料', decryptData);
         const createResponse = await TopupService.updateNewebpayOrder(decryptData)
+        console.log('createResponse:', createResponse);
+        
         if(createResponse.payment_status == 'SUCCESS') {
             //增加錢包餘額＋新增一筆錢包deposit紀錄
             const addDepositResponse = await paymentService.addDeposit(createResponse.topuper_id, createResponse.amount);
                 const record = await paymentService.createPaymentRecord(
-                topuper_id,
+                createResponse.topuper_id,
                 "deposit",
                 createResponse.amount,
                 addDepositResponse.balance
                 );
                 if(record){
-                    return res.end();
+                    return res.end("1|OK");
                 }
         }
         } catch (error) {
         console.error('處理藍新notify發生錯誤：', error);
         }
-    };
+};
+
+export const handleReturn = async (req, res, next) => {
+    try {
+        const { id } = req.params
+        res.redirect(`${process.env.FRONTEND_URL}topup/result/${id}`)
+    } catch (error) {
+        next(error)
+    }
+}
