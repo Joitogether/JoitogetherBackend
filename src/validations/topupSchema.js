@@ -11,7 +11,7 @@ export const newebpayOrderSchema = z.object({
     pay_time: z.string().optional(),
     payer_ip: z.string().max(45).optional(),
     bank_code: z.string().max(10).optional(),
-    card_last_four: z.string().max(4).optional(),
+    card_last_four: z.string().max(10).optional(),
     escrow_bank: z.string().max(10).optional(),
     created_at: z.coerce.date().optional(),
     updated_at: z.coerce.date().optional(),
