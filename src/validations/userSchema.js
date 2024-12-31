@@ -53,7 +53,15 @@ export const GetFollowingSchema = z.object({
 export const NotificationSchema = z.object({
   user_id: z.string().max(255),
   actor_id: z.string().max(255),
-  action: z.enum(["like", "comment", "register", "review", "rate"]),
+  action: z.enum([
+    "like",
+    "comment",
+    "register",
+    "review",
+    "rate",
+    "create",
+    "follow",
+  ]),
   target_type: z.enum(["post", "activity", "rating"]),
   message: z.string(),
 });
@@ -61,7 +69,6 @@ export const NotificationSchema = z.object({
 export const NotificationListSchema = z.object({
   unreadList: z.array(z.number().int()).min(1),
 });
-
 
 export const CreateRatingSchema = z.object({
   host_id: z.string().max(255),
@@ -71,4 +78,4 @@ export const CreateRatingSchema = z.object({
   rating_kindness: z.number().int().min(1).max(5),
   rating_ability: z.number().int().min(1).max(5),
   rating_credit: z.number().int().min(1).max(5),
-})
+});

@@ -168,9 +168,32 @@ export const activityService = {
       approval_deadline: convertToISOString(activityData.approval_deadline),
       event_time: convertToISOString(activityData.event_time),
     };
-    return await prisma.activities.create({
+
+    const activity = await prisma.activities.create({
       data: formattedActivityData,
     });
+
+    //通知訂閱者
+    const followers = await userService.getSimplifyFollowers(activity.host_id);
+    if (followers.length == 0) {
+      return;
+    }
+    const data = followers.map((follower) => {
+      return {
+        actor_id: activity.host_id,
+        user_id: follower.follower_id,
+        action: "create",
+        target_type: "activity",
+        target_id: activity.id,
+        message: "剛建立了一個活動！",
+        link: `/activity/detail/${activity.id}`,
+      };
+    });
+    await prisma.notifications.createMany({
+      data,
+    });
+
+    return activity;
   },
 
   // 免審核的活動報名
