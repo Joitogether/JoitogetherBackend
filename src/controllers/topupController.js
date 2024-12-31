@@ -84,4 +84,13 @@ export const handleNewebpayNotify = async (req, res, next) => {
         } catch (error) {
         console.error('處理藍新notify發生錯誤：', error);
         }
-    };
+};
+
+export const handleReturn = async (req, res, next) => {
+    try {
+        const { id } = req.params
+        res.redircet(`${process.env.FRONTEND_URL}/${id}`)
+    } catch (error) {
+        next(error)
+    }
+}
