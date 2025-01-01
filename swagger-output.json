@@ -2917,7 +2917,7 @@
         "tags": [
           "Cart"
         ],
-        "description": "",
+        "description": "取得購物車所有商品資料(含活動資料)",
         "parameters": [
           {
             "name": "userId",
@@ -2928,7 +2928,93 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "成功取得資料",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 200
+                },
+                "message": {
+                  "type": "string",
+                  "example": "購物車成功取得資料"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "cartItems": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "number",
+                            "example": 115
+                          },
+                          "cart_id": {
+                            "type": "number",
+                            "example": 5
+                          },
+                          "activity_id": {
+                            "type": "number",
+                            "example": 34
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "example": "2025-01-01T04:57:32.661Z"
+                          },
+                          "is_selected": {
+                            "type": "boolean",
+                            "example": false
+                          },
+                          "activities": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "example": "養狗"
+                              },
+                              "location": {
+                                "type": "string",
+                                "example": "台灣台北市信義區101大樓2樓連通天橋"
+                              },
+                              "img_url": {
+                                "type": "string",
+                                "example": "https://ih1.redbubble.net/image.4994245202.0402/bg,f8f8f8-flat,750x,075,f-pad,750x1000,f8f8f8.jpg"
+                              },
+                              "price": {
+                                "type": "string",
+                                "example": "250"
+                              },
+                              "require_approval": {
+                                "type": "number",
+                                "example": 1
+                              },
+                              "pay_type": {
+                                "type": "string",
+                                "example": "AA"
+                              },
+                              "event_time": {
+                                "type": "string",
+                                "example": "2024-12-12T20:59:00.000Z"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "totalActivities": {
+                      "type": "number",
+                      "example": 1
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       },
@@ -2936,7 +3022,7 @@
         "tags": [
           "Cart"
         ],
-        "description": "",
+        "description": "新增商品至購物車",
         "parameters": [
           {
             "name": "userId",
@@ -2945,13 +3031,16 @@
             "type": "string"
           },
           {
-            "name": "body",
+            "name": "obj",
             "in": "body",
+            "description": "編輯文章內容",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "activityId": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 34
                 }
               }
             }
@@ -2959,7 +3048,48 @@
         ],
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "成功新增至購物車",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 201
+                },
+                "message": {
+                  "type": "string",
+                  "example": "成功新增至購物車"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number",
+                      "example": 115
+                    },
+                    "cart_id": {
+                      "type": "number",
+                      "example": 5
+                    },
+                    "activity_id": {
+                      "type": "number",
+                      "example": 34
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "example": "2025-01-01T04:57:32.661Z"
+                    },
+                    "is_selected": {
+                      "type": "boolean",
+                      "example": false
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -2969,7 +3099,7 @@
         "tags": [
           "Cart"
         ],
-        "description": "",
+        "description": "刪除購物車中的商品",
         "parameters": [
           {
             "name": "userId",
@@ -2986,7 +3116,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 200
+                },
+                "message": {
+                  "type": "string",
+                  "example": "成功移除購物車項目"
+                },
+                "data": {}
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "404": {
             "description": "Not Found"
@@ -2999,7 +3146,7 @@
         "tags": [
           "Cart_Selected_Item"
         ],
-        "description": "",
+        "description": "取得購物車中已選擇的商品",
         "parameters": [
           {
             "name": "userId",
@@ -3010,7 +3157,93 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "成功獲取已選中商品",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 200
+                },
+                "message": {
+                  "type": "string",
+                  "example": "成功取得已選擇項目"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "cartItems": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "number",
+                            "example": 117
+                          },
+                          "cart_id": {
+                            "type": "number",
+                            "example": 5
+                          },
+                          "activity_id": {
+                            "type": "number",
+                            "example": 34
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "example": "2025-01-01T05:12:30.308Z"
+                          },
+                          "is_selected": {
+                            "type": "boolean",
+                            "example": true
+                          },
+                          "activities": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "example": "養狗"
+                              },
+                              "location": {
+                                "type": "string",
+                                "example": "台灣台北市信義區101大樓2樓連通天橋"
+                              },
+                              "img_url": {
+                                "type": "string",
+                                "example": "https://ih1.redbubble.net/image.4994245202.0402/bg,f8f8f8-flat,750x,075,f-pad,750x1000,f8f8f8.jpg"
+                              },
+                              "price": {
+                                "type": "string",
+                                "example": "250"
+                              },
+                              "require_approval": {
+                                "type": "number",
+                                "example": 1
+                              },
+                              "pay_type": {
+                                "type": "string",
+                                "example": "AA"
+                              },
+                              "event_time": {
+                                "type": "string",
+                                "example": "2024-12-12T20:59:00.000Z"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "totalActivities": {
+                      "type": "number",
+                      "example": 1
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -3020,7 +3253,7 @@
         "tags": [
           "Cart_Selected_Item"
         ],
-        "description": "",
+        "description": "更新購物車中的商品狀態為已選中",
         "parameters": [
           {
             "name": "id",
@@ -3029,13 +3262,16 @@
             "type": "string"
           },
           {
-            "name": "body",
+            "name": "obj",
             "in": "body",
+            "description": "選中商品",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "isSelected": {
-                  "example": "any"
+                  "type": "boolean",
+                  "example": true
                 }
               }
             }
@@ -3043,34 +3279,54 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 200
+                },
+                "message": {
+                  "type": "string",
+                  "example": "ID 為 117 的項目成功更新選擇狀態"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number",
+                      "example": 117
+                    },
+                    "cart_id": {
+                      "type": "number",
+                      "example": 5
+                    },
+                    "activity_id": {
+                      "type": "number",
+                      "example": 34
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "example": "2025-01-01T05:12:30.308Z"
+                    },
+                    "is_selected": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "400": {
             "description": "Bad Request"
           },
           "404": {
             "description": "Not Found"
-          }
-        }
-      }
-    },
-    "/carts/{uid}/clear": {
-      "delete": {
-        "tags": [
-          "Cart_Selected_Item"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "uid",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
           }
         }
       }

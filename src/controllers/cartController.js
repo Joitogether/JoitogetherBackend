@@ -83,7 +83,7 @@ const removeActivityFromCart = async (req, res, next) => {
     res.status(200).json({
       status: 200,
       message: "成功移除購物車項目",
-      data: response,
+      data: null,
     });
   } catch (error) {
     next(error);
