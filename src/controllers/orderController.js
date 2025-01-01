@@ -100,9 +100,9 @@ const completeOrder = async (req, res, next) => {
       order_status
     );
 
-    res.status(200).json({
-      status: 200,
-      message: `${order_status}`,
+    res.status(201).json({
+      status: 201,
+      message: "訂單完成",
       data: response,
     });
   } catch (error) {
@@ -120,9 +120,9 @@ const failOrder = async (req, res, next) => {
       order_status
     );
 
-    res.status(200).json({
-      status: 200,
-      message: `${order_status}`,
+    res.status(201).json({
+      status: 201,
+      message: "訂單失敗",
       data: response,
     });
   } catch (error) {
@@ -140,9 +140,9 @@ const cancelOrder = async (req, res, next) => {
       order_status
     );
 
-    res.status(200).json({
-      status: 200,
-      message: `${order_status}`,
+    res.status(201).json({
+      status: 201,
+      message: "訂單取消",
       data: response,
     });
   } catch (error) {
@@ -160,9 +160,9 @@ const removeOrder = async (req, res, next) => {
       order_status
     );
 
-    res.status(200).json({
-      status: 200,
-      message: `${order_status}`,
+    res.status(201).json({
+      status: 201,
+      message: "訂單刪除",
       data: response,
     });
   } catch (error) {

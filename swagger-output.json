@@ -3544,39 +3544,12 @@
         }
       }
     },
-    "/orders/": {
-      "get": {
-        "tags": [
-          "Order"
-        ],
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "Order"
-        ],
-        "description": "",
-        "responses": {
-          "201": {
-            "description": "Created"
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
-    },
     "/orders/{order_id}": {
       "get": {
         "tags": [
           "Order"
         ],
-        "description": "",
+        "description": "取得單筆訂單資料",
         "parameters": [
           {
             "name": "order_id",
@@ -3587,28 +3560,243 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "成功取得資料",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 200
+                },
+                "message": {
+                  "type": "string",
+                  "example": "成功取得資料"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "order_id": {
+                      "type": "number",
+                      "example": 49
+                    },
+                    "uid": {
+                      "type": "string",
+                      "example": "7l2rEgRk2bc6KSFY90VDL2h2aHo2"
+                    },
+                    "total_amount": {
+                      "type": "string",
+                      "example": "750"
+                    },
+                    "order_status": {
+                      "type": "string",
+                      "example": "completed"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "example": "2024-12-23T10:48:45.000Z"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "example": "2024-12-23T18:48:45.000Z"
+                    },
+                    "order_items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "order_item_id": {
+                            "type": "number",
+                            "example": 98
+                          },
+                          "order_id": {
+                            "type": "number",
+                            "example": 49
+                          },
+                          "activity_id": {
+                            "type": "number",
+                            "example": 35
+                          },
+                          "quantity": {
+                            "type": "number",
+                            "example": 1
+                          },
+                          "price": {
+                            "type": "string",
+                            "example": "500"
+                          },
+                          "subtotal": {
+                            "type": "string",
+                            "example": "500"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "example": "2024-12-23T10:48:45.000Z"
+                          },
+                          "activities": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "example": "買飾品"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
     },
-    "/orders/pending/{uid}": {
-      "get": {
+    "/orders/": {
+      "post": {
         "tags": [
           "Order"
         ],
-        "description": "",
+        "description": "建立訂單",
         "parameters": [
           {
-            "name": "uid",
-            "in": "path",
+            "name": "obj",
+            "in": "body",
+            "description": "訂單資訊",
             "required": true,
-            "type": "string"
+            "schema": {
+              "type": "object",
+              "properties": {
+                "uid": {
+                  "type": "string",
+                  "example": "LIAnzmdBnwcig6NGoXYIRsIMM7I3"
+                },
+                "total_amount": {
+                  "type": "number",
+                  "example": 2000
+                },
+                "order_status": {
+                  "type": "string",
+                  "example": "pending"
+                },
+                "order_items": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "activity_id": {
+                        "type": "number",
+                        "example": 34
+                      },
+                      "quantity": {
+                        "type": "number",
+                        "example": 1
+                      },
+                      "price": {
+                        "type": "number",
+                        "example": 500
+                      },
+                      "subtotal": {
+                        "type": "number",
+                        "example": 500
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "資料建立成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 201
+                },
+                "message": {
+                  "type": "string",
+                  "example": "資料建立成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "order_id": {
+                      "type": "number",
+                      "example": 69
+                    },
+                    "uid": {
+                      "type": "string",
+                      "example": "LIAnzmdBnwcig6NGoXYIRsIMM7I3"
+                    },
+                    "total_amount": {
+                      "type": "string",
+                      "example": "2000"
+                    },
+                    "order_status": {
+                      "type": "string",
+                      "example": "pending"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "example": "2025-01-01T04:29:17.000Z"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "example": "2025-01-01T04:29:17.000Z"
+                    },
+                    "order_items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "order_item_id": {
+                            "type": "number",
+                            "example": 131
+                          },
+                          "order_id": {
+                            "type": "number",
+                            "example": 69
+                          },
+                          "activity_id": {
+                            "type": "number",
+                            "example": 34
+                          },
+                          "quantity": {
+                            "type": "number",
+                            "example": 1
+                          },
+                          "price": {
+                            "type": "string",
+                            "example": "500"
+                          },
+                          "subtotal": {
+                            "type": "string",
+                            "example": "500"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "example": "2025-01-01T04:29:17.000Z"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
           }
         }
       }
@@ -3618,7 +3806,7 @@
         "tags": [
           "Order"
         ],
-        "description": "",
+        "description": "刪除訂單",
         "parameters": [
           {
             "name": "order_id",
@@ -3627,21 +3815,69 @@
             "type": "string"
           },
           {
-            "name": "body",
+            "name": "obj",
             "in": "body",
+            "description": "訂單狀態",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "order_status": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "deleted"
                 }
               }
             }
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "訂單刪除",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 201
+                },
+                "message": {
+                  "type": "string",
+                  "example": "訂單刪除"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "order_id": {
+                      "type": "number",
+                      "example": 69
+                    },
+                    "uid": {
+                      "type": "string",
+                      "example": "LIAnzmdBnwcig3eEoXYIRsIMM7I3"
+                    },
+                    "total_amount": {
+                      "type": "string",
+                      "example": "2000"
+                    },
+                    "order_status": {
+                      "type": "string",
+                      "example": "deleted"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "example": "2025-01-01T04:29:17.000Z"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "example": "2025-01-01T12:33:58.000Z"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -3651,7 +3887,7 @@
         "tags": [
           "Order"
         ],
-        "description": "",
+        "description": "訂單完成",
         "parameters": [
           {
             "name": "order_id",
@@ -3660,21 +3896,69 @@
             "type": "string"
           },
           {
-            "name": "body",
+            "name": "obj",
             "in": "body",
+            "description": "訂單狀態",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "order_status": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "completed"
                 }
               }
             }
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "訂單完成",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 201
+                },
+                "message": {
+                  "type": "string",
+                  "example": "訂單完成"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "order_id": {
+                      "type": "number",
+                      "example": 69
+                    },
+                    "uid": {
+                      "type": "string",
+                      "example": "LIAnzmdBnwcig3eEoXYIRsIMM7I3"
+                    },
+                    "total_amount": {
+                      "type": "string",
+                      "example": "2000"
+                    },
+                    "order_status": {
+                      "type": "string",
+                      "example": "completed"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "example": "2025-01-01T04:29:17.000Z"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "example": "2025-01-01T12:33:58.000Z"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -3684,7 +3968,7 @@
         "tags": [
           "Order"
         ],
-        "description": "",
+        "description": "訂單失敗",
         "parameters": [
           {
             "name": "order_id",
@@ -3693,21 +3977,69 @@
             "type": "string"
           },
           {
-            "name": "body",
+            "name": "obj",
             "in": "body",
+            "description": "訂單狀態",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "order_status": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "failed"
                 }
               }
             }
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "訂單失敗",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 201
+                },
+                "message": {
+                  "type": "string",
+                  "example": "訂單"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "order_id": {
+                      "type": "number",
+                      "example": 69
+                    },
+                    "uid": {
+                      "type": "string",
+                      "example": "LIAnzmdBnwcig3eEoXYIRsIMM7I3"
+                    },
+                    "total_amount": {
+                      "type": "string",
+                      "example": "2000"
+                    },
+                    "order_status": {
+                      "type": "string",
+                      "example": "failed"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "example": "2025-01-01T04:29:17.000Z"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "example": "2025-01-01T12:33:58.000Z"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -3717,7 +4049,7 @@
         "tags": [
           "Order"
         ],
-        "description": "",
+        "description": "取消訂單",
         "parameters": [
           {
             "name": "order_id",
@@ -3726,21 +4058,69 @@
             "type": "string"
           },
           {
-            "name": "body",
+            "name": "obj",
             "in": "body",
+            "description": "訂單狀態",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "order_status": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "cancelled"
                 }
               }
             }
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "訂單取消",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 201
+                },
+                "message": {
+                  "type": "string",
+                  "example": "訂單"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "order_id": {
+                      "type": "number",
+                      "example": 69
+                    },
+                    "uid": {
+                      "type": "string",
+                      "example": "LIAnzmdBnwcig3eEoXYIRsIMM7I3"
+                    },
+                    "total_amount": {
+                      "type": "string",
+                      "example": "2000"
+                    },
+                    "order_status": {
+                      "type": "string",
+                      "example": "cancelled"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "example": "2025-01-01T04:29:17.000Z"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "example": "2025-01-01T12:33:58.000Z"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
