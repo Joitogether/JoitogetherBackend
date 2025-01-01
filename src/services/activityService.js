@@ -1,4 +1,5 @@
 import { prisma } from "../config/db.js";
+import { fetchAllActivities } from "../controllers/activityController.js";
 import {
   ActivityCommentCancelSchema,
   ActivityGetCategorySchema,
@@ -323,32 +324,25 @@ export const activityService = {
     };
   },
 
-  async searchActivities(keyword) {
+  async fetchAllActivities({ page, pageSize, category, region, keyword }) {
+    const skip = (page - 1) * pageSize;
+  
+    const filters = { status: "registrationOpen" };
+  
+    if (category) filters.category = category;
+    if (region) filters.location = { contains: region };
+    if (keyword) {
+      filters.OR = [
+        { name: { contains: keyword } },
+        { description: { contains: keyword } },
+        { location: { contains: keyword } },
+      ];
+    }
+  
     return await prisma.activities.findMany({
-      where: {
-        status: "registrationOpen",
-        //今天以後的活動
-        event_time: {
-          gte: new Date(),
-        },
-        OR: [
-          {
-            name: {
-              contains: keyword,
-            },
-          },
-          {
-            description: {
-              contains: keyword,
-            },
-          },
-          {
-            location: {
-              contains: keyword,
-            },
-          },
-        ],
-      },
+      skip,
+      take: pageSize,
+      where: filters,
       select: {
         id: true,
         name: true,
@@ -363,9 +357,7 @@ export const activityService = {
           },
         },
       },
-      orderBy: {
-        event_time: "asc",
-      },
+      orderBy: { created_at: "desc" },
     });
   },
 };

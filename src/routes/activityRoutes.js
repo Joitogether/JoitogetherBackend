@@ -4,20 +4,16 @@ const router = express.Router();
 
 // Activity List
 router.get(
-  "/",
-  /* #swagger.tags = ['Activity'] */
-  ActivityController.fetchAllActiveActivities
-);
-router.get(
   "/:id",
   /* #swagger.tags = ['Activity'] */
   ActivityController.fetchActivityDetails
 );
-router.post(
-  "/category/:type",
+router.get(
+  "/",
   /* #swagger.tags = ['Activity'] */
-  ActivityController.fetchActivitiesByCategory
+  ActivityController.fetchAllActivities
 );
+
 
 // Activity Create/Delete
 router.post(
@@ -29,11 +25,6 @@ router.put(
   "/cancel/:id",
   /* #swagger.tags = ['Activity'] */
   ActivityController.cancelActivityRequest
-);
-router.post(
-  "/search",
-  /* #swagger.tags = ['Activity'] */
-  ActivityController.searchActivities
 );
 
 // Activity Comment
