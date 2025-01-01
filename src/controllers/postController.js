@@ -149,8 +149,8 @@ const removePost = async (req, res, next) => {
 
     const response = await postService.deletePost(post_id);
 
-    res.status(200).json({
-      status: 200,
+    res.status(201).json({
+      status: 201,
       message: "資料刪除成功",
       data: response,
     });
@@ -206,8 +206,8 @@ const removePostComment = async (req, res, next) => {
 
     const response = await postService.deletePostComment(comment_id);
 
-    res.status(200).json({
-      status: 200,
+    res.status(201).json({
+      status: 201,
       message: "資料刪除成功",
       data: response,
     });
@@ -260,8 +260,8 @@ const removePostLike = async (req, res, next) => {
     const like_id = parseInt(req.params.like_id);
     const response = await postService.deletePostLike(like_id);
 
-    res.status(200).json({
-      status: 200,
+    res.status(201).json({
+      status: 201,
       message: "取消按讚成功",
       data: response,
     });

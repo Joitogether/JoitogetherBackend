@@ -1066,10 +1066,109 @@
         "tags": [
           "Post"
         ],
-        "description": "",
+        "description": "取得所有文章資料",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "成功取得資料",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 200
+                },
+                "message": {
+                  "type": "string",
+                  "example": "成功取得資料"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "post_id": {
+                            "type": "number",
+                            "example": 107
+                          },
+                          "post_title": {
+                            "type": "string",
+                            "example": "測試文章"
+                          },
+                          "post_content": {
+                            "type": "string",
+                            "example": "TEST"
+                          },
+                          "uid": {
+                            "type": "string",
+                            "example": "XRS2wbAZv3NqQ56uvoSh68veitv0"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "example": "2024-12-30T07:37:49.000Z"
+                          },
+                          "updated_at": {
+                            "type": "string",
+                            "example": "2024-12-30T07:37:49.000Z"
+                          },
+                          "post_category": {
+                            "type": "string",
+                            "example": "shopping"
+                          },
+                          "post_status": {
+                            "type": "string",
+                            "example": "posted"
+                          },
+                          "post_img": {
+                            "type": "string",
+                            "example": ""
+                          },
+                          "users": {
+                            "type": "object",
+                            "properties": {
+                              "display_name": {
+                                "type": "string",
+                                "example": "沙拉貓"
+                              },
+                              "photo_url": {
+                                "type": "string",
+                                "example": "https://firebasestorage.googleapis.com/v0/b/login-demo1-9d3cb.firebasestorage.app/o/avatars%2F1735439695053_images%20(2).jpeg?alt=media&token=347b9eb2-8af7-4381-9aea-de763f29df09"
+                              }
+                            }
+                          },
+                          "_count": {
+                            "type": "object",
+                            "properties": {
+                              "post_comments": {
+                                "type": "number",
+                                "example": 0
+                              },
+                              "post_likes": {
+                                "type": "number",
+                                "example": 0
+                              }
+                            }
+                          },
+                          "commentCount": {
+                            "type": "number",
+                            "example": 0
+                          },
+                          "likeCount": {
+                            "type": "number",
+                            "example": 0
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       },
@@ -1077,10 +1176,116 @@
         "tags": [
           "Post"
         ],
-        "description": "",
+        "description": "新增文章",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "文章內容",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "post_id": {
+                  "type": "number",
+                  "example": 20
+                },
+                "post_title": {
+                  "type": "string",
+                  "example": "測試！"
+                },
+                "post_content": {
+                  "type": "string",
+                  "example": "測試測試測試！"
+                },
+                "uid": {
+                  "type": "string",
+                  "example": "KcYkDTxGZPQNzNbbTdOeO8en0Ah1"
+                },
+                "created_at": {
+                  "type": "string",
+                  "example": "2024-12-05T13:28:21.000Z"
+                },
+                "updated_at": {
+                  "type": "string",
+                  "example": "2024-12-05T13:28:21.000Z"
+                },
+                "post_category": {
+                  "type": "string",
+                  "example": "food"
+                },
+                "post_status": {
+                  "type": "string",
+                  "example": "posted"
+                },
+                "post_img": {
+                  "type": "string",
+                  "example": "https://drive.google.com/drive/u/2/home"
+                }
+              }
+            }
+          }
+        ],
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "資料建立成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 201
+                },
+                "message": {
+                  "type": "string",
+                  "example": "資料建立成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "post_id": {
+                      "type": "number",
+                      "example": 20
+                    },
+                    "post_title": {
+                      "type": "string",
+                      "example": "測試！"
+                    },
+                    "post_content": {
+                      "type": "string",
+                      "example": "測試測試測試！"
+                    },
+                    "uid": {
+                      "type": "string",
+                      "example": "KcYkDTxGZPQNzNbbTdOeO8en0Ah1"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "example": "2024-12-05T13:28:21.000Z"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "example": "2024-12-05T13:28:21.000Z"
+                    },
+                    "post_category": {
+                      "type": "string",
+                      "example": "food"
+                    },
+                    "post_status": {
+                      "type": "string",
+                      "example": "posted"
+                    },
+                    "post_img": {
+                      "type": "string",
+                      "example": "https://firebasestorage.googleapis.com/v0/b/login-demo1-9d3cb.firebasestorage.app/o/postImages%2FphpZTyjN1.jpg?alt=media&token=4ca98841-2fa7-4d83-a380-60d37c25ca0e"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -1090,10 +1295,109 @@
         "tags": [
           "Post"
         ],
-        "description": "",
+        "description": "取得最新 15 筆文章資料",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "成功取得資料",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 200
+                },
+                "message": {
+                  "type": "string",
+                  "example": "成功取得資料"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "post_id": {
+                            "type": "number",
+                            "example": 107
+                          },
+                          "post_title": {
+                            "type": "string",
+                            "example": "測試文章"
+                          },
+                          "post_content": {
+                            "type": "string",
+                            "example": "TEST"
+                          },
+                          "uid": {
+                            "type": "string",
+                            "example": "XRS2wbAZv3NqQ56uvoSh68veitv0"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "example": "2024-12-30T07:37:49.000Z"
+                          },
+                          "updated_at": {
+                            "type": "string",
+                            "example": "2024-12-30T07:37:49.000Z"
+                          },
+                          "post_category": {
+                            "type": "string",
+                            "example": "shopping"
+                          },
+                          "post_status": {
+                            "type": "string",
+                            "example": "posted"
+                          },
+                          "post_img": {
+                            "type": "string",
+                            "example": ""
+                          },
+                          "users": {
+                            "type": "object",
+                            "properties": {
+                              "display_name": {
+                                "type": "string",
+                                "example": "沙拉貓"
+                              },
+                              "photo_url": {
+                                "type": "string",
+                                "example": "https://firebasestorage.googleapis.com/v0/b/login-demo1-9d3cb.firebasestorage.app/o/avatars%2F1735439695053_images%20(2).jpeg?alt=media&token=347b9eb2-8af7-4381-9aea-de763f29df09"
+                              }
+                            }
+                          },
+                          "_count": {
+                            "type": "object",
+                            "properties": {
+                              "post_comments": {
+                                "type": "number",
+                                "example": 0
+                              },
+                              "post_likes": {
+                                "type": "number",
+                                "example": 0
+                              }
+                            }
+                          },
+                          "commentCount": {
+                            "type": "number",
+                            "example": 0
+                          },
+                          "likeCount": {
+                            "type": "number",
+                            "example": 0
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -1103,10 +1407,109 @@
         "tags": [
           "Post"
         ],
-        "description": "",
+        "description": "取得 15 天內讚數最多的文章資料",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "成功取得資料",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 200
+                },
+                "message": {
+                  "type": "string",
+                  "example": "成功取得資料"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "post_id": {
+                            "type": "number",
+                            "example": 107
+                          },
+                          "post_title": {
+                            "type": "string",
+                            "example": "測試文章"
+                          },
+                          "post_content": {
+                            "type": "string",
+                            "example": "TEST"
+                          },
+                          "uid": {
+                            "type": "string",
+                            "example": "XRS2wbAZv3NqQ56uvoSh68veitv0"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "example": "2024-12-30T07:37:49.000Z"
+                          },
+                          "updated_at": {
+                            "type": "string",
+                            "example": "2024-12-30T07:37:49.000Z"
+                          },
+                          "post_category": {
+                            "type": "string",
+                            "example": "shopping"
+                          },
+                          "post_status": {
+                            "type": "string",
+                            "example": "posted"
+                          },
+                          "post_img": {
+                            "type": "string",
+                            "example": ""
+                          },
+                          "users": {
+                            "type": "object",
+                            "properties": {
+                              "display_name": {
+                                "type": "string",
+                                "example": "沙拉貓"
+                              },
+                              "photo_url": {
+                                "type": "string",
+                                "example": "https://firebasestorage.googleapis.com/v0/b/login-demo1-9d3cb.firebasestorage.app/o/avatars%2F1735439695053_images%20(2).jpeg?alt=media&token=347b9eb2-8af7-4381-9aea-de763f29df09"
+                              }
+                            }
+                          },
+                          "_count": {
+                            "type": "object",
+                            "properties": {
+                              "post_comments": {
+                                "type": "number",
+                                "example": 0
+                              },
+                              "post_likes": {
+                                "type": "number",
+                                "example": 0
+                              }
+                            }
+                          },
+                          "commentCount": {
+                            "type": "number",
+                            "example": 0
+                          },
+                          "likeCount": {
+                            "type": "number",
+                            "example": 0
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -1116,7 +1519,7 @@
         "tags": [
           "Post"
         ],
-        "description": "",
+        "description": "取得單筆文章資料",
         "parameters": [
           {
             "name": "post_id",
@@ -1127,7 +1530,106 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "成功取得資料",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 200
+                },
+                "message": {
+                  "type": "string",
+                  "example": "成功取得資料"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "post_id": {
+                            "type": "number",
+                            "example": 107
+                          },
+                          "post_title": {
+                            "type": "string",
+                            "example": "測試文章"
+                          },
+                          "post_content": {
+                            "type": "string",
+                            "example": "TEST"
+                          },
+                          "uid": {
+                            "type": "string",
+                            "example": "XRS2wbAZv3NqQ56uvgjsdh68veitv0"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "example": "2024-12-30T07:37:49.000Z"
+                          },
+                          "updated_at": {
+                            "type": "string",
+                            "example": "2024-12-30T07:37:49.000Z"
+                          },
+                          "post_category": {
+                            "type": "string",
+                            "example": "shopping"
+                          },
+                          "post_status": {
+                            "type": "string",
+                            "example": "posted"
+                          },
+                          "post_img": {
+                            "type": "string",
+                            "example": ""
+                          },
+                          "users": {
+                            "type": "object",
+                            "properties": {
+                              "display_name": {
+                                "type": "string",
+                                "example": "沙拉貓"
+                              },
+                              "photo_url": {
+                                "type": "string",
+                                "example": "https://firebasestorage.googleapis.com/v0/b/login-demo1-9d3cb.firebasestorage.app/o/avatars%2F1735439695053_images%20(2).jpeg?alt=media&token=347b9eb2-8af7-4381-9aea-de763f29df09"
+                              }
+                            }
+                          },
+                          "_count": {
+                            "type": "object",
+                            "properties": {
+                              "post_comments": {
+                                "type": "number",
+                                "example": 0
+                              },
+                              "post_likes": {
+                                "type": "number",
+                                "example": 0
+                              }
+                            }
+                          },
+                          "commentCount": {
+                            "type": "number",
+                            "example": 0
+                          },
+                          "likeCount": {
+                            "type": "number",
+                            "example": 0
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       },
@@ -1135,18 +1637,117 @@
         "tags": [
           "Post"
         ],
-        "description": "",
+        "description": "編輯文章",
         "parameters": [
           {
             "name": "post_id",
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "編輯文章內容",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "post_id": {
+                  "type": "number",
+                  "example": 10
+                },
+                "post_title": {
+                  "type": "string",
+                  "example": "test"
+                },
+                "post_content": {
+                  "type": "string",
+                  "example": "寫專題就是一直不斷在測試"
+                },
+                "uid": {
+                  "type": "string",
+                  "example": "KcYkDTxGZPQNzNbbTdOeO8en0Ah0"
+                },
+                "post_category": {
+                  "type": "string",
+                  "example": "sports"
+                },
+                "post_status": {
+                  "type": "string",
+                  "example": "onEdit"
+                },
+                "post_img": {
+                  "type": "string",
+                  "example": ""
+                }
+              }
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "201": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 201
+                },
+                "message": {
+                  "type": "string",
+                  "example": "資料更新成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "post_id": {
+                      "type": "number",
+                      "example": 10
+                    },
+                    "post_title": {
+                      "type": "string",
+                      "example": "test"
+                    },
+                    "post_content": {
+                      "type": "string",
+                      "example": "寫專題就是一直不斷在測試"
+                    },
+                    "uid": {
+                      "type": "string",
+                      "example": "KcYkDTxGZPQNzNbbTdOeO8en0Ah1"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "example": "2024-12-05T13:05:34.000Z"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "example": "2024-12-05T13:05:34.000Z"
+                    },
+                    "post_category": {
+                      "type": "string",
+                      "example": "sports"
+                    },
+                    "post_status": {
+                      "type": "string",
+                      "example": "onEdit"
+                    },
+                    "post_img": {
+                      "type": "string",
+                      "example": ""
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            },
+            "description": "Created"
           }
         }
       },
@@ -1154,7 +1755,7 @@
         "tags": [
           "Post"
         ],
-        "description": "",
+        "description": "刪除文章",
         "parameters": [
           {
             "name": "post_id",
@@ -1164,8 +1765,65 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "Created",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 201
+                },
+                "message": {
+                  "type": "string",
+                  "example": "資料刪除成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "post_id": {
+                      "type": "number",
+                      "example": 10
+                    },
+                    "post_title": {
+                      "type": "string",
+                      "example": "test"
+                    },
+                    "post_content": {
+                      "type": "string",
+                      "example": "寫專題就是一直不斷在測試"
+                    },
+                    "uid": {
+                      "type": "string",
+                      "example": "KcYkDTxGZPQNzNbbTdOeO8en0Ah1"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "example": "2024-12-05T13:05:34.000Z"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "example": "2024-12-05T13:05:34.000Z"
+                    },
+                    "post_category": {
+                      "type": "string",
+                      "example": "sports"
+                    },
+                    "post_status": {
+                      "type": "string",
+                      "example": "deleted"
+                    },
+                    "post_img": {
+                      "type": "string",
+                      "example": ""
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -1175,7 +1833,7 @@
         "tags": [
           "Post"
         ],
-        "description": "",
+        "description": "取得分類文章資料(food, shopping, education, sports, travel, others)",
         "parameters": [
           {
             "name": "category",
@@ -1186,7 +1844,106 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "成功取得資料",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 200
+                },
+                "message": {
+                  "type": "string",
+                  "example": "成功取得資料"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "post_id": {
+                            "type": "number",
+                            "example": 107
+                          },
+                          "post_title": {
+                            "type": "string",
+                            "example": "測試文章"
+                          },
+                          "post_content": {
+                            "type": "string",
+                            "example": "TEST"
+                          },
+                          "uid": {
+                            "type": "string",
+                            "example": "XRS2wbAZv3NqQ56uvgjsdh68veitv0"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "example": "2024-12-30T07:37:49.000Z"
+                          },
+                          "updated_at": {
+                            "type": "string",
+                            "example": "2024-12-30T07:37:49.000Z"
+                          },
+                          "post_category": {
+                            "type": "string",
+                            "example": "shopping"
+                          },
+                          "post_status": {
+                            "type": "string",
+                            "example": "posted"
+                          },
+                          "post_img": {
+                            "type": "string",
+                            "example": ""
+                          },
+                          "users": {
+                            "type": "object",
+                            "properties": {
+                              "display_name": {
+                                "type": "string",
+                                "example": "沙拉貓"
+                              },
+                              "photo_url": {
+                                "type": "string",
+                                "example": "https://firebasestorage.googleapis.com/v0/b/login-demo1-9d3cb.firebasestorage.app/o/avatars%2F1735439695053_images%20(2).jpeg?alt=media&token=347b9eb2-8af7-4381-9aea-de763f29df09"
+                              }
+                            }
+                          },
+                          "_count": {
+                            "type": "object",
+                            "properties": {
+                              "post_comments": {
+                                "type": "number",
+                                "example": 0
+                              },
+                              "post_likes": {
+                                "type": "number",
+                                "example": 0
+                              }
+                            }
+                          },
+                          "commentCount": {
+                            "type": "number",
+                            "example": 0
+                          },
+                          "likeCount": {
+                            "type": "number",
+                            "example": 0
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -1196,7 +1953,7 @@
         "tags": [
           "Post_Comment"
         ],
-        "description": "",
+        "description": "取得文章留言",
         "parameters": [
           {
             "name": "post_id",
@@ -1207,7 +1964,68 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "成功取得資料",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 200
+                },
+                "message": {
+                  "type": "string",
+                  "example": "成功取得資料"
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "comment_id": {
+                        "type": "number",
+                        "example": 51
+                      },
+                      "post_id": {
+                        "type": "number",
+                        "example": 106
+                      },
+                      "comment_content": {
+                        "type": "string",
+                        "example": "讚啦"
+                      },
+                      "uid": {
+                        "type": "string",
+                        "example": "XRS2wbAZv3NqQ42urfuSh68veitv2"
+                      },
+                      "created_at": {
+                        "type": "string",
+                        "example": "2024-12-30T02:39:55.000Z"
+                      },
+                      "comment_status": {
+                        "type": "string",
+                        "example": "active"
+                      },
+                      "users": {
+                        "type": "object",
+                        "properties": {
+                          "display_name": {
+                            "type": "string",
+                            "example": "沙拉貓"
+                          },
+                          "photo_url": {
+                            "type": "string",
+                            "example": "https://firebasestorage.googleapis.com/v0/b/login-demo1-9d3cb.firebasestorage.app/o/avatars%2F1735439695053_images%20(2).jpeg?alt=media&token=347b9eb2-8af7-4381-9aea-de763f29df09"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -1217,18 +2035,103 @@
         "tags": [
           "Post_Comment"
         ],
-        "description": "",
+        "description": "新增文章留言",
         "parameters": [
           {
             "name": "post_id",
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "新增文章留言",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "post_id": {
+                  "type": "number",
+                  "example": 15
+                },
+                "comment_content": {
+                  "type": "string",
+                  "example": "123"
+                },
+                "uid": {
+                  "type": "string",
+                  "example": "XRS2wbAZv3NqQ42ueeSh68veitv2"
+                },
+                "comment_status": {
+                  "type": "string",
+                  "example": "active"
+                },
+                "users": {
+                  "type": "object",
+                  "properties": {
+                    "display_name": {
+                      "type": "string",
+                      "example": "Test"
+                    },
+                    "photo_url": {
+                      "type": "string",
+                      "example": "https://lh3.googleusercontent.com/a/ACg8ocLD8SAXsCHN6t5O1lujmNXyHr9YQJ4jPF9PXp8ao7YNG4nyiA=s96-c"
+                    }
+                  }
+                }
+              }
+            }
           }
         ],
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "資料建立成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "資料建立成功"
+                },
+                "status": {
+                  "type": "number",
+                  "example": 201
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "comment_id": {
+                      "type": "number",
+                      "example": 59
+                    },
+                    "post_id": {
+                      "type": "number",
+                      "example": 15
+                    },
+                    "comment_content": {
+                      "type": "string",
+                      "example": "123"
+                    },
+                    "uid": {
+                      "type": "string",
+                      "example": "XRS2wbAZv3NqQ42uefwSh68veitv2"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "example": "2024-12-31T08:17:16.000Z"
+                    },
+                    "comment_status": {
+                      "type": "string",
+                      "example": "active"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -1238,7 +2141,7 @@
         "tags": [
           "Post_Comment"
         ],
-        "description": "",
+        "description": "刪除文章留言",
         "parameters": [
           {
             "name": "comment_id",
@@ -1248,8 +2151,53 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "資料刪除成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 201
+                },
+                "message": {
+                  "type": "string",
+                  "example": "資料刪除成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "comment_id": {
+                      "type": "number",
+                      "example": 5
+                    },
+                    "post_id": {
+                      "type": "number",
+                      "example": 15
+                    },
+                    "comment_content": {
+                      "type": "string",
+                      "example": "我要去打桌遊要不要來"
+                    },
+                    "uid": {
+                      "type": "string",
+                      "example": "XRS2wbAZv3NqQ475uvoSh68veitv2"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "example": "2024-12-07T06:31:07.000Z"
+                    },
+                    "comment_status": {
+                      "type": "string",
+                      "example": "deleted"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -1259,7 +2207,7 @@
         "tags": [
           "Post_Like"
         ],
-        "description": "",
+        "description": "取得文章點讚",
         "parameters": [
           {
             "name": "post_id",
@@ -1270,7 +2218,47 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "成功取得資料",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 200
+                },
+                "message": {
+                  "type": "string",
+                  "example": "成功取得資料"
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "like_id": {
+                        "type": "number",
+                        "example": 3
+                      },
+                      "post_id": {
+                        "type": "number",
+                        "example": 15
+                      },
+                      "uid": {
+                        "type": "string",
+                        "example": "XRS2wbAZv3NqQ4uvoSh68veitv2"
+                      },
+                      "created_at": {
+                        "type": "string",
+                        "example": "2024-12-08T10:52:15.000Z"
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -1280,7 +2268,7 @@
         "tags": [
           "Post_Like"
         ],
-        "description": "",
+        "description": "新增文章點讚",
         "parameters": [
           {
             "name": "post_id",
@@ -1289,13 +2277,20 @@
             "type": "string"
           },
           {
-            "name": "body",
+            "name": "obj",
             "in": "body",
+            "description": "新增文章點讚",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
+                "post_id": {
+                  "type": "number",
+                  "example": 15
+                },
                 "uid": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "KcYkDTxGZPQNzNbbTdOkef8en0Ah1"
                 }
               }
             }
@@ -1303,7 +2298,48 @@
         ],
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "按讚成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 201
+                },
+                "message": {
+                  "type": "string",
+                  "example": "按讚成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "like_id": {
+                      "type": "number",
+                      "example": 1
+                    },
+                    "post_id": {
+                      "type": "number",
+                      "example": 15
+                    },
+                    "uid": {
+                      "type": "string",
+                      "example": "KcYkDTxGZPQNzNbbTdOkef8en0Ah1"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "example": "2024-12-06T17:49:47.000Z"
+                    },
+                    "like_status": {
+                      "type": "string",
+                      "example": "liked"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -1313,7 +2349,7 @@
         "tags": [
           "Post_Like"
         ],
-        "description": "",
+        "description": "取消文章點讚",
         "parameters": [
           {
             "name": "like_id",
@@ -1323,8 +2359,49 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "按讚成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 201
+                },
+                "message": {
+                  "type": "string",
+                  "example": "取消按讚成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "like_id": {
+                      "type": "number",
+                      "example": 4
+                    },
+                    "post_id": {
+                      "type": "number",
+                      "example": 25
+                    },
+                    "uid": {
+                      "type": "string",
+                      "example": "XRS2wbAZv3NqQ42uvoSh68veitv2"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "example": "2024-12-08T11:14:38.000Z"
+                    },
+                    "like_status": {
+                      "type": "string",
+                      "example": "unlike"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
