@@ -6,10 +6,15 @@ const router = express.Router();
 router.get(
   "/records/:uid",
   /* #swagger.tags = ['Top Up'] */
-
   TopupController.getTopuperRecord
 );
-router.post("/return/:id", TopupController.handleReturn);
+
+router.post(
+  "/return/:id",
+  /* #swagger.tags = ['Top Up'] */
+  TopupController.handleReturn
+);
+
 router.post(
   "/encrypt/process",
   /* #swagger.tags = ['Top Up'] */

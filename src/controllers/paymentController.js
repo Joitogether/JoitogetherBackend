@@ -120,8 +120,8 @@ const decreaseBalance = async (req, res, next) => {
 
     const response = await paymentService.deductWalletBalance(uid, amount);
 
-    res.status(200).json({
-      status: 200,
+    res.status(201).json({
+      status: 201,
       message: "扣款成功",
       data: response,
     });
@@ -142,24 +142,11 @@ const handleCheckoutProcess = async (req, res, next) => {
       register_validated = 0,
     } = req.body;
 
-    // 驗證參數
-    if (!uid || !total_amount || !order_items || order_items.length === 0) {
-      return res.status(400).json({
-        status: 400,
-        message: "參數不完整",
-        success: false,
-      });
-    }
-
     // 扣除儲值金
     const spendBalance = await paymentService.deductWalletBalance(
       uid,
       total_amount
     );
-
-    if (!spendBalance) {
-      throw new Error("Insufficient wallet balance.");
-    }
 
     // 建立訂單
     const createdOrder = await orderService.createOrder({
@@ -188,10 +175,9 @@ const handleCheckoutProcess = async (req, res, next) => {
     }
 
     // 返回所有處理成功結果
-    return res.status(200).json({
-      status: 200,
+    return res.status(201).json({
+      status: 201,
       message: "訂單與報名成功完成",
-      success: true,
       data: {
         order: createdOrder,
         wallet: spendBalance,

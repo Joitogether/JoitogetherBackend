@@ -3075,12 +3075,155 @@
         }
       }
     },
+    "/payments/wallet/{uid}": {
+      "get": {
+        "tags": [
+          "Balance"
+        ],
+        "description": "取得儲值金餘額",
+        "parameters": [
+          {
+            "name": "uid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功取得資料",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 200
+                },
+                "message": {
+                  "type": "string",
+                  "example": "成功取得資料"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "uid": {
+                      "type": "string",
+                      "example": "7l2rEgRk2bc6KSFY90VDL2heuHo2"
+                    },
+                    "balance": {
+                      "type": "string",
+                      "example": "50200"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/payments/wallet/{uid}/transactions": {
+      "get": {
+        "tags": [
+          "Balance"
+        ],
+        "description": "取得錢包交易紀錄",
+        "parameters": [
+          {
+            "name": "uid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "action",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "startData",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "endData",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功取得資料",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 200
+                },
+                "message": {
+                  "type": "string",
+                  "example": "成功取得資料"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "balance": {
+                      "type": "string",
+                      "example": "50200"
+                    },
+                    "transactions": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "number",
+                            "example": 92
+                          },
+                          "uid": {
+                            "type": "string",
+                            "example": "7l2rEgRk2bc6KSFY90VDL2h2aHo2"
+                          },
+                          "action": {
+                            "type": "string",
+                            "example": "deposit"
+                          },
+                          "amount": {
+                            "type": "string",
+                            "example": "500"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "example": "2024-12-29T09:16:11.000Z"
+                          },
+                          "updated_balance": {
+                            "type": "string",
+                            "example": "50200"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
     "/payments/encrypt": {
       "post": {
         "tags": [
           "Balance"
         ],
-        "description": "",
+        "description": "金流訂單加密",
         "parameters": [
           {
             "name": "body",
@@ -3107,7 +3250,7 @@
         "tags": [
           "Balance"
         ],
-        "description": "",
+        "description": "增加儲值金",
         "parameters": [
           {
             "name": "uid",
@@ -3135,69 +3278,12 @@
         }
       }
     },
-    "/payments/wallet/{uid}": {
-      "get": {
-        "tags": [
-          "Balance"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "uid",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/payments/wallet/{uid}/transactions": {
-      "get": {
-        "tags": [
-          "Balance"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "uid",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "action",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "startData",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "endData",
-            "in": "query",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/payments/wallet/{uid}/spend": {
       "put": {
         "tags": [
           "Balance"
         ],
-        "description": "",
+        "description": "扣除儲值金",
         "parameters": [
           {
             "name": "uid",
@@ -3206,21 +3292,53 @@
             "type": "string"
           },
           {
-            "name": "body",
+            "name": "obj",
             "in": "body",
+            "description": "商品價格",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "amount": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 100
                 }
               }
             }
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "Created",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 201
+                },
+                "message": {
+                  "type": "string",
+                  "example": "扣款成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "uid": {
+                      "type": "string",
+                      "example": "7l2rEgRk2bc6KSFY90rqL2h2aHo2"
+                    },
+                    "balance": {
+                      "type": "string",
+                      "example": "50000"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -3230,45 +3348,198 @@
         "tags": [
           "Process"
         ],
-        "description": "",
+        "description": "完整結帳流程（含扣除儲值金、建立訂單、清空購物車、處理活動報名）",
         "parameters": [
           {
-            "name": "body",
+            "name": "obj",
             "in": "body",
+            "description": "商品價格",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "uid": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "XRS2wbAZv3NqQ42uvoSh68veitv2"
                 },
                 "total_amount": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 500
                 },
                 "order_items": {
-                  "example": "any"
-                },
-                "order_status": {
-                  "example": "any"
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "activity_id": {
+                        "type": "number",
+                        "example": 34
+                      },
+                      "quantity": {
+                        "type": "number",
+                        "example": 1
+                      },
+                      "price": {
+                        "type": "number",
+                        "example": 500
+                      },
+                      "subtotal": {
+                        "type": "number",
+                        "example": 500
+                      }
+                    }
+                  }
                 },
                 "activity_id": {
-                  "example": "any"
-                },
-                "comment": {
-                  "example": "any"
-                },
-                "register_validated": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 34
                 }
               }
             }
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
+          "201": {
+            "description": "訂單與報名成功完成",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 201
+                },
+                "message": {
+                  "type": "string",
+                  "example": "訂單與報名成功完成"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "order": {
+                      "type": "object",
+                      "properties": {
+                        "order_id": {
+                          "type": "number",
+                          "example": 68
+                        },
+                        "uid": {
+                          "type": "string",
+                          "example": "XRS2wbAZv3NqQ33uvoSh68veitv2"
+                        },
+                        "total_amount": {
+                          "type": "string",
+                          "example": "500"
+                        },
+                        "order_status": {
+                          "type": "string",
+                          "example": "completed"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "example": "2025-01-01T04:11:28.000Z"
+                        },
+                        "updated_at": {
+                          "type": "string",
+                          "example": "2025-01-01T04:11:28.000Z"
+                        },
+                        "order_items": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "order_item_id": {
+                                "type": "number",
+                                "example": 129
+                              },
+                              "order_id": {
+                                "type": "number",
+                                "example": 68
+                              },
+                              "activity_id": {
+                                "type": "number",
+                                "example": 34
+                              },
+                              "quantity": {
+                                "type": "number",
+                                "example": 1
+                              },
+                              "price": {
+                                "type": "string",
+                                "example": "500"
+                              },
+                              "subtotal": {
+                                "type": "string",
+                                "example": "500"
+                              },
+                              "created_at": {
+                                "type": "string",
+                                "example": "2025-01-01T04:11:28.000Z"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "wallet": {
+                      "type": "object",
+                      "properties": {
+                        "uid": {
+                          "type": "string",
+                          "example": "XRS2wbAZv3NqQ33uvoSh68veitv2"
+                        },
+                        "balance": {
+                          "type": "string",
+                          "example": "9991149"
+                        }
+                      }
+                    },
+                    "registrations": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "application_id": {
+                            "type": "number",
+                            "example": 53
+                          },
+                          "activity_id": {
+                            "type": "number",
+                            "example": 34
+                          },
+                          "participant_id": {
+                            "type": "string",
+                            "example": "XRS2wbAZv3NqQ42uvoSh68veitv2"
+                          },
+                          "status": {
+                            "type": "string",
+                            "example": "registered"
+                          },
+                          "comment": {
+                            "type": "string",
+                            "example": ""
+                          },
+                          "register_validated": {
+                            "type": "number",
+                            "example": 1
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "example": "2024-12-24T06:16:08.000Z"
+                          },
+                          "updated_at": {
+                            "type": "string",
+                            "example": "2025-01-01T04:11:28.000Z"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -3498,6 +3769,27 @@
         }
       }
     },
+    "/topups/return/{id}": {
+      "post": {
+        "tags": [
+          "Top Up"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/topups/encrypt/process": {
       "post": {
         "tags": [
@@ -3511,6 +3803,9 @@
             "schema": {
               "type": "object",
               "properties": {
+                "topuper_id": {
+                  "example": "any"
+                },
                 "email": {
                   "example": "any"
                 },
