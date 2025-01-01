@@ -44,8 +44,23 @@ const paymentService = {
       return [];
     }
 
+    const queryConditions = {
+      wallet_id: wallet.uid,
+    };
+
+    if (action) {
+      queryConditions.action = action;
+    }
+
+    if (startData || endData) {
+      queryConditions.created_at = {
+        ...(startData ? { gte: new Date(startData) } : {}),
+        ...(endData ? { lte: new Date(endData) } : {}),
+      };
+    }
+
     const transactions = await prisma.wallet_record.findMany({
-      where: { wallet_id: wallet.uid },
+      where: queryConditions,
       orderBy: {
         created_at: "desc",
       },
@@ -58,7 +73,7 @@ const paymentService = {
         action: record.action,
         amount: record.amount,
         created_at: record.created_at,
-        updated_balance: record.updated_balance
+        updated_balance: record.updated_balance,
       })),
     };
     return formattedResponse;
