@@ -89,7 +89,7 @@ export const handleNewebpayNotify = async (req, res, next) => {
 export const handleReturn = async (req, res, next) => {
     try {
         const { id } = req.params
-        res.redirect(`${process.env.FRONTEND_URL}topup/result/${id}`)
+        res.redirect(`${process.env.FRONTEND_URL}/topup/result/${id}`)
     } catch (error) {
         next(error)
     }
