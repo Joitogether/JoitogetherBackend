@@ -53,6 +53,7 @@ export const userService = {
       include: {
         activities: {
           select: {
+            id: true,
             name: true,
             location: true,
             event_time: true,
