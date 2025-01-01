@@ -9,7 +9,7 @@ router.get(
 
   TopupController.getTopuperRecord
 );
-
+router.post("/return/:id", TopupController.handleReturn);
 router.post(
   "/encrypt/process",
   /* #swagger.tags = ['Top Up'] */

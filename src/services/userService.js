@@ -238,6 +238,7 @@ export const userService = {
       where: { user_id, isFollowing: true },
       select: {
         follower_id: true,
+        isFollowing: true,
         users_followers_follower_idTousers: {
           select: {
             display_name: true,
@@ -256,6 +257,7 @@ export const userService = {
       where: { follower_id, isFollowing: true },
       select: {
         user_id: true,
+        isFollowing: true,
         users_followers_user_idTousers: {
           select: {
             display_name: true,

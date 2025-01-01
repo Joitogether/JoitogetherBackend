@@ -276,16 +276,16 @@ model carts_items {
 model newebpay_transactions {
   id              Int                                  @id @default(autoincrement())
   topuper_id      String                               @db.VarChar(255)
-  merchantOrderNo Int
+  merchantOrderNo String                               @unique(map: "merchantOrderNo_UNIQUE") @db.VarChar(30)
   payment_status  newebpay_transactions_payment_status
   amount          Decimal                              @db.Decimal(10, 2)
   email           String                               @db.VarChar(99)
-  tradeNo         Int?
+  tradeNo         String?                              @db.VarChar(50)
   payment_type    newebpay_transactions_payment_type?
   pay_time        DateTime?                            @db.DateTime(0)
   payer_ip        String?                              @db.VarChar(45)
   bank_code       String?                              @db.VarChar(10)
-  card_last_four  String?                              @db.VarChar(4)
+  card_last_four  String?                              @db.VarChar(10)
   escrow_bank     String?                              @db.VarChar(10)
   created_at      DateTime?                            @default(now()) @db.Timestamp(0)
   updated_at      DateTime?                            @updatedAt @db.Timestamp(0)

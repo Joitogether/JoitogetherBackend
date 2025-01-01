@@ -36,16 +36,33 @@ export const TopupService = {
     },
     async updateNewebpayOrder(data) {
         console.log('藍新notify傳來的資料', data);
+        const { Result, Status } = data
+        let pay_time = Result.PayTime;
+
+        // 修正格式
+        if (pay_time) {
+            pay_time = pay_time.slice(0, 10) + "T" + pay_time.slice(10);
+
+            // 確保是合法日期
+            const parsedDate = new Date(pay_time);
+            if (isNaN(parsedDate.getTime())) {
+                throw new Error("Invalid pay_time format");
+            }
+
+            // 轉為 ISO 格式
+            pay_time = parsedDate.toISOString();
+        }
         const updateData = {
-            payment_status: data.PaymentStatus === 'PENDING' ? 'SUCCESS' : data.PaymentStatus,
-            trade_no: data.TradeNo,
-            payment_type: data.PaymentType,
-            pay_time: data.PayTime,
-            payer_ip: data.IP || undefined,  
-            bank_code: data.BankCode || undefined,
-            card_last_four: data.CardLastFour || undefined,
-            escrow_bank: data.EscrowBank || undefined,
+            payment_status: Status === 'PENDING' ? 'SUCCESS' : Status,
+            tradeNo: Result.TradeNo,
+            payment_type: Result.PaymentType,
+            pay_time: pay_time,
+            payer_ip: Result.IP || undefined,  
+            bank_code: Result.PayBankCode || undefined,
+            card_last_four: Result.PayerAccount5Code || undefined,
+            escrow_bank: Result.EscrowBank || undefined,
             };
+        console.log('updateData', updateData);
         
             // 移除 undefined 的欄位，這樣不會覆蓋原有的值
             const cleanedData = Object.fromEntries(
@@ -54,33 +71,16 @@ export const TopupService = {
         
             return await prisma.newebpay_transactions.update({
             where: { 
-                id,
-                topuper_id 
+                merchantOrderNo: Result.MerchantOrderNo,
+                payment_status: "PENDING"
             },
             data: cleanedData,
             select: {
                 topuper_id: true,
                 amount: true,
                 payment_status: true,  
-                trade_no: true      
+                tradeNo: true      
             }
             });
         }
-    // async createNewebpayOrder(data) {
-    //     const created = await prisma.newebpay_transactions.create({
-    //         merchant_order_no: data.merchant_order_no,
-    //         trade_no: data.trade_no,
-    //         payment_status: data.payment_status,
-    //         amount: data.amount,
-    //         payment_type: data.payment,
-    //         pay_time: data.pay_time,
-    //         payer_ip: data.payer_ip,
-    //         bank_code: data.bank_code,
-    //         card_last_four: data.card_last_four,
-    //         escrow_bank: data.escrow_bank,
-    //         created_at: data.created_at,
-    //         updated_at: data.updated_at
-    //     })
-    //     return created
-    // }
 } 
