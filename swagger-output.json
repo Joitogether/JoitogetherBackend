@@ -16,10 +16,128 @@
         "tags": [
           "Activity"
         ],
-        "description": "",
+        "description": "取得所有活動資料",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "成功取得資料",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 200
+                },
+                "message": {
+                  "type": "string",
+                  "example": "成功取得資料"
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "number",
+                        "example": 40
+                      },
+                      "name": {
+                        "type": "string",
+                        "example": "一起debug"
+                      },
+                      "img_url": {
+                        "type": "string",
+                        "example": "https://i.imgur.com/8fbnZTk.png"
+                      },
+                      "location": {
+                        "type": "string",
+                        "example": "台灣台北市信義區松仁路101號"
+                      },
+                      "host_id": {
+                        "type": "string",
+                        "example": "lNLo8eDmqoTcWghXpPA5H4P1iG02"
+                      },
+                      "description": {
+                        "type": "string",
+                        "example": "為什麼它動了？為什麼不動了？"
+                      },
+                      "max_participants": {
+                        "type": "number",
+                        "example": 5
+                      },
+                      "min_participants": {
+                        "type": "number",
+                        "example": 1
+                      },
+                      "category": {
+                        "type": "string",
+                        "example": "food"
+                      },
+                      "status": {
+                        "type": "string",
+                        "example": "registrationOpen"
+                      },
+                      "price": {
+                        "type": "string",
+                        "example": "150"
+                      },
+                      "pay_type": {
+                        "type": "string",
+                        "example": "AA"
+                      },
+                      "require_approval": {
+                        "type": "number",
+                        "example": 0
+                      },
+                      "created_at": {
+                        "type": "string",
+                        "example": "2024-12-22T21:28:01.000Z"
+                      },
+                      "approval_deadline": {
+                        "type": "string",
+                        "example": "2024-12-13T17:11:00.000Z"
+                      },
+                      "event_time": {
+                        "type": "string",
+                        "example": "2024-12-25T17:11:00.000Z"
+                      },
+                      "updated_at": {
+                        "type": "string",
+                        "example": "2024-12-22T21:28:01.000Z"
+                      },
+                      "require_payment": {
+                        "type": "number",
+                        "example": 0
+                      },
+                      "users": {
+                        "type": "object",
+                        "properties": {
+                          "display_name": {
+                            "type": "string",
+                            "example": "黃俊龍"
+                          },
+                          "photo_url": {
+                            "type": "string",
+                            "example": "https://lh3.googleusercontent.com/a/ACg8ocIvgSvTl286GHd25o1C_74ayYw4N1Axn18NOl7HTGb21rqfTQ=s96-c"
+                          }
+                        }
+                      },
+                      "_count": {
+                        "type": "object",
+                        "properties": {
+                          "applications": {
+                            "type": "number",
+                            "example": 1
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       },
@@ -27,10 +145,176 @@
         "tags": [
           "Activity"
         ],
-        "description": "",
+        "description": "新增活動",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "活動內容",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "Mountain Hiking Adventure"
+                },
+                "img_url": {
+                  "type": "string",
+                  "example": "https://example.com/images/mountain_hike.jpg"
+                },
+                "location": {
+                  "type": "string",
+                  "example": "Taipei, Taiwan"
+                },
+                "host_id": {
+                  "type": "string",
+                  "example": "7P6ocyCefPc8oTzjfAEs16RZThR2"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Join us for an exhilarating hike through the mountains. Great for both beginners and seasoned hikers."
+                },
+                "max_participants": {
+                  "type": "number",
+                  "example": 20
+                },
+                "min_participants": {
+                  "type": "number",
+                  "example": 5
+                },
+                "category": {
+                  "type": "string",
+                  "example": "travel"
+                },
+                "status": {
+                  "type": "string",
+                  "example": "registrationOpen"
+                },
+                "price": {
+                  "type": "number",
+                  "example": 500
+                },
+                "pay_type": {
+                  "type": "string",
+                  "example": "AA"
+                },
+                "require_approval": {
+                  "type": "number",
+                  "example": 0
+                },
+                "require_payment": {
+                  "type": "number",
+                  "example": 0
+                },
+                "approval_deadline": {
+                  "type": "string",
+                  "example": "1111-11-11 00:00:00"
+                },
+                "event_time": {
+                  "type": "string",
+                  "example": "2024-11-30 14:09:50"
+                }
+              }
+            }
+          }
+        ],
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "成功新增資料",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 201
+                },
+                "message": {
+                  "type": "string",
+                  "example": "資料建立成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number",
+                      "example": 44
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "Mountain Hiking Adventure"
+                    },
+                    "img_url": {
+                      "type": "string",
+                      "example": "https://example.com/images/mountain_hike.jpg"
+                    },
+                    "location": {
+                      "type": "string",
+                      "example": "Taipei, Taiwan"
+                    },
+                    "host_id": {
+                      "type": "string",
+                      "example": "7P6ocyCefPc8oTzjfAEs16RZThR2"
+                    },
+                    "description": {
+                      "type": "string",
+                      "example": "Join us for an exhilarating hike through the mountains. Great for both beginners and seasoned hikers."
+                    },
+                    "max_participants": {
+                      "type": "number",
+                      "example": 20
+                    },
+                    "min_participants": {
+                      "type": "number",
+                      "example": 5
+                    },
+                    "category": {
+                      "type": "string",
+                      "example": "travel"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "registrationOpen"
+                    },
+                    "price": {
+                      "type": "string",
+                      "example": "500"
+                    },
+                    "pay_type": {
+                      "type": "string",
+                      "example": "AA"
+                    },
+                    "require_approval": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "example": "2025-01-01T06:36:51.000Z"
+                    },
+                    "approval_deadline": {
+                      "type": "string",
+                      "example": "1111-11-10T15:54:00.000Z"
+                    },
+                    "event_time": {
+                      "type": "string",
+                      "example": "2024-11-30T06:09:50.000Z"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "example": "2025-01-01T06:36:51.000Z"
+                    },
+                    "require_payment": {
+                      "type": "number",
+                      "example": 0
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -40,7 +324,7 @@
         "tags": [
           "Activity"
         ],
-        "description": "",
+        "description": "取得單筆活動資料",
         "parameters": [
           {
             "name": "id",
@@ -51,7 +335,382 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "資料獲取成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 200
+                },
+                "message": {
+                  "type": "string",
+                  "example": "資料獲取成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number",
+                      "example": 34
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "養狗"
+                    },
+                    "img_url": {
+                      "type": "string",
+                      "example": "https://ih1.redbubble.net/image.4994245202.0402/bg,f8f8f8-flat,750x,075,f-pad,750x1000,f8f8f8.jpg"
+                    },
+                    "location": {
+                      "type": "string",
+                      "example": "台灣台北市信義區101大樓2樓連通天橋"
+                    },
+                    "host_id": {
+                      "type": "string",
+                      "example": "lNLo8eDmqoTcWghXpPA5H4P1iG02"
+                    },
+                    "description": {
+                      "type": "string",
+                      "example": "嘗試領養狗"
+                    },
+                    "max_participants": {
+                      "type": "number",
+                      "example": 20
+                    },
+                    "min_participants": {
+                      "type": "number",
+                      "example": 1
+                    },
+                    "category": {
+                      "type": "string",
+                      "example": "travel"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "registrationOpen"
+                    },
+                    "price": {
+                      "type": "string",
+                      "example": "250"
+                    },
+                    "pay_type": {
+                      "type": "string",
+                      "example": "AA"
+                    },
+                    "require_approval": {
+                      "type": "number",
+                      "example": 1
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "example": "2024-12-06T07:59:17.000Z"
+                    },
+                    "approval_deadline": {
+                      "type": "string",
+                      "example": "2024-12-06T20:00:00.000Z"
+                    },
+                    "event_time": {
+                      "type": "string",
+                      "example": "2024-12-12T20:59:00.000Z"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "example": "2024-12-06T07:59:17.000Z"
+                    },
+                    "require_payment": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "applications": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "application_id": {
+                            "type": "number",
+                            "example": 53
+                          },
+                          "activity_id": {
+                            "type": "number",
+                            "example": 34
+                          },
+                          "participant_id": {
+                            "type": "string",
+                            "example": "XRS2wbAZv3NqQ42uvoSh68veitv2"
+                          },
+                          "status": {
+                            "type": "string",
+                            "example": "registered"
+                          },
+                          "comment": {
+                            "type": "string",
+                            "example": "已付款，自動報名"
+                          },
+                          "register_validated": {
+                            "type": "number",
+                            "example": 0
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "example": "2024-12-24T06:16:08.000Z"
+                          },
+                          "updated_at": {
+                            "type": "string",
+                            "example": "2025-01-01T05:23:02.000Z"
+                          }
+                        }
+                      }
+                    },
+                    "host_info": {
+                      "type": "object",
+                      "properties": {
+                        "uid": {
+                          "type": "string",
+                          "example": "lNLo8eDmqoTcWghXpPA5H4P1iG02"
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "a86527913@gmail.com"
+                        },
+                        "email_verified": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "full_name": {
+                          "type": "string",
+                          "example": "黃俊龍"
+                        },
+                        "display_name": {
+                          "type": "string",
+                          "example": "黃俊龍"
+                        },
+                        "phone_number": {
+                          "type": "string",
+                          "example": "0912345678"
+                        },
+                        "photo_url": {
+                          "type": "string",
+                          "example": "https://lh3.googleusercontent.com/a/ACg8ocIvgSvTl286GHd25o1C_74ayYw4N1Axn18NOl7HTGb21rqfTQ=s96-c"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "example": "2024-12-05T06:57:35.000Z"
+                        },
+                        "city": {
+                          "type": "string",
+                          "example": "string"
+                        },
+                        "age": {
+                          "type": "string",
+                          "example": "string"
+                        },
+                        "career": {
+                          "type": "string",
+                          "example": "string"
+                        },
+                        "favorite_sentence": {
+                          "type": "string",
+                          "example": "string"
+                        },
+                        "tags": {
+                          "type": "string",
+                          "example": "string"
+                        },
+                        "self_introduction": {
+                          "type": "string",
+                          "example": "string"
+                        },
+                        "zodiac": {
+                          "type": "string",
+                          "example": "string"
+                        },
+                        "hobby": {
+                          "type": "string",
+                          "example": "string"
+                        },
+                        "expertise": {
+                          "type": "string",
+                          "example": "string"
+                        },
+                        "interested_in": {
+                          "type": "string",
+                          "example": "string"
+                        },
+                        "life_photo_1": {
+                          "type": "string",
+                          "example": "string"
+                        },
+                        "life_photo_2": {
+                          "type": "string",
+                          "example": "string"
+                        }
+                      }
+                    },
+                    "comments": {
+                      "type": "array",
+                      "example": [],
+                      "items": {}
+                    },
+                    "recent_activities": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "number",
+                            "example": 33
+                          },
+                          "name": {
+                            "type": "string",
+                            "example": "111111"
+                          },
+                          "img_url": {
+                            "type": "string",
+                            "example": ""
+                          },
+                          "location": {
+                            "type": "string",
+                            "example": "台灣台北市信義區101大樓2樓連通天橋"
+                          },
+                          "host_id": {
+                            "type": "string",
+                            "example": "lNLo8eDmqoTcWghXpPA5H4P1iG02"
+                          },
+                          "description": {
+                            "type": "string",
+                            "example": "2222222222"
+                          },
+                          "max_participants": {
+                            "type": "number",
+                            "example": 10
+                          },
+                          "min_participants": {
+                            "type": "number",
+                            "example": 1
+                          },
+                          "category": {
+                            "type": "string",
+                            "example": "sports"
+                          },
+                          "status": {
+                            "type": "string",
+                            "example": "registrationOpen"
+                          },
+                          "price": {
+                            "type": "string",
+                            "example": "2000"
+                          },
+                          "pay_type": {
+                            "type": "string",
+                            "example": "AA"
+                          },
+                          "require_approval": {
+                            "type": "number",
+                            "example": 1
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "example": "2024-12-06T07:47:09.000Z"
+                          },
+                          "approval_deadline": {
+                            "type": "string",
+                            "example": "2024-12-08T20:02:00.000Z"
+                          },
+                          "event_time": {
+                            "type": "string",
+                            "example": "2024-12-08T20:02:00.000Z"
+                          },
+                          "updated_at": {
+                            "type": "string",
+                            "example": "2024-12-06T07:47:09.000Z"
+                          },
+                          "require_payment": {
+                            "type": "number",
+                            "example": 0
+                          },
+                          "users": {
+                            "type": "object",
+                            "properties": {
+                              "display_name": {
+                                "type": "string",
+                                "example": "黃俊龍"
+                              },
+                              "photo_url": {
+                                "type": "string",
+                                "example": "https://lh3.googleusercontent.com/a/ACg8ocIvgSvTl286GHd25o1C_74ayYw4N1Axn18NOl7HTGb21rqfTQ=s96-c"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "ratings": {
+                      "type": "object",
+                      "properties": {
+                        "heartCounts": {
+                          "type": "object",
+                          "properties": {
+                            "heart1": {
+                              "type": "number",
+                              "example": 0
+                            },
+                            "heart2": {
+                              "type": "number",
+                              "example": 0
+                            },
+                            "heart3": {
+                              "type": "number",
+                              "example": 0
+                            },
+                            "heart4": {
+                              "type": "number",
+                              "example": 1
+                            },
+                            "heart5": {
+                              "type": "number",
+                              "example": 0
+                            }
+                          }
+                        },
+                        "ratingPercentages": {
+                          "type": "object",
+                          "properties": {
+                            "heart1": {
+                              "type": "string",
+                              "example": "0.00"
+                            },
+                            "heart2": {
+                              "type": "string",
+                              "example": "0.00"
+                            },
+                            "heart3": {
+                              "type": "string",
+                              "example": "0.00"
+                            },
+                            "heart4": {
+                              "type": "string",
+                              "example": "100.00"
+                            },
+                            "heart5": {
+                              "type": "string",
+                              "example": "0.00"
+                            }
+                          }
+                        },
+                        "averageHeart": {
+                          "type": "string",
+                          "example": "4.0"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -61,7 +720,7 @@
         "tags": [
           "Activity"
         ],
-        "description": "",
+        "description": "取得特定類別活動資料",
         "parameters": [
           {
             "name": "type",
@@ -70,19 +729,24 @@
             "type": "string"
           },
           {
-            "name": "body",
+            "name": "obj",
             "in": "body",
+            "description": "分類與頁數",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "category": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "food"
                 },
                 "page": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 1
                 },
                 "pageSize": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 12
                 }
               }
             }
@@ -90,7 +754,68 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "成功取得資料",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "成功取得資料"
+                },
+                "status": {
+                  "type": "number",
+                  "example": 200
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "number",
+                        "example": 40
+                      },
+                      "name": {
+                        "type": "string",
+                        "example": "一起debug"
+                      },
+                      "img_url": {
+                        "type": "string",
+                        "example": "https://i.imgur.com/8fbnZTk.png"
+                      },
+                      "location": {
+                        "type": "string",
+                        "example": "台灣台北市信義區松仁路101號"
+                      },
+                      "event_time": {
+                        "type": "string",
+                        "example": "2024-12-25T17:11:00.000Z"
+                      },
+                      "max_participants": {
+                        "type": "number",
+                        "example": 5
+                      },
+                      "users": {
+                        "type": "object",
+                        "properties": {
+                          "display_name": {
+                            "type": "string",
+                            "example": "黃俊龍"
+                          },
+                          "photo_url": {
+                            "type": "string",
+                            "example": "https://lh3.googleusercontent.com/a/ACg8ocIvgSvTl286GHd25o1C_74ayYw4N1Axn18NOl7HTGb21rqfTQ=s96-c"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -100,7 +825,7 @@
         "tags": [
           "Activity"
         ],
-        "description": "",
+        "description": "取消活動",
         "parameters": [
           {
             "name": "id",
@@ -111,7 +836,100 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "資料刪除成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 200
+                },
+                "message": {
+                  "type": "string",
+                  "example": "資料刪除成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number",
+                      "example": 34
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "養狗"
+                    },
+                    "img_url": {
+                      "type": "string",
+                      "example": "https://ih1.redbubble.net/image.4994245202.0402/bg,f8f8f8-flat,750x,075,f-pad,750x1000,f8f8f8.jpg"
+                    },
+                    "location": {
+                      "type": "string",
+                      "example": "台灣台北市信義區101大樓2樓連通天橋"
+                    },
+                    "host_id": {
+                      "type": "string",
+                      "example": "lNLo8eDmqoTcWghXpPA5H4P1iG02"
+                    },
+                    "description": {
+                      "type": "string",
+                      "example": "嘗試領養狗"
+                    },
+                    "max_participants": {
+                      "type": "number",
+                      "example": 20
+                    },
+                    "min_participants": {
+                      "type": "number",
+                      "example": 1
+                    },
+                    "category": {
+                      "type": "string",
+                      "example": "travel"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "cancelled"
+                    },
+                    "price": {
+                      "type": "string",
+                      "example": "250"
+                    },
+                    "pay_type": {
+                      "type": "string",
+                      "example": "AA"
+                    },
+                    "require_approval": {
+                      "type": "number",
+                      "example": 1
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "example": "2024-12-06T07:59:17.000Z"
+                    },
+                    "approval_deadline": {
+                      "type": "string",
+                      "example": "2024-12-06T20:00:00.000Z"
+                    },
+                    "event_time": {
+                      "type": "string",
+                      "example": "2024-12-12T20:59:00.000Z"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "example": "2025-01-01T06:40:16.000Z"
+                    },
+                    "require_payment": {
+                      "type": "number",
+                      "example": 0
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -121,7 +939,7 @@
         "tags": [
           "Activity"
         ],
-        "description": "",
+        "description": "搜尋活動",
         "parameters": [
           {
             "name": "body",
@@ -148,7 +966,7 @@
         "tags": [
           "Activity_Comment"
         ],
-        "description": "",
+        "description": "新增活動留言",
         "parameters": [
           {
             "name": "activity_id",
@@ -157,16 +975,20 @@
             "type": "string"
           },
           {
-            "name": "body",
+            "name": "obj",
             "in": "body",
+            "description": "留言內容",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "participant_id": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "7P6ocyCefPc8oTzjfAEs16RZThR2"
                 },
                 "comment": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "看起來很有趣欸！"
                 }
               }
             }
@@ -174,7 +996,52 @@
         ],
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "新增資料成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 201
+                },
+                "message": {
+                  "type": "string",
+                  "example": "資料建立成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "comment_id": {
+                      "type": "number",
+                      "example": 11
+                    },
+                    "activity_id": {
+                      "type": "number",
+                      "example": 40
+                    },
+                    "user_comment": {
+                      "type": "string",
+                      "example": "看起來很有趣欸！"
+                    },
+                    "uid": {
+                      "type": "string",
+                      "example": "7P6ocyCefPc8oTzjfAEs16RZThR2"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "example": "2025-01-01T06:46:57.000Z"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "posted"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -184,7 +1051,7 @@
         "tags": [
           "Activity_Comment"
         ],
-        "description": "",
+        "description": "刪除活動留言",
         "parameters": [
           {
             "name": "comment_id",
@@ -195,7 +1062,112 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "資料刪除成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "資料刪除成功"
+                },
+                "status": {
+                  "type": "number",
+                  "example": 200
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "comment_id": {
+                      "type": "number",
+                      "example": 11
+                    },
+                    "activity_id": {
+                      "type": "number",
+                      "example": 40
+                    },
+                    "user_comment": {
+                      "type": "string",
+                      "example": "看起來很有趣欸！"
+                    },
+                    "uid": {
+                      "type": "string",
+                      "example": "7P6ocyCefPc8oTzjfAEs16RZThR2"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "example": "2025-01-01T06:46:57.000Z"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "deleted"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/activities/geocode": {
+      "post": {
+        "tags": [
+          "Google Map"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "address": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/activities/autocomplete": {
+      "post": {
+        "tags": [
+          "Google Map"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "query": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
           }
         }
       }
