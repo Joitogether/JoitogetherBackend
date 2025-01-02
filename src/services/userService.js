@@ -314,6 +314,7 @@ export const userService = {
     return await prisma.followers.findMany({
       where: { user_id, isFollowing: true },
       select: {
+        id: true,
         follower_id: true,
         isFollowing: true,
         users_followers_follower_idTousers: {
@@ -333,6 +334,7 @@ export const userService = {
     return await prisma.followers.findMany({
       where: { follower_id, isFollowing: true },
       select: {
+        id: true,
         user_id: true,
         isFollowing: true,
         users_followers_user_idTousers: {
