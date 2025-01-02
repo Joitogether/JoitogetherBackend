@@ -1906,7 +1906,7 @@
         "tags": [
           "Application"
         ],
-        "description": "",
+        "description": "取得活動報名資料",
         "parameters": [
           {
             "name": "activity_id",
@@ -1917,7 +1917,127 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "成功取得資料",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 200
+                },
+                "message": {
+                  "type": "string",
+                  "example": "成功取得資料"
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "application_id": {
+                        "type": "number",
+                        "example": 55
+                      },
+                      "activity_id": {
+                        "type": "number",
+                        "example": 40
+                      },
+                      "participant_id": {
+                        "type": "string",
+                        "example": "XRS2wbAZv3NqQ42uvoSh68veitv2"
+                      },
+                      "status": {
+                        "type": "string",
+                        "example": "registered"
+                      },
+                      "comment": {
+                        "type": "string",
+                        "example": "已付款，自動報名"
+                      },
+                      "register_validated": {
+                        "type": "number",
+                        "example": 1
+                      },
+                      "created_at": {
+                        "type": "string",
+                        "example": "2024-12-24T06:16:08.000Z"
+                      },
+                      "updated_at": {
+                        "type": "string",
+                        "example": "2025-01-01T05:32:07.000Z"
+                      },
+                      "participant_info": {
+                        "type": "object",
+                        "properties": {
+                          "uid": {
+                            "type": "string",
+                            "example": "XRS2wbAZv3NqQ42uvoSh68veitv2"
+                          },
+                          "email": {
+                            "type": "string",
+                            "example": "latte.0975582420@gmail.com"
+                          },
+                          "email_verified": {
+                            "type": "boolean",
+                            "example": true
+                          },
+                          "full_name": {
+                            "type": "string",
+                            "example": "Zhi-Yan Huang"
+                          },
+                          "display_name": {
+                            "type": "string",
+                            "example": "沙拉貓"
+                          },
+                          "phone_number": {
+                            "type": "string",
+                            "example": "0912345678"
+                          },
+                          "photo_url": {
+                            "type": "string",
+                            "example": "https://firebasestorage.googleapis.com/v0/b/login-demo1-9d3cb.firebasestorage.app/o/avatars%2F1735439695053_images%20(2).jpeg?alt=media&token=347b9eb2-8af7-4381-9aea-de763f29df09"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "example": "2024-12-05T08:09:29.000Z"
+                          },
+                          "city": {
+                            "type": "string",
+                            "example": "新北市"
+                          },
+                          "age": {
+                            "type": "number",
+                            "example": 21
+                          },
+                          "career": {
+                            "type": "string",
+                            "example": "沙拉鑑賞師"
+                          },
+                          "favorite_sentence": {
+                            "type": "string",
+                            "example": "喵"
+                          },
+                          "tags": {
+                            "type": "string",
+                            "example": "🐈"
+                          },
+                          "self_introduction": {},
+                          "zodiac": {},
+                          "hobby": {},
+                          "expertise": {},
+                          "interested_in": {},
+                          "life_photo_1": {},
+                          "life_photo_2": {}
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -1927,7 +2047,7 @@
         "tags": [
           "Application"
         ],
-        "description": "",
+        "description": "報名活動",
         "parameters": [
           {
             "name": "activity_id",
@@ -1936,19 +2056,24 @@
             "type": "string"
           },
           {
-            "name": "body",
+            "name": "obj",
             "in": "body",
+            "description": "報名資訊",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
-                "participant_id": {
-                  "example": "any"
-                },
                 "comment": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "我要去"
+                },
+                "participant_id": {
+                  "type": "string",
+                  "example": "7l2rEgRk2bc6KSFY90VDL452aHo2"
                 },
                 "register_validated": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 0
                 }
               }
             }
@@ -1956,7 +2081,57 @@
         ],
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "資料建立成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 201
+                },
+                "message": {
+                  "type": "string",
+                  "example": "資料建立成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "application_id": {
+                      "type": "number",
+                      "example": 57
+                    },
+                    "activity_id": {
+                      "type": "number",
+                      "example": 40
+                    },
+                    "participant_id": {
+                      "type": "string",
+                      "example": "7l2rEgRk2bc6KSFY90VDL452aHo2"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "registered"
+                    },
+                    "comment": {
+                      "type": "string",
+                      "example": "我要去"
+                    },
+                    "register_validated": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "example": "2025-01-01T07:08:43.000Z"
+                    },
+                    "updated_at": {}
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "400": {
             "description": "Bad Request"
@@ -1969,7 +2144,7 @@
         "tags": [
           "Application"
         ],
-        "description": "",
+        "description": "取消報名活動",
         "parameters": [
           {
             "name": "activity_id",
@@ -1978,13 +2153,16 @@
             "type": "string"
           },
           {
-            "name": "body",
+            "name": "obj",
             "in": "body",
+            "description": "報名者 ID",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "participant_id": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "lNLo8eDmqoTcWghXpPA5H4P1iG02"
                 }
               }
             }
@@ -1992,7 +2170,57 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "取消報名成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 200
+                },
+                "message": {
+                  "type": "string",
+                  "example": "資料更新成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "application_id": {
+                      "type": "number",
+                      "example": 85
+                    },
+                    "activity_id": {
+                      "type": "number",
+                      "example": 57
+                    },
+                    "participant_id": {
+                      "type": "string",
+                      "example": "lNLo8eDmqoTcWghXpPA5H4P1iG02"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "participant_cancelled"
+                    },
+                    "comment": {},
+                    "register_validated": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "example": "2024-12-31T06:26:10.000Z"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "example": "2025-01-01T14:37:56.000Z"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -2002,7 +2230,7 @@
         "tags": [
           "Application"
         ],
-        "description": "",
+        "description": "審核狀態與驗證",
         "parameters": [
           {
             "name": "application_id",
@@ -2011,16 +2239,20 @@
             "type": "string"
           },
           {
-            "name": "body",
+            "name": "obj",
             "in": "body",
+            "description": "審核活動報名",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "status": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "approved"
                 },
                 "register_validated": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 1
                 }
               }
             }
@@ -2028,7 +2260,60 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "審核成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 200
+                },
+                "message": {
+                  "type": "string",
+                  "example": "審核成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "application_id": {
+                      "type": "number",
+                      "example": 91
+                    },
+                    "activity_id": {
+                      "type": "number",
+                      "example": 55
+                    },
+                    "participant_id": {
+                      "type": "string",
+                      "example": "gaP7j1Y4xGWrvLwH8bBVo2XL7qb2"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "approved"
+                    },
+                    "comment": {
+                      "type": "string",
+                      "example": "本人自己來報名做主桌"
+                    },
+                    "register_validated": {
+                      "type": "number",
+                      "example": 1
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "example": "2025-01-01T08:25:59.000Z"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "example": "2025-01-01T14:39:24.000Z"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -4005,7 +4290,7 @@
           {
             "name": "obj",
             "in": "body",
-            "description": "編輯文章內容",
+            "description": "新增商品",
             "required": true,
             "schema": {
               "type": "object",
