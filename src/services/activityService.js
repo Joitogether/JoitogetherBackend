@@ -168,9 +168,12 @@ export const activityService = {
       approval_deadline: convertToISOString(activityData.approval_deadline),
       event_time: convertToISOString(activityData.event_time),
     };
-    return await prisma.activities.create({
+
+    const activity = await prisma.activities.create({
       data: formattedActivityData,
     });
+
+    return activity;
   },
 
   // 免審核的活動報名

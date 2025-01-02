@@ -347,6 +347,8 @@ enum notifications_action {
   register
   review
   rate
+  create
+  follow
 }
 
 enum notifications_target_type {

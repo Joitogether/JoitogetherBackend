@@ -53,6 +53,7 @@ export const userService = {
       include: {
         activities: {
           select: {
+            id: true,
             name: true,
             location: true,
             event_time: true,
@@ -141,6 +142,82 @@ export const userService = {
         ...detailResponse,
         target_detail,
       };
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  },
+
+  async addNotifications(data) {
+    try {
+      // 先校驗
+      NotificationSchema.parse(data);
+      const { actor_id, action, target_type, target_id, message, link } = data;
+      const followers = await userService.getSimplifyFollowers(actor_id);
+      if (followers.length == 0) return;
+
+      const followersArray = followers.map((follower) => {
+        return {
+          actor_id,
+          user_id: follower.follower_id,
+          action,
+          target_type,
+          target_id,
+          message,
+          link,
+        };
+      });
+
+      await prisma.notifications.createMany({
+        data: followersArray,
+      });
+
+      const detailResponse = await prisma.notifications.findFirst({
+        where: { actor_id, action, target_id },
+        select: {
+          users_notifications_actor_idTousers: {
+            select: {
+              display_name: true,
+              photo_url: true,
+            },
+          },
+          message: true,
+          action: true,
+          is_read: true,
+          created_at: true,
+          target_type: true,
+          target_id: true,
+          id: true,
+          link: true,
+        },
+      });
+      let target_detail;
+      switch (detailResponse.target_type) {
+        case "activity":
+          target_detail = await prisma.activities.findUnique({
+            where: { id: detailResponse.target_id },
+            select: {
+              name: true,
+            },
+          });
+          break;
+        case "post":
+          target_detail = await prisma.posts.findUnique({
+            where: { post_id: detailResponse.target_id },
+            select: {
+              post_title: true,
+            },
+          });
+          break;
+      }
+      const followerIds = followers.map((data) => data.follower_id);
+      return [
+        {
+          ...detailResponse,
+          target_detail,
+        },
+        followerIds,
+      ];
     } catch (error) {
       console.log(error);
       return null;
@@ -322,6 +399,18 @@ export const userService = {
       },
       data: {
         isFollowing: false,
+      },
+    });
+  },
+
+  async getSimplifyFollowers(user_id) {
+    return await prisma.followers.findMany({
+      where: {
+        user_id,
+        isFollowing: true,
+      },
+      select: {
+        follower_id: true,
       },
     });
   },
