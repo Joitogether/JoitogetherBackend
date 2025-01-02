@@ -55,9 +55,17 @@ export const ActivityGetCategorySchema = z.object({
 })
 
 export const ActivityGetAllActivities = z.object({
-  category: z.enum(['food', 'shopping', 'travel', 'sports', 'education', 'others']).optional(), 
+  category: z.enum(['',
+  'food',
+  'shopping',
+  'travel', 
+  'sports', 
+  'education',
+  'others',
+  ]).optional(), 
   region: z
     .enum([
+      '',
       '台北',
       '新北',
       '基隆',
