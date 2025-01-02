@@ -191,7 +191,7 @@ const googleAutocomplete = async (req, res, next) => {
   }
 };
 
-const fetchAllActivities = async (req, res) => {
+const fetchAllActivities = async (req, res, next) => {
  try {
   const { page = 1, pageSize = 12, category, region, keyword } = req.query;
   const parsedPage = parseInt(page, 10);
