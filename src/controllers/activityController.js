@@ -125,7 +125,9 @@ const cancelActivityRequest = async (req, res, next) => {
     }
     //活動要付款所以過濾一下有哪些人需要被退款
     const refundList = applications.filter((application) => {
-      application.status == "approved" || application.status == "registered";
+      return (
+        application.status == "approved" || application.status == "registered"
+      );
     });
     // 沒有需要被退款這裡就結束
     if (refundList.length == 0) {
