@@ -350,6 +350,7 @@ export const activityService = {
         location: true,
         event_time: true,
         max_participants: true,
+        host_id:true,
         users: {
           select: {
             display_name: true,
