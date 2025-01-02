@@ -49,7 +49,7 @@ router.post(
 
   /*	#swagger.parameters['obj'] = {
             in: 'body',
-            description: '編輯文章內容',
+            description: '新增商品',
             required: true,
             schema: {
               "activityId": 34

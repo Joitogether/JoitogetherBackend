@@ -150,9 +150,9 @@ router.delete(
             }
     } */
 
-  /* #swagger.responses[201] = { 
+  /* #swagger.responses[200] = { 
       schema: {
-    "status": 201,
+    "status": 200,
     "message": "訂單刪除",
     "data": {
         "order_id": 69,
@@ -183,9 +183,9 @@ router.put(
             }
     } */
 
-  /* #swagger.responses[201] = { 
+  /* #swagger.responses[200] = { 
       schema: {
-    "status": 201,
+    "status": 200,
     "message": "訂單完成",
     "data": {
         "order_id": 69,
@@ -215,10 +215,10 @@ router.put(
             }
     } */
 
-  /* #swagger.responses[201] = { 
+  /* #swagger.responses[200] = { 
       schema: {
-    "status": 201,
-    "message": "訂單",
+    "status": 200,
+    "message": "訂單失敗",
     "data": {
         "order_id": 69,
         "uid": "LIAnzmdBnwcig3eEoXYIRsIMM7I3",
@@ -247,10 +247,10 @@ router.put(
             }
     } */
 
-  /* #swagger.responses[201] = { 
+  /* #swagger.responses[200] = { 
       schema: {
-    "status": 201,
-    "message": "訂單",
+    "status": 200,
+    "message": "訂單取消",
     "data": {
         "order_id": 69,
         "uid": "LIAnzmdBnwcig3eEoXYIRsIMM7I3",

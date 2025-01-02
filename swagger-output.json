@@ -1420,14 +1420,14 @@
           }
         ],
         "responses": {
-          "201": {
+          "200": {
             "description": "更新使用者資料成功",
             "schema": {
               "type": "object",
               "properties": {
                 "status": {
                   "type": "number",
-                  "example": 201
+                  "example": 200
                 },
                 "message": {
                   "type": "string",
@@ -2944,15 +2944,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
-          },
-          "201": {
+            "description": "OK",
             "schema": {
               "type": "object",
               "properties": {
                 "status": {
                   "type": "number",
-                  "example": 201
+                  "example": 200
                 },
                 "message": {
                   "type": "string",
@@ -3003,8 +3001,7 @@
               "xml": {
                 "name": "main"
               }
-            },
-            "description": "Created"
+            }
           }
         }
       },
@@ -3022,14 +3019,14 @@
           }
         ],
         "responses": {
-          "201": {
-            "description": "Created",
+          "200": {
+            "description": "OK",
             "schema": {
               "type": "object",
               "properties": {
                 "status": {
                   "type": "number",
-                  "example": 201
+                  "example": 200
                 },
                 "message": {
                   "type": "string",
@@ -3408,14 +3405,14 @@
           }
         ],
         "responses": {
-          "201": {
+          "200": {
             "description": "資料刪除成功",
             "schema": {
               "type": "object",
               "properties": {
                 "status": {
                   "type": "number",
-                  "example": 201
+                  "example": 200
                 },
                 "message": {
                   "type": "string",
@@ -3616,14 +3613,14 @@
           }
         ],
         "responses": {
-          "201": {
+          "200": {
             "description": "按讚成功",
             "schema": {
               "type": "object",
               "properties": {
                 "status": {
                   "type": "number",
-                  "example": 201
+                  "example": 200
                 },
                 "message": {
                   "type": "string",
@@ -4821,14 +4818,13 @@
           }
         ],
         "responses": {
-          "201": {
-            "description": "Created",
+          "200": {
             "schema": {
               "type": "object",
               "properties": {
                 "status": {
                   "type": "number",
-                  "example": 201
+                  "example": 200
                 },
                 "message": {
                   "type": "string",
@@ -4851,7 +4847,11 @@
               "xml": {
                 "name": "main"
               }
-            }
+            },
+            "description": "OK"
+          },
+          "201": {
+            "description": "Created"
           }
         }
       }
@@ -5344,14 +5344,13 @@
           }
         ],
         "responses": {
-          "201": {
-            "description": "訂單刪除",
+          "200": {
             "schema": {
               "type": "object",
               "properties": {
                 "status": {
                   "type": "number",
-                  "example": 201
+                  "example": 200
                 },
                 "message": {
                   "type": "string",
@@ -5390,7 +5389,11 @@
               "xml": {
                 "name": "main"
               }
-            }
+            },
+            "description": "訂單刪除"
+          },
+          "201": {
+            "description": "Created"
           }
         }
       }
@@ -5425,14 +5428,13 @@
           }
         ],
         "responses": {
-          "201": {
-            "description": "訂單完成",
+          "200": {
             "schema": {
               "type": "object",
               "properties": {
                 "status": {
                   "type": "number",
-                  "example": 201
+                  "example": 200
                 },
                 "message": {
                   "type": "string",
@@ -5471,7 +5473,11 @@
               "xml": {
                 "name": "main"
               }
-            }
+            },
+            "description": "訂單完成"
+          },
+          "201": {
+            "description": "Created"
           }
         }
       }
@@ -5506,18 +5512,17 @@
           }
         ],
         "responses": {
-          "201": {
-            "description": "訂單失敗",
+          "200": {
             "schema": {
               "type": "object",
               "properties": {
                 "status": {
                   "type": "number",
-                  "example": 201
+                  "example": 200
                 },
                 "message": {
                   "type": "string",
-                  "example": "訂單"
+                  "example": "訂單失敗"
                 },
                 "data": {
                   "type": "object",
@@ -5552,7 +5557,11 @@
               "xml": {
                 "name": "main"
               }
-            }
+            },
+            "description": "訂單失敗"
+          },
+          "201": {
+            "description": "Created"
           }
         }
       }
@@ -5587,18 +5596,17 @@
           }
         ],
         "responses": {
-          "201": {
-            "description": "訂單取消",
+          "200": {
             "schema": {
               "type": "object",
               "properties": {
                 "status": {
                   "type": "number",
-                  "example": 201
+                  "example": 200
                 },
                 "message": {
                   "type": "string",
-                  "example": "訂單"
+                  "example": "訂單取消"
                 },
                 "data": {
                   "type": "object",
@@ -5633,7 +5641,11 @@
               "xml": {
                 "name": "main"
               }
-            }
+            },
+            "description": "訂單取消"
+          },
+          "201": {
+            "description": "Created"
           }
         }
       }

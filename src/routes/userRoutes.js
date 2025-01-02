@@ -117,9 +117,9 @@ router.put(
         }
     } */
 
-  /* #swagger.responses[201] = { 
+  /* #swagger.responses[200] = { 
       schema: { 
-  "status": 201,
+  "status": 200,
   "message": "資料更新成功",
   "data": {
         "uid": "7P6ocyCefPc8oTzjfAEs16Rjiegr5",

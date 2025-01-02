@@ -83,9 +83,9 @@ router.put(
             }
     } */
 
-  /* #swagger.responses[201] = { 
+  /* #swagger.responses[200] = { 
       schema: {
-    "status": 201,
+    "status": 200,
     "message": "扣款成功",
     "data": {
         "uid": "7l2rEgRk2bc6KSFY90rqL2h2aHo2",

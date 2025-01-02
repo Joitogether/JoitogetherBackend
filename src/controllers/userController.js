@@ -83,8 +83,8 @@ const updateUserInfo = async (req, res, next) => {
 
     const response = await userService.userUpdateInfo(updateData, userUid);
 
-    res.status(201).json({
-      status: 201,
+    res.status(200).json({
+      status: 200,
       message: "資料更新成功",
       data: response,
     });

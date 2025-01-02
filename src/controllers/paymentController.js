@@ -120,8 +120,8 @@ const decreaseBalance = async (req, res, next) => {
 
     const response = await paymentService.deductWalletBalance(uid, amount);
 
-    res.status(201).json({
-      status: 201,
+    res.status(200).json({
+      status: 200,
       message: "扣款成功",
       data: response,
     });

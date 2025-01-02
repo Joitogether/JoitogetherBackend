@@ -254,9 +254,9 @@ router.put(
         }
     } */
 
-  /* #swagger.responses[201] = { 
+  /* #swagger.responses[200] = { 
       schema: {
-    "status": 201,
+    "status": 200,
     "message": "資料更新成功",
     "data": {
         "post_id": 10,
@@ -279,9 +279,9 @@ router.delete(
 
   /* #swagger.description = "刪除文章" */
 
-  /* #swagger.responses[201] = { 
+  /* #swagger.responses[200] = { 
       schema: {
-    "status": 201,
+    "status": 200,
     "message": "資料刪除成功",
     "data": {
         "post_id": 10,
@@ -373,9 +373,9 @@ router.delete(
 
   /* #swagger.description = "刪除文章留言" */
 
-  /* #swagger.responses[201] = { 
+  /* #swagger.responses[200] = { 
       schema: {
-    "status": 201,
+    "status": 200,
     "message": "資料刪除成功",
     "data": {
         "comment_id": 5,
@@ -459,9 +459,9 @@ router.delete(
 
   /* #swagger.description = "取消文章點讚" */
 
-  /* #swagger.responses[201] = { 
+  /* #swagger.responses[200] = { 
       schema: {
-    "status": 201,
+    "status": 200,
     "message": "取消按讚成功",
     "data": {
         "like_id": 4,
