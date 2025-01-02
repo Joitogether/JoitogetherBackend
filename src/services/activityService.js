@@ -176,7 +176,7 @@ export const activityService = {
     return activity;
   },
 
-  // 免審核的活動報名
+  // 活動報名
   async upsertApplication(
     activity_id,
     participant_id,
