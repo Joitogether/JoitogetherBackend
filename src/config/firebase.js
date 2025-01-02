@@ -4,9 +4,6 @@
 // const require = createRequire(import.meta.url);
 // const serviceAccount = require(process.env.GOOGLE_APPLICATION_CREDENTIALS)
 
-
 // export const fbApp = initializeApp({
 //   credential: cert(serviceAccount),
-// })  
-
-
+// })

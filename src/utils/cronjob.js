@@ -3,10 +3,12 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc.js";
 import timezone from "dayjs/plugin/timezone.js";
 import {
+  getActivitiesByApprovalDeadline,
   getActivitiesByTime,
   sendNotifications,
   updateActivities,
 } from "../services/cronService.js";
+import paymentService from "../services/paymentService.js";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 const tz = "Asia/Taipei";
@@ -23,6 +25,29 @@ const cronJobs = {
             .subtract(1, "day")
             .startOf("day")
             .toISOString();
+          // 找有哪些活動是昨天最後截止報名，回來的只會有狀態為已報名但沒審核通過的
+          const { applications, price } = await getActivitiesByApprovalDeadline(
+            yesterday,
+            today
+          );
+          if (applications.length != 0) {
+            // 退款給所有符合條件的人
+            await Promise.all(
+              applications.map(async (application) => {
+                const refund = await paymentService.addDeposit(
+                  application.participant_id,
+                  parseInt(price)
+                );
+                const record = await paymentService.createPaymentRecord(
+                  application.participant_id,
+                  "refund",
+                  parseInt(price),
+                  refund.balance
+                );
+                return { refund, record };
+              })
+            );
+          }
 
           const activities = await getActivitiesByTime(yesterday, today);
 

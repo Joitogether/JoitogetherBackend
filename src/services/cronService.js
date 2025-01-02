@@ -23,6 +23,31 @@ export async function getActivitiesByTime(start, end) {
   });
 }
 
+export async function getActivitiesByApprovalDeadline(start, end) {
+  return await prisma.activities.findMany({
+    where: {
+      approval_deadline: {
+        lte: end,
+        gte: start,
+      },
+      status: "registrationOpen",
+    },
+    select: {
+      id: true,
+      price: true,
+      applications: {
+        where: {
+          register_validated: 0,
+          status: "registered",
+        },
+        select: {
+          participant_id: true,
+        },
+      },
+    },
+  });
+}
+
 export async function updateActivities(activity) {
   await prisma.activities.update({
     where: { id: activity.id },

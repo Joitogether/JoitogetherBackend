@@ -138,25 +138,19 @@ const cancelActivityRequest = async (req, res, next) => {
       });
     }
     // 先把錢退給參加者
-    const wallet_output = await Promise.all(
-      refundList.map((application) => {
-        return paymentService.addDeposit(
+    await Promise.all(
+      refundList.map(async (application) => {
+        const refund = await paymentService.addDeposit(
           application.participant_id,
           parseInt(activity.price)
         );
-      })
-    );
-    // 創造退款紀錄
-    let count = -1;
-    await Promise.all(
-      refundList.map((application) => {
-        count++;
-        return paymentService.createPaymentRecord(
+        const record = await paymentService.createPaymentRecord(
           application.participant_id,
           "refund",
           parseInt(activity.price),
-          wallet_output[count].balance
+          refund.balance
         );
+        return { refund, record };
       })
     );
 
