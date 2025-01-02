@@ -3,6 +3,7 @@ import { fetchAllActivities } from "../controllers/activityController.js";
 import {
   ActivityCommentCancelSchema,
   ActivityGetCategorySchema,
+  ActivityGetAllActivities,
 } from "../validations/activitySchema.js";
 
 // Service 層
@@ -325,6 +326,7 @@ export const activityService = {
   },
 
   async fetchAllActivities({ page, pageSize, category, region, keyword }) {
+  ActivityGetAllActivities.parse({ page, pageSize, category, region, keyword });
     const skip = (page - 1) * pageSize;
   
     const filters = { status: "registrationOpen" };

@@ -215,9 +215,9 @@ const fetchAllActivities = async (req, res) => {
 
 
   if(!activities || activities.length === 0){
-    return res.status(404).json({
+    return res.status(200).json({
     message:"目前沒有符合條件的活動資料",
-    status: 404,
+    status: 200,
     data: [],
     });
   }
@@ -229,10 +229,7 @@ const fetchAllActivities = async (req, res) => {
     total: activities.length,
   });
 } catch (error) {
-  res.status(500).json({
-    message:"伺服器錯誤，無法取得活動資料",
-    status: 500
-  })
+  next(error);
 }
 };
 

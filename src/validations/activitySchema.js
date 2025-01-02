@@ -53,3 +53,30 @@ export const ActivityGetCategorySchema = z.object({
   page: z.number().int(),
   pageSize: z.number().int().min(1)
 })
+
+export const ActivityGetAllActivities = z.object({
+  category: z.enum(['food', 'shopping', 'travel', 'sports', 'education', 'others']).optional(), 
+  region: z
+    .enum([
+      '台北',
+      '新北',
+      '基隆',
+      '桃園',
+      '新竹',
+      '宜蘭',
+      '臺中',
+      '苗栗',
+      '彰化',
+      '南投',
+      '雲林',
+      '高雄',
+      '臺南',
+      '屏東',
+      '澎湖',
+      '花蓮',
+      '臺東',
+    ]).optional(),
+  keyword: z.string().optional(), 
+  page: z.number().int().min(1), 
+  pageSize: z.number().int().min(1),
+});
