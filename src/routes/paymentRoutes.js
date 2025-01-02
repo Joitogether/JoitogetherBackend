@@ -64,6 +64,33 @@ router.post(
   /* #swagger.tags = ['Balance'] */
 
   /* #swagger.description = "增加儲值金" */
+
+  /*	#swagger.parameters['obj'] = {
+            in: 'body',
+            description: '儲值金金額',
+            required: true,
+            schema: {
+              "amount": 2000
+            }
+    } */
+
+  /* #swagger.responses[201] = { 
+      schema: {
+        "status": 201,
+        "message": "儲值成功",
+        "data": {
+            "balance": "2000",
+            "record": {
+                "id": 35,
+                "wallet_id": "2LONt3qKmISeVzKAEtUcR3KzF3n1",
+                "action": "deposit",
+                "amount": "2000",
+                "created_at": "2025-01-01T14:35:08.000Z",
+                "updated_balance": "2000"
+            }
+        }
+    }
+        description: "儲值成功" } */
   PaymentController.paymentDeposit
 );
 
@@ -125,46 +152,46 @@ router.post(
 
   /* #swagger.responses[201] = { 
       schema: {
-    "status": 201,
-    "message": "訂單與報名成功完成",
-    "data": {
-        "order": {
-            "order_id": 68,
-            "uid": "XRS2wbAZv3NqQ33uvoSh68veitv2",
-            "total_amount": "500",
-            "order_status": "completed",
-            "created_at": "2025-01-01T04:11:28.000Z",
-            "updated_at": "2025-01-01T04:11:28.000Z",
-            "order_items": [
+        "status": 201,
+        "message": "訂單與報名成功完成",
+        "data": {
+            "order": {
+                "order_id": 68,
+                "uid": "XRS2wbAZv3NqQ33uvoSh68veitv2",
+                "total_amount": "500",
+                "order_status": "completed",
+                "created_at": "2025-01-01T04:11:28.000Z",
+                "updated_at": "2025-01-01T04:11:28.000Z",
+                "order_items": [
+                    {
+                        "order_item_id": 129,
+                        "order_id": 68,
+                        "activity_id": 34,
+                        "quantity": 1,
+                        "price": "500",
+                        "subtotal": "500",
+                        "created_at": "2025-01-01T04:11:28.000Z"
+                    }
+                ]
+            },
+            "wallet": {
+                "uid": "XRS2wbAZv3NqQ33uvoSh68veitv2",
+                "balance": "9991149"
+            },
+            "registrations": [
                 {
-                    "order_item_id": 129,
-                    "order_id": 68,
+                    "application_id": 53,
                     "activity_id": 34,
-                    "quantity": 1,
-                    "price": "500",
-                    "subtotal": "500",
-                    "created_at": "2025-01-01T04:11:28.000Z"
+                    "participant_id": "XRS2wbAZv3NqQ42uvoSh68veitv2",
+                    "status": "registered",
+                    "comment": "",
+                    "register_validated": 1,
+                    "created_at": "2024-12-24T06:16:08.000Z",
+                    "updated_at": "2025-01-01T04:11:28.000Z"
                 }
             ]
-        },
-        "wallet": {
-            "uid": "XRS2wbAZv3NqQ33uvoSh68veitv2",
-            "balance": "9991149"
-        },
-        "registrations": [
-            {
-                "application_id": 53,
-                "activity_id": 34,
-                "participant_id": "XRS2wbAZv3NqQ42uvoSh68veitv2",
-                "status": "registered",
-                "comment": "",
-                "register_validated": 1,
-                "created_at": "2024-12-24T06:16:08.000Z",
-                "updated_at": "2025-01-01T04:11:28.000Z"
-            }
-        ]
-    }
-},
+        }
+    },
         description: "訂單與報名成功完成" } */
 
   PaymentController.handleCheckoutProcess

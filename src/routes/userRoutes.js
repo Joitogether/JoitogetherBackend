@@ -241,12 +241,43 @@ router.get(
 router.get(
   "/notifications/:uid",
   /* #swagger.tags = ['User_Notification'] */
+
+  /* #swagger.description = "取得使用者通知" */
+
+  /* #swagger.responses[200] = { 
+      schema: {
+        "status": 200,
+        "message": "成功取得資料",
+        "data": [
+            {
+                "users_notifications_actor_idTousers": {
+                    "display_name": "RRRRRRRR",
+                    "photo_url": "https://firebasestorage.googleapis.com/v0/b/login-demo1-9d3cb.firebasestorage.app/o/avatars%2F1735457917194_d21cb346-4ad6-4335-9740-61d53475ceee.webp?alt=media&token=db46d9d7-841f-4ec4-a21b-0cbab5fb0b9d"
+                },
+                "message": "報名了你的活動",
+                "action": "register",
+                "is_read": 1,
+                "created_at": "2024-12-22T16:45:28.000Z",
+                "target_type": "activity",
+                "target_id": 1,
+                "id": 6,
+                "link": "/activity/detail/1",
+                "target_detail": {
+                    "name": "一起來大笑"
+                }
+            }
+        ]
+    },
+        description: "成功取得資料" } */
   UserController.fetchUserNotifications
 );
 
 router.put(
   "/notifications/:uid",
   /* #swagger.tags = ['User_Notification'] */
+
+  /* #swagger.description = "標記使用者通知為已讀狀態" */
+
   UserController.markUserNotifications
 );
 
@@ -254,24 +285,120 @@ router.put(
 router.get(
   "/userFollowers/:user_id",
   /* #swagger.tags = ['User_Follow'] */
+
+  /* #swagger.description = "取得使用者追蹤者" */
+
+  /* #swagger.responses[200] = { 
+      schema: {
+        "status": 200,
+        "message": "成功取得資料",
+        "data": [
+          {
+            "id": 10,
+            "follower_id": "bs3TWFMAF6V1kMLIS5w6uSbsfF83",
+            "isFollowing": true,
+            "users_followers_follower_idTousers": {
+              "display_name": "Latte",
+              "photo_url": "https://firebasestorage.googleapis.com/v0/b/login-demo1-9d3cb.firebasestorage.app/o/avatars%2F1734951865018_IMG_5408.JPG?alt=media&token=fa2fd095-f014-4284-9a59-0aa0d99bee32",
+              "favorite_sentence": "我就跟你說過了，誰叫你不聽(╯‵□′)╯︵┴─┴"
+            }
+          }
+        ]
+      },
+        description: "成功取得資料" } */
+
   UserController.fetchUserFollowers
 );
 
 router.get(
   "/following/:follower_id",
   /* #swagger.tags = ['User_Follow'] */
+
+  /* #swagger.description = "取得使用者追蹤中" */
+
+  /* #swagger.responses[200] = { 
+      schema: {
+        "status": 200,
+        "message": "成功取得資料",
+        "data": [
+          {
+            "id": 10,
+            "user_id": "gaP7j1Y4xGWrvLwH8bBVo2XL7qb2",
+            "isFollowing": true,
+            "users_followers_user_idTousers": {
+              "display_name": "廢文站長の林",
+              "photo_url": "https://firebasestorage.googleapis.com/v0/b/login-demo1-9d3cb.firebasestorage.app/o/avatars%2F1734940195190_0fe1ae93c111d60683862a1825930f19.jpg?alt=media&token=0b16cbcf-9d65-4ffb-8347-7ea1faaf3c71",
+              "favorite_sentence": "你好我是一隻謊報年齡ㄉ魷魚嘻嘻 🦑"
+            }
+          }
+        ]
+      },
+        description: "成功取得資料" } */
+
   UserController.fetchUserFollowing
 );
 
 router.post(
   "/follow",
   /* #swagger.tags = ['User_Follow'] */
+
+  /* #swagger.description = "追蹤使用者" */
+
+  /* #swagger.parameters['obj'] = {
+        in: 'body',
+        description: '追蹤使用者',
+        required: true,
+        schema: {
+          "user_id": "2LONt3qKmISeVzKAEtUcR3KzF3n1",
+          "follower_id": "2LONt3qKmISeVzKAEtUcR3KzF3n1"
+        }
+  } */
+
+  /* #swagger.responses[200] = { 
+        schema: {
+          "status": 201,
+          "message": "追蹤成功",
+          "data": {
+              "id": 6,
+              "user_id": "2LONt3qKmISeVzKAEtUcR3KzF3n1",
+              "follower_id": "2LONt3qKmISeVzKAEtUcR3KzF3n1",
+              "isFollowing": true
+          }
+      },
+        description: "追蹤成功" 
+  } */
   UserController.followUser
 );
 
 router.post(
   "/unfollow/:id",
   /* #swagger.tags = ['User_Follow'] */
+
+  /* #swagger.description = "取消追蹤使用者" */
+
+  /* #swagger.parameters['obj'] = {
+        in: 'body',
+        description: '追蹤使用者',
+        required: true,
+        schema: {
+          "user_id": "2LONt3qKmISeVzKAEtUcR3KzF3n1",
+          "follower_id": "2LONt3qKmISeVzKAEtUcR3KzF3n1"
+        }
+  } */
+
+  /* #swagger.responses[200] = { 
+        schema: {
+          "status": 200,
+          "message": "取消追蹤成功",
+          "data": {
+              "id": 6,
+              "user_id": "2LONt3qKmISeVzKAEtUcR3KzF3n1",
+              "follower_id": "2LONt3qKmISeVzKAEtUcR3KzF3n1",
+              "isFollowing": false
+          }
+      },
+        description: "取消追蹤成功" 
+  } */
   UserController.unFollowUser
 );
 

@@ -175,6 +175,42 @@ router.get(
 router.post(
   "/",
   /* #swagger.tags = ['Rating'] */
+
+  /*	#swagger.parameters['obj'] = {
+            in: 'body',
+            description: '新增評論',
+            required: true,
+            schema: {
+              "host_id": "pyuavO5K5CZfyJfciPw7JL8q1Zw2",
+              "user_id": "R8SEOQI4YCWe4o88mjcN6fWHten1",
+              "rating_heart": 5,
+              "user_comment": "",
+              "rating_kindness": 5,
+              "rating_ability": 5,
+              "rating_credit": 5,
+              "activity_id": 11
+            }
+    } */
+
+  /* #swagger.responses[201] = { 
+      schema: {
+        "message": "資料建立成功",
+        "status": 201,
+        "data": {
+            "rating_id": 17,
+            "user_id": "R8SEOQI4YCWe4o88mjcN6fWHten1",
+            "host_id": "pyuavO5K5CZfyJfciPw7JL8q1Zw2",
+            "rating_heart": 5,
+            "user_comment": "",
+            "rating_kindness": 5,
+            "rating_ability": 5,
+            "rating_credit": 5,
+            "created_at": "2025-01-01T14:33:57.000Z",
+            "activitiesId": null,
+            "activity_id": 11
+        }
+    },
+        description: "評論成功" } */
   RatingController.createRating
 );
 
