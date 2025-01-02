@@ -1,4 +1,5 @@
 import { activityService } from "../services/activityService.js";
+import paymentService from "../services/paymentService.js";
 import {
   ApplicationSchema,
   ApplicationReviewSchema,
@@ -53,7 +54,27 @@ const removeActivityRegistration = async (req, res, next) => {
       participant_id,
       activity_id
     );
-
+    const activity = await activityService.getActivityById(activity_id);
+    if (activity.require_payment) {
+      const wallet = await paymentService.addDeposit(
+        participant_id,
+        parseInt(activity.price)
+      );
+      const wallet_record = await paymentService.createPaymentRecord(
+        participant_id,
+        "refund",
+        parseInt(activity.price),
+        wallet.balance
+      );
+      return res.status(200).json({
+        status: 200,
+        message: "資料更新成功",
+        data: {
+          ...response,
+          ...wallet_record,
+        },
+      });
+    }
     res.status(200).json({
       status: 200,
       message: "資料更新成功",
