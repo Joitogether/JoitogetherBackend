@@ -182,7 +182,7 @@ const cancelActivityRequest = async (req, res, next) => {
           target_type: "activity",
           target_id: activity.id,
           message: "您報名參加的活動已遭團主取消,已退款",
-          link: `/activity/detail/${activity.id}`,
+          link: "/walletRecord",
         });
         const io = getIO();
         if (io) {

@@ -9,6 +9,8 @@ import {
   updateActivities,
 } from "../services/cronService.js";
 import paymentService from "../services/paymentService.js";
+import { getIO } from "../config/socket.js";
+import { userService } from "../services/userService.js";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 const tz = "Asia/Taipei";
@@ -44,6 +46,25 @@ const cronJobs = {
                     parseInt(activity.price),
                     refund.balance
                   );
+
+                  const notification = await userService.addNotification({
+                    actor_id: activity.host_id,
+                    user_id: application.participant_id,
+                    action: "register",
+                    target_type: "activity",
+                    target_id: activity.id,
+                    message: "您並未通過該活動的審核，已協助退款",
+                    link: `/walletRecord`,
+                  });
+
+                  const io = getIO();
+                  if (io) {
+                    io.to(application.participant_id).emit(
+                      "newNotification",
+                      notification
+                    );
+                  }
+
                   return { refund, record };
                 })
               );
