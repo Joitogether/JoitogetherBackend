@@ -1,5 +1,7 @@
 import express from "express";
 import * as ActivityController from "../controllers/activityController.js";
+import { authMiddleware } from "../middlewares/authMiddleware.js";
+
 const router = express.Router();
 
 // Activity List
@@ -121,8 +123,6 @@ router.get(
   ActivityController.fetchActivityDetails
 );
 
-
-
 // Activity Create/Delete
 router.post(
   "/",
@@ -178,7 +178,7 @@ router.post(
         }
     },
         description: "成功新增資料" } */
-
+  authMiddleware,
   ActivityController.addNewActivity
 );
 
@@ -188,7 +188,7 @@ router.put(
 
   /* #swagger.description = "取消活動" */
 
-  /* #swagger.responses[200] = { 
+  /* #swagger.responses[200] = {
       schema: {
         "status": 200,
         "message": "資料刪除成功",
@@ -214,9 +214,9 @@ router.put(
         }
     },
         description: "資料刪除成功" } */
+  authMiddleware,
   ActivityController.cancelActivityRequest
 );
-
 
 // Activity Comment
 router.post(
@@ -235,7 +235,7 @@ router.post(
             }
       } */
 
-  /* #swagger.responses[201] = { 
+  /* #swagger.responses[201] = {
       schema: {
         "status": 201,
         "message": "資料建立成功",
@@ -249,6 +249,7 @@ router.post(
         }
     },
         description: "新增資料成功" } */
+  authMiddleware,
   ActivityController.addActivityComments
 );
 
@@ -258,7 +259,7 @@ router.delete(
 
   /* #swagger.description = "刪除活動留言" */
 
-  /* #swagger.responses[200] = { 
+  /* #swagger.responses[200] = {
       schema: {
         "message": "資料刪除成功",
         "status": 200,
@@ -272,6 +273,7 @@ router.delete(
         }
     },
         description: "資料刪除成功" } */
+  authMiddleware,
   ActivityController.removeActivityComment
 );
 
@@ -280,12 +282,14 @@ router.delete(
 router.post(
   "/geocode",
   /* #swagger.tags = ['Google Map'] */
+  authMiddleware,
   ActivityController.googleMapGeocode
 );
 
 router.post(
   "/autocomplete",
   /* #swagger.tags = ['Google Map'] */
+  authMiddleware,
   ActivityController.googleAutocomplete
 );
 

@@ -1,23 +1,31 @@
-// import { getAuth } from "firebase-admin/auth"
-// // 記得要用嘚時候要確定firebase是用哪個密鑰
+import { auth } from "../config/firebase.js";
 
-// export const authMiddleware = async (req, res, next) => {
-//   const idToken = req.headers.authorization && req.headers.authorization.split(' ')[1]
-//   if(!idToken){
-//     return res.status(403).json({
-//       message: '沒有提供id token',
-//       status: 403
-//     })
-//   }
-//   try{
-//     const decodedToken = await getAuth().verifyIdToken(idToken)
-//     req.user = decodedToken; // 解碼後的用戶資料會被放在 req.user 中
-//     next()
-//   }catch(err){
-//     res.status(403).json({
-//       message: 'Unauthorized' ,
-//       status: 403,
-//       err
-//     })
-//   }
-// }
+export const authMiddleware = async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(403).json({
+      status: 403,
+      message: "沒有提供 Authorization header",
+    });
+  }
+
+  const idToken = authHeader.split(" ")[1];
+  if (!idToken) {
+    return res.status(403).json({
+      status: 403,
+      message: "沒有提供 id token",
+    });
+  }
+
+  try {
+    const decodedToken = await auth.verifyIdToken(idToken);
+    req.user = decodedToken; // 將用戶信息保存到請求對象
+    next();
+  } catch (err) {
+    res.status(403).json({
+      status: 403,
+      message: "無效的憑證",
+      error: err.message,
+    });
+  }
+};
