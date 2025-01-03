@@ -163,7 +163,6 @@ const cancelActivityRequest = async (req, res, next) => {
       });
     }
     // 先把錢退給參加者
-    const io = getIO();
     const data = await Promise.all(
       subscribedList.map(async (application) => {
         const refund = await paymentService.addDeposit(
@@ -185,6 +184,7 @@ const cancelActivityRequest = async (req, res, next) => {
           message: "您報名參加的活動已遭團主取消,已退款",
           link: `/activity/detail/${activity.id}`,
         });
+        const io = getIO();
         if (io) {
           console.log(notification);
           io.to(notification.user_id).emit("newNotification", notification);
