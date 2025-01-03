@@ -1,4 +1,5 @@
 import { activityService } from "../services/activityService.js";
+import paymentService from "../services/paymentService.js";
 import {
   ApplicationSchema,
   ApplicationReviewSchema,
@@ -53,7 +54,29 @@ const removeActivityRegistration = async (req, res, next) => {
       participant_id,
       activity_id
     );
+    const activity = await activityService.getActivityById(activity_id);
 
+    // 如果需要付款就要處理退款
+    if (activity.require_payment) {
+      const wallet = await paymentService.addDeposit(
+        participant_id,
+        parseInt(activity.price)
+      );
+      const wallet_record = await paymentService.createPaymentRecord(
+        participant_id,
+        "refund",
+        parseInt(activity.price),
+        wallet.balance
+      );
+      return res.status(200).json({
+        status: 200,
+        message: "資料更新成功",
+        data: {
+          ...response,
+          ...wallet_record,
+        },
+      });
+    }
     res.status(200).json({
       status: 200,
       message: "資料更新成功",
@@ -91,11 +114,12 @@ const fetchActivityRegistrations = async (req, res, next) => {
 const approveActivityParticipant = async (req, res, next) => {
   try {
     const application_id = parseInt(req.params.application_id);
-    const { status, register_validated } = req.body;
+    const { status, register_validated, activity_id } = req.body;
     ApplicationReviewSchema.parse({
       status,
       application_id,
       register_validated,
+      activity_id,
     });
 
     const response = await activityService.verifyParticipant(
@@ -103,6 +127,30 @@ const approveActivityParticipant = async (req, res, next) => {
       status,
       register_validated
     );
+
+    // 處理退款邏輯
+    const activity = await activityService.getActivityById(activity_id);
+    // 如果活動是需要付款的並且被拒絕了，就要退錢給使用者
+    if (activity.require_payment && status == "host_declined") {
+      const wallet = await paymentService.addDeposit(
+        response.participant_id,
+        parseInt(activity.price)
+      );
+      const wallet_record = await paymentService.createPaymentRecord(
+        response.participant_id,
+        "refund",
+        parseInt(activity.price),
+        wallet.balance
+      );
+      return res.status(200).json({
+        status: 200,
+        message: "審核成功",
+        data: {
+          ...response,
+          ...wallet_record,
+        },
+      });
+    }
 
     res.status(200).json({
       status: 200,

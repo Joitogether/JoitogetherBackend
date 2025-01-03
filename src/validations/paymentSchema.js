@@ -12,5 +12,5 @@ export const GetDepositSchema = z.object({
 export const getWalletTransactionsSchema = z.object({
   wallet_id: z.string().max(255),
   amount: z.number().int(),
-  action: z.enum(["spend", "withdraw", "deposit"]),
+  action: z.enum(["spend", "withdraw", "deposit", "refund"]),
 });

@@ -6,6 +6,7 @@ import {
   ActivityGetCategorySchema,
 } from "../validations/activitySchema.js";
 import { fetchSummaryFn } from "./ratingController.js";
+import paymentService from "../services/paymentService.js";
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 
@@ -107,9 +108,51 @@ const addNewActivity = async (req, res, next) => {
 
 const cancelActivityRequest = async (req, res, next) => {
   try {
+    // 取消活動 拿參加者
     const activityId = parseInt(req.params.id);
-
-    const response = await activityService.cancelActivity(activityId);
+    const [response, applications, activity] = await Promise.all([
+      activityService.cancelActivity(activityId),
+      activityService.getParticipantsByActivityId(activityId),
+      activityService.getActivityById(activityId),
+    ]);
+    // 活動不用付款就不用處理是否要退款
+    if (!activity.require_payment) {
+      return res.status(200).json({
+        status: 200,
+        message: "資料刪除成功",
+        data: response,
+      });
+    }
+    //活動要付款所以過濾一下有哪些人需要被退款
+    const refundList = applications.filter((application) => {
+      return (
+        application.status == "approved" || application.status == "registered"
+      );
+    });
+    // 沒有需要被退款這裡就結束
+    if (refundList.length == 0) {
+      return res.status(200).json({
+        status: 200,
+        message: "資料刪除成功",
+        data: response,
+      });
+    }
+    // 先把錢退給參加者
+    await Promise.all(
+      refundList.map(async (application) => {
+        const refund = await paymentService.addDeposit(
+          application.participant_id,
+          parseInt(activity.price)
+        );
+        const record = await paymentService.createPaymentRecord(
+          application.participant_id,
+          "refund",
+          parseInt(activity.price),
+          refund.balance
+        );
+        return { refund, record };
+      })
+    );
 
     res.status(200).json({
       status: 200,
