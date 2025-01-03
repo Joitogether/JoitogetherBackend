@@ -2,8 +2,9 @@ import { Server } from "socket.io";
 import { userService } from "../services/userService.js";
 import "dotenv/config";
 
+let io;
 export const initSocket = (server) => {
-  const io = new Server(server, {
+  io = new Server(server, {
     cors: {
       origin: process.env.FRONTEND_URL, // 前端地址
       methods: ["GET", "POST"],
@@ -33,4 +34,13 @@ export const initSocket = (server) => {
       }
     });
   });
+  return io;
+};
+
+export const getIO = () => {
+  if (!io) {
+    console.log("io無法使用");
+    return;
+  }
+  return io;
 };

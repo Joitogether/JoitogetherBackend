@@ -230,7 +230,10 @@ export const userService = {
       // 先校驗
       NotificationsSchema.parse(data);
       // 存db
-      const response = await prisma.notifications.createMany({ data });
+      const response = await Promise.all(
+        data.map((data) => prisma.notifications.create({ data }))
+      );
+      console.log("123", response);
       // 回傳整理過的資料
       const detailResponse = await prisma.notifications.findUnique({
         where: { id: response[0].id },

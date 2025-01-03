@@ -8,6 +8,7 @@ import {
 import { fetchSummaryFn } from "./ratingController.js";
 import paymentService from "../services/paymentService.js";
 import { userService } from "../services/userService.js";
+import { getIO } from "../config/socket.js";
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 
@@ -110,6 +111,7 @@ const addNewActivity = async (req, res, next) => {
 const cancelActivityRequest = async (req, res, next) => {
   try {
     // 取消活動 拿參加者
+    const io = getIO();
     const activityId = parseInt(req.params.id);
     const [response, applications, activity] = await Promise.all([
       activityService.cancelActivity(activityId),
@@ -139,6 +141,9 @@ const cancelActivityRequest = async (req, res, next) => {
     });
     if (!activity.require_payment) {
       const response = await userService.addNotifications(noRefundNotiData);
+      if (io) {
+        io.to(response[1]).emit("newNotification", response[0]);
+      }
       return res.status(200).json({
         status: 200,
         message: "資料刪除成功",
@@ -148,7 +153,9 @@ const cancelActivityRequest = async (req, res, next) => {
     // 沒有需要被退款這裡就結束
     if (subscribedList.length == 0) {
       const response = await userService.addNotifications(noRefundNotiData);
-
+      if (io) {
+        io.to(response[1]).emit("newNotification", response[0]);
+      }
       return res.status(200).json({
         status: 200,
         message: "資料刪除成功",
