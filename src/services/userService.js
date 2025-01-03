@@ -46,7 +46,12 @@ export const userService = {
 async getUserHostActivitiesByUid(uid) {
   UserUidSchema.parse({ uid })
   return await prisma.activities.findMany({
-    where: { host_id: uid }
+    where: { 
+      host_id: uid
+    },
+    orderBy: {
+        event_time: "desc",
+    },
   })
 },
 
@@ -58,11 +63,17 @@ async getUserHostActivitiesByUid(uid) {
         participant_id: uid,
         OR: [{ status: "registered" }, { status: "approved" }],
       },
+      orderBy: {
+        activities: {
+          event_time: "desc"
+        }
+      },
       include: {
         activities: {
           select: {
             id: true,
             name: true,
+            status: true,
             location: true,
             event_time: true,
             img_url: true,
