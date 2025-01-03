@@ -5119,33 +5119,6 @@
         }
       }
     },
-    "/payments/encrypt": {
-      "post": {
-        "tags": [
-          "Balance"
-        ],
-        "description": "金流訂單加密",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "Amount": {
-                  "example": "any"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/payments/wallet/{uid}/deposit": {
       "post": {
         "tags": [
@@ -5160,13 +5133,16 @@
             "type": "string"
           },
           {
-            "name": "body",
+            "name": "obj",
             "in": "body",
+            "description": "儲值金金額",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "amount": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 2000
                 }
               }
             }
@@ -5174,7 +5150,61 @@
         ],
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "儲值成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 201
+                },
+                "message": {
+                  "type": "string",
+                  "example": "儲值成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "balance": {
+                      "type": "string",
+                      "example": "2000"
+                    },
+                    "record": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "number",
+                          "example": 35
+                        },
+                        "wallet_id": {
+                          "type": "string",
+                          "example": "2LONt3qKmISeVzKAEtUcR3KzF3n1"
+                        },
+                        "action": {
+                          "type": "string",
+                          "example": "deposit"
+                        },
+                        "amount": {
+                          "type": "string",
+                          "example": "2000"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "example": "2025-01-01T14:35:08.000Z"
+                        },
+                        "updated_balance": {
+                          "type": "string",
+                          "example": "2000"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -6031,7 +6061,7 @@
         "tags": [
           "Top Up"
         ],
-        "description": "",
+        "description": "取得儲值紀錄",
         "parameters": [
           {
             "name": "uid",
@@ -6042,31 +6072,76 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      }
-    },
-    "/topups/return/{id}": {
-      "post": {
-        "tags": [
-          "Top Up"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
+            "description": "成功取得儲值紀錄",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 200
+                },
+                "message": {
+                  "type": "string",
+                  "example": "資料獲取成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "amount": {
+                      "type": "string",
+                      "example": "66"
+                    },
+                    "bank_code": {},
+                    "card_last_four": {},
+                    "created_at": {
+                      "type": "string",
+                      "example": "2024-12-29T13:44:38.000Z"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "abc123@gmail.com"
+                    },
+                    "escrow_bank": {},
+                    "id": {
+                      "type": "number",
+                      "example": 13
+                    },
+                    "merchantOrderNo": {
+                      "type": "string",
+                      "example": "1735479878"
+                    },
+                    "pay_time": {},
+                    "payer_ip": {},
+                    "payment_status": {
+                      "type": "string",
+                      "example": "SUCCESS"
+                    },
+                    "payment_type": {},
+                    "topuper_id": {
+                      "type": "string",
+                      "example": "2ymk8Xpx4oeijeodmlk432345IIfE3"
+                    },
+                    "tradeNo": {},
+                    "updated_at": {
+                      "type": "string",
+                      "example": "2024-12-29T21:46:28.000Z"
+                    },
+                    "wallet": {
+                      "type": "object",
+                      "properties": {
+                        "balance": {
+                          "type": "string",
+                          "example": "3"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
@@ -6076,25 +6151,35 @@
         "tags": [
           "Top Up"
         ],
-        "description": "",
+        "description": "儲值加密處理",
         "parameters": [
           {
-            "name": "body",
+            "name": "obj",
             "in": "body",
+            "description": "新增商品",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
-                "topuper_id": {
-                  "example": "any"
-                },
                 "email": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "abc123@gmail.com"
+                },
+                "topuper_id": {
+                  "type": "string",
+                  "example": "2ymk8Xpx4oeijeodmlk432345IIfE3"
                 },
                 "amount": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 100
                 },
                 "type": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "儲值金"
+                },
+                "payment_status": {
+                  "type": "string",
+                  "example": "PENDING"
                 }
               }
             }
@@ -6103,33 +6188,50 @@
         "responses": {
           "200": {
             "description": "OK"
-          }
-        }
-      }
-    },
-    "/topups/newebpay_notify": {
-      "post": {
-        "tags": [
-          "Top Up"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
+          },
+          "201": {
             "schema": {
               "type": "object",
               "properties": {
-                "TradeInfo": {
-                  "example": "any"
+                "status": {
+                  "type": "number",
+                  "example": 201
+                },
+                "message": {
+                  "type": "string",
+                  "example": "成功新增至購物車"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number",
+                      "example": 115
+                    },
+                    "cart_id": {
+                      "type": "number",
+                      "example": 5
+                    },
+                    "activity_id": {
+                      "type": "number",
+                      "example": 34
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "example": "2025-01-01T04:57:32.661Z"
+                    },
+                    "is_selected": {
+                      "type": "boolean",
+                      "example": false
+                    }
+                  }
                 }
+              },
+              "xml": {
+                "name": "main"
               }
-            }
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
+            },
+            "description": "成功新增至購物車"
           }
         }
       }

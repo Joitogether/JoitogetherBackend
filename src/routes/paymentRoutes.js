@@ -54,9 +54,8 @@ router.get(
 // Balance Add
 router.post(
   "/encrypt",
-  /* #swagger.tags = ['Balance'] */
+  /* #swagger.ignore = true */
 
-  /* #swagger.description = "金流訂單加密" */
   PaymentController.paymentEncrytOrder
 );
 router.post(
@@ -89,8 +88,9 @@ router.post(
                 "updated_balance": "2000"
             }
         }
-    }
+    },
         description: "儲值成功" } */
+
   PaymentController.paymentDeposit
 );
 
