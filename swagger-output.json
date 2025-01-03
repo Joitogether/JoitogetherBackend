@@ -1003,7 +1003,7 @@
         "tags": [
           "Google Map"
         ],
-        "description": "",
+        "description": "Google 地址搜尋",
         "parameters": [
           {
             "name": "authorization",
@@ -1011,13 +1011,16 @@
             "type": "string"
           },
           {
-            "name": "body",
+            "name": "obj",
             "in": "body",
+            "description": "訂單狀態",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "address": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "100台北市中正區北平西路3號號(地下一樓"
                 }
               }
             }
@@ -1025,7 +1028,36 @@
         ],
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "訂單取消",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 201
+                },
+                "message": {
+                  "type": "string",
+                  "example": "取得地址成功"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "lat": {
+                      "type": "number",
+                      "example": 25.047702
+                    },
+                    "lng": {
+                      "type": "number",
+                      "example": 121.5173735
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "400": {
             "description": "Bad Request"
@@ -1041,7 +1073,7 @@
         "tags": [
           "Google Map"
         ],
-        "description": "",
+        "description": "Google 地址自動完成",
         "parameters": [
           {
             "name": "authorization",
@@ -1049,19 +1081,57 @@
             "type": "string"
           },
           {
-            "name": "body",
+            "name": "obj",
             "in": "body",
+            "description": "訂單狀態",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "query": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "台北車站"
                 }
               }
             }
           }
         ],
         "responses": {
+          "200": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "number",
+                  "example": 201
+                },
+                "message": {
+                  "type": "string",
+                  "example": "取得成功"
+                },
+                "predictions": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "lat": {
+                        "type": "number",
+                        "example": 25.047702
+                      },
+                      "lng": {
+                        "type": "number",
+                        "example": 121.5173735
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            },
+            "description": "訂單取消"
+          },
           "201": {
             "description": "Created"
           },
@@ -1460,6 +1530,24 @@
                 "name": "main"
               }
             }
+          }
+        }
+      }
+    },
+    "/users/activities/{uid}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "uid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }

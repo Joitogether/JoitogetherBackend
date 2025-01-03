@@ -94,9 +94,13 @@ export const ratingService = {
     });
 
     //目前只拿一個
-    const latestHostRating = await prisma.ratings.findFirst({
+    const latestHostRating = await prisma.ratings.findMany({
       where: {
         host_id: activity.host_id,
+      },
+      take: 6,
+      orderBy: {
+        created_at: "desc",
       },
       include: {
         users_ratings_user_idTousers: {
