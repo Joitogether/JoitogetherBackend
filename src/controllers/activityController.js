@@ -138,7 +138,7 @@ const cancelActivityRequest = async (req, res, next) => {
       };
     });
     if (!activity.require_payment) {
-      userService.addNotifications(noRefundNotiData);
+      const res = await userService.addNotifications(noRefundNotiData);
       return res.status(200).json({
         status: 200,
         message: "資料刪除成功",
@@ -148,7 +148,8 @@ const cancelActivityRequest = async (req, res, next) => {
 
     // 沒有需要被退款這裡就結束
     if (subscribedList.length == 0) {
-      userService.addNotifications(noRefundNotiData);
+      const res = await userService.addNotifications(noRefundNotiData);
+
       return res.status(200).json({
         status: 200,
         message: "資料刪除成功",

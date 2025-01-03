@@ -20,7 +20,7 @@ export const initSocket = (server) => {
     socket.on("sendNotification", async (data) => {
       if (data.action == "create") {
         // data 0 為通知內容 1 為使用者陣列
-        const data = await userService.addNotifications(data);
+        const data = await userService.addNotificationsToFollowers(data);
         io.to(data[1]).emit("newNotification", data[0]);
       } else {
         //拿到提醒先新增在資料庫
