@@ -34,12 +34,11 @@ export const initSocket = (server) => {
       }
     });
   });
-  return io;
 };
 
 export const getIO = () => {
   if (!io) {
-    console.log("io無法使用");
+    console.log("沒有sockets鞥用");
     return;
   }
   return io;
