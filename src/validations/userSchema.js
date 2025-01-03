@@ -66,6 +66,8 @@ export const NotificationSchema = z.object({
   message: z.string(),
 });
 
+export const NotificationsSchema = z.array(NotificationSchema);
+
 export const NotificationListSchema = z.object({
   unreadList: z.array(z.number().int()).min(1),
 });

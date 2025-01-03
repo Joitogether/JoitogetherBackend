@@ -2,6 +2,7 @@ import { prisma } from "../config/db.js";
 import {
   NotificationListSchema,
   NotificationSchema,
+  NotificationsSchema,
   UserUidSchema,
 } from "../validations/userSchema.js";
 import {
@@ -151,7 +152,7 @@ export const userService = {
   async addNotifications(data) {
     try {
       // 先校驗
-      NotificationSchema.parse(data);
+      NotificationsSchema.parse(data);
       const { actor_id, action, target_type, target_id, message, link } = data;
       const followers = await userService.getSimplifyFollowers(actor_id);
       if (followers.length == 0) return;
