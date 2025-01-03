@@ -332,7 +332,6 @@ router.post(
         }
     },
         description: "訂單取消" } */
-  authMiddleware,
   ActivityController.googleMapGeocode
 );
 
@@ -361,7 +360,6 @@ router.post(
 }]
     },
         description: "訂單取消" } */
-  authMiddleware,
   ActivityController.googleAutocomplete
 );
 
