@@ -1,5 +1,6 @@
 import express from "express";
 import * as PostController from "../controllers/postController.js";
+import { authMiddleware } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
@@ -214,7 +215,7 @@ router.post(
         }
     } */
 
-  /* #swagger.responses[201] = { 
+  /* #swagger.responses[201] = {
       schema: {
     "status": 201,
     "message": "資料建立成功",
@@ -231,6 +232,7 @@ router.post(
     }
 },
         description: "資料建立成功" } */
+  authMiddleware,
   PostController.addPost
 );
 router.put(
@@ -279,7 +281,7 @@ router.delete(
 
   /* #swagger.description = "刪除文章" */
 
-  /* #swagger.responses[200] = { 
+  /* #swagger.responses[200] = {
       schema: {
     "status": 200,
     "message": "資料刪除成功",
@@ -296,6 +298,7 @@ router.delete(
     }
 }}
         description: "資料刪除成功" } */
+  authMiddleware,
   PostController.removePost
 );
 
@@ -306,7 +309,7 @@ router.get(
 
   /* #swagger.description = "取得文章留言" */
 
-  /* #swagger.responses[200] = { 
+  /* #swagger.responses[200] = {
       schema: {
   "status": 200,
   "message": "成功取得資料",
@@ -364,7 +367,7 @@ router.post(
     }
 },
         description: "資料建立成功" } */
-
+  authMiddleware,
   PostController.addPostComment
 );
 router.delete(
@@ -387,7 +390,7 @@ router.delete(
     }
 },
         description: "資料刪除成功" } */
-
+  authMiddleware,
   PostController.removePostComment
 );
 
@@ -438,7 +441,7 @@ router.post(
         }
     } */
 
-  /* #swagger.responses[201] = { 
+  /* #swagger.responses[201] = {
       schema: {
     "status": 201,
     "message": "按讚成功",
@@ -451,6 +454,7 @@ router.post(
     }
 },
         description: "按讚成功" } */
+  authMiddleware,
   PostController.addPostLike
 );
 router.delete(
@@ -472,7 +476,7 @@ router.delete(
     }
 },
         description: "按讚成功" } */
-
+  authMiddleware,
   PostController.removePostLike
 );
 

@@ -1,5 +1,6 @@
 import express from "express";
 import * as PaymentController from "../controllers/paymentController.js";
+import { authMiddleware } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
@@ -10,7 +11,7 @@ router.get(
 
   /* #swagger.description = "取得儲值金餘額" */
 
-  /* #swagger.responses[200] = { 
+  /* #swagger.responses[200] = {
       schema: {
     "status": 200,
     "message": "成功取得資料",
@@ -20,6 +21,7 @@ router.get(
     }
 },
         description: "成功取得資料" } */
+  authMiddleware,
   PaymentController.fetchWalletBalance
 );
 
@@ -29,7 +31,7 @@ router.get(
 
   /* #swagger.description = "取得錢包交易紀錄" */
 
-  /* #swagger.responses[200] = { 
+  /* #swagger.responses[200] = {
       schema: {
     "status": 200,
     "message": "成功取得資料",
@@ -48,6 +50,7 @@ router.get(
     }
 },
         description: "成功取得資料" } */
+  authMiddleware,
   PaymentController.fetchTransactionHistory
 );
 
@@ -55,9 +58,9 @@ router.get(
 router.post(
   "/encrypt",
   /* #swagger.ignore = true */
-
   PaymentController.paymentEncrytOrder
 );
+
 router.post(
   "/wallet/:uid/deposit",
   /* #swagger.tags = ['Balance'] */
@@ -73,7 +76,7 @@ router.post(
             }
     } */
 
-  /* #swagger.responses[201] = { 
+  /* #swagger.responses[201] = {
       schema: {
         "status": 201,
         "message": "儲值成功",
@@ -91,6 +94,7 @@ router.post(
     },
         description: "儲值成功" } */
 
+  authMiddleware,
   PaymentController.paymentDeposit
 );
 
@@ -110,7 +114,7 @@ router.put(
             }
     } */
 
-  /* #swagger.responses[200] = { 
+  /* #swagger.responses[200] = {
       schema: {
     "status": 200,
     "message": "扣款成功",
@@ -121,6 +125,7 @@ router.put(
 }
 },
         description: "成功扣款" } */
+  authMiddleware,
   PaymentController.decreaseBalance
 );
 
@@ -193,7 +198,7 @@ router.post(
         }
     },
         description: "訂單與報名成功完成" } */
-
+  authMiddleware,
   PaymentController.handleCheckoutProcess
 );
 

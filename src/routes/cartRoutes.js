@@ -1,5 +1,6 @@
 import express from "express";
 import * as CartController from "../controllers/cartController.js";
+import { authMiddleware } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
@@ -37,7 +38,7 @@ router.get(
     }
 },
         description: "成功取得資料" } */
-
+  authMiddleware,
   CartController.fetchCartByUserId
 );
 
@@ -56,7 +57,7 @@ router.post(
             }
     } */
 
-  /* #swagger.responses[201] = { 
+  /* #swagger.responses[201] = {
       schema: {
     "status": 201,
     "message": "成功新增至購物車",
@@ -69,6 +70,7 @@ router.post(
     }
 },
         description: "成功新增至購物車" } */
+  authMiddleware,
   CartController.addActivityToCart
 );
 router.delete(
@@ -85,7 +87,7 @@ router.delete(
 }
 },
         description: "成功移除購物車項目" } */
-
+  authMiddleware,
   CartController.removeActivityFromCart
 );
 
@@ -96,7 +98,7 @@ router.get(
 
   /* #swagger.description = "取得購物車中已選擇的商品" */
 
-  /* #swagger.responses[200] = { 
+  /* #swagger.responses[200] = {
       schema: {
     "status": 200,
     "message": "成功取得已選擇項目",
@@ -123,6 +125,7 @@ router.get(
     }
 },
         description: "成功獲取已選中商品" } */
+  authMiddleware,
   CartController.getSelectedItems
 );
 router.put(
@@ -140,7 +143,7 @@ router.put(
             }
     } */
 
-  /* #swagger.responses[200] = { 
+  /* #swagger.responses[200] = {
       schema: {
     "status": 200,
     "message": "ID 為 117 的項目成功更新選擇狀態",
@@ -155,11 +158,13 @@ router.put(
 }
 },
         description: "成功更新選擇狀態" } */
+  authMiddleware,
   CartController.updateSelection
 );
 router.delete(
   "/:uid/clear",
   /* #swagger.ignore = true */
+  authMiddleware,
   CartController.removeCartItems
 );
 

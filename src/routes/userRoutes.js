@@ -1,5 +1,6 @@
 import express from "express";
 import * as UserController from "../controllers/userController.js";
+import { authMiddleware } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
@@ -278,6 +279,7 @@ router.put(
 
   /* #swagger.description = "標記使用者通知為已讀狀態" */
 
+  authMiddleware,
   UserController.markUserNotifications
 );
 
@@ -354,7 +356,7 @@ router.post(
         }
   } */
 
-  /* #swagger.responses[200] = { 
+  /* #swagger.responses[200] = {
         schema: {
           "status": 201,
           "message": "追蹤成功",
@@ -367,6 +369,7 @@ router.post(
       },
         description: "追蹤成功" 
   } */
+  authMiddleware,
   UserController.followUser
 );
 
@@ -386,7 +389,7 @@ router.post(
         }
   } */
 
-  /* #swagger.responses[200] = { 
+  /* #swagger.responses[200] = {
         schema: {
           "status": 200,
           "message": "取消追蹤成功",
@@ -399,6 +402,7 @@ router.post(
       },
         description: "取消追蹤成功" 
   } */
+  authMiddleware,
   UserController.unFollowUser
 );
 

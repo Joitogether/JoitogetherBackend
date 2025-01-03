@@ -1,5 +1,7 @@
 import express from "express";
 import * as RatingController from "../controllers/ratingController.js";
+import { authMiddleware } from "../middlewares/authMiddleware.js";
+
 const router = express.Router();
 
 router.get(
@@ -192,7 +194,7 @@ router.post(
             }
     } */
 
-  /* #swagger.responses[201] = { 
+  /* #swagger.responses[201] = {
       schema: {
         "message": "資料建立成功",
         "status": 201,
@@ -211,6 +213,7 @@ router.post(
         }
     },
         description: "評論成功" } */
+  authMiddleware,
   RatingController.createRating
 );
 

@@ -1,5 +1,6 @@
 import express from "express";
 import * as TopupController from "../controllers/topupController.js";
+import { authMiddleware } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
@@ -36,7 +37,7 @@ router.get(
         },
         description: "成功取得儲值紀錄"
   } */
-
+  authMiddleware,
   TopupController.getTopuperRecord
 );
 
@@ -45,6 +46,7 @@ router.post(
   /* #swagger.ignore = true */
 
   /* #swagger.description = "儲值回傳" */
+  authMiddleware,
   TopupController.handleReturn
 );
 
@@ -67,7 +69,7 @@ router.post(
             }
     } */
 
-  /* #swagger.responses[201] = { 
+  /* #swagger.responses[201] = {
       schema: {
         "status": 201,
         "message": "訂單儲存成功＆加密成功",
@@ -89,6 +91,7 @@ router.post(
         }
     },
         description: "" } */
+  authMiddleware,
   TopupController.handleTopupProcess
 );
 
@@ -97,6 +100,7 @@ router.post(
   /* #swagger.ignore = true */
 
   /* #swagger.description = "儲值回傳" */
+  authMiddleware,
   TopupController.handleNewebpayNotify
 );
 

@@ -1,5 +1,7 @@
 import express from "express";
 import * as ApplicationController from "../controllers/applicationController.js";
+import { authMiddleware } from "../middlewares/authMiddleware.js";
+
 const router = express.Router();
 
 // Application List
@@ -9,7 +11,7 @@ router.get(
 
   /* #swagger.description = "取得活動報名資料" */
 
-  /* #swagger.responses[200] = { 
+  /* #swagger.responses[200] = {
       schema:{
         "status": 200,
         "message": "成功取得資料",
@@ -81,6 +83,7 @@ router.get(
         ]
       },
         description: "成功取得資料" } */
+  authMiddleware,
   ApplicationController.fetchActivityRegistrations
 );
 
@@ -102,7 +105,7 @@ router.post(
           }
     } */
 
-  /* #swagger.responses[201] = { 
+  /* #swagger.responses[201] = {
       schema: {
     "status": 201,
     "message": "資料建立成功",
@@ -118,6 +121,7 @@ router.post(
     }
 },
         description: "資料建立成功" } */
+  authMiddleware,
   ApplicationController.createActivityRegistration
 );
 router.put(
@@ -135,7 +139,7 @@ router.put(
         }
     } */
 
-  /* #swagger.responses[200] = { 
+  /* #swagger.responses[200] = {
       schema: {
         "status": 200,
         "message": "資料更新成功",
@@ -151,6 +155,7 @@ router.put(
         }
     },
         description: "取消報名成功" } */
+  authMiddleware,
   ApplicationController.removeActivityRegistration
 );
 
@@ -171,7 +176,7 @@ router.put(
           }
     } */
 
-  /* #swagger.responses[200] = { 
+  /* #swagger.responses[200] = {
       schema: {
         "status": 200,
         "message": "審核成功",
@@ -187,6 +192,7 @@ router.put(
         }
     },
         description: "審核成功" } */
+  authMiddleware,
   ApplicationController.approveActivityParticipant
 );
 

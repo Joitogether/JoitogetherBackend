@@ -1,5 +1,6 @@
 import express from "express";
 import * as OrderController from "../controllers/orderController.js";
+import { authMiddleware } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
@@ -7,6 +8,7 @@ const router = express.Router();
 router.get(
   "/",
   /* #swagger.ignore = true */
+  authMiddleware,
   OrderController.fetchAllOrders
 );
 
@@ -16,7 +18,7 @@ router.get(
 
   /* #swagger.description = "取得單筆訂單資料" */
 
-  /* #swagger.responses[200] = { 
+  /* #swagger.responses[200] = {
       schema: {
     "status": 200,
     "message": "成功取得資料",
@@ -56,6 +58,7 @@ router.get(
     }
 },
         description: "成功取得資料" } */
+  authMiddleware,
   OrderController.fetchOrderById
 );
 
@@ -131,7 +134,7 @@ router.post(
     }
 },
         description: "資料建立成功" } */
-
+  authMiddleware,
   OrderController.addOrder
 );
 
@@ -150,7 +153,7 @@ router.delete(
             }
     } */
 
-  /* #swagger.responses[200] = { 
+  /* #swagger.responses[200] = {
       schema: {
     "status": 200,
     "message": "訂單刪除",
@@ -164,6 +167,7 @@ router.delete(
     }
 },
         description: "訂單刪除" } */
+  authMiddleware,
   OrderController.removeOrder
 );
 
@@ -183,7 +187,7 @@ router.put(
             }
     } */
 
-  /* #swagger.responses[200] = { 
+  /* #swagger.responses[200] = {
       schema: {
     "status": 200,
     "message": "訂單完成",
@@ -197,6 +201,7 @@ router.put(
     }
 },
         description: "訂單完成" } */
+  authMiddleware,
   OrderController.completeOrder
 );
 
@@ -215,7 +220,7 @@ router.put(
             }
     } */
 
-  /* #swagger.responses[200] = { 
+  /* #swagger.responses[200] = {
       schema: {
     "status": 200,
     "message": "訂單失敗",
@@ -229,6 +234,7 @@ router.put(
     }
 },
         description: "訂單失敗" } */
+  authMiddleware,
   OrderController.failOrder
 );
 
@@ -247,7 +253,7 @@ router.put(
             }
     } */
 
-  /* #swagger.responses[200] = { 
+  /* #swagger.responses[200] = {
       schema: {
     "status": 200,
     "message": "訂單取消",
@@ -262,6 +268,7 @@ router.put(
 },
         description: "訂單取消" } */
 
+  authMiddleware,
   OrderController.cancelOrder
 );
 
