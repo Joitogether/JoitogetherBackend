@@ -228,7 +228,7 @@ export const userService = {
   async addNotifications(data) {
     try {
       // 先校驗
-      NotificationListSchema.parse(data);
+      NotificationsSchema.parse(data);
       // 存db
       const response = await prisma.notifications.createMany(data);
       // 回傳整理過的資料
