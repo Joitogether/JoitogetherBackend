@@ -8,8 +8,36 @@ const router = express.Router();
 router.get(
   "/",
   /* #swagger.tags = ['Activity'] */
+
+  /* #swagger.description = "取得所有活動資料" */
+
+  /* #swagger.responses[200] = { 
+      schema: {
+  "message": "活動資料取得成功",
+  "status": 200,
+  "data": {
+    "activities": [
+     {
+      "id": 87,
+        "name": "12隻狗",
+        "img_url": "https://firebasestorage.googleapis.com/v0/b/login-demo1-9d3cb.firebasestorage.app/o/activities%2F1735891465251_dog11111.jpg?alt=media&token=0741f69a-066f-4dac-b156-cd630665f477",
+        "location": "台北市中正區北平西路3號100臺灣",
+        "event_time": "2025-01-04T03:03:00.000Z",
+        "max_participants": 1,
+        "host_id": "lNLo8eDmqoTcWghXpPA5H4P1iG02",
+        "users": {
+            "display_name": "黃俊龍",
+            "photo_url": "https://lh3.googleusercontent.com/a/ACg8ocIvgSvTl286GHd25o1C_74ayYw4N1Axn18NOl7HTGb21rqfTQ=s96-c"
+        }
+      },
+    ],
+    "total": 1
+  }
+},
+        description: "資料獲取成功" } */
   ActivityController.fetchAllActivities
 );
+
 router.get(
   "/:id",
   /* #swagger.tags = ['Activity'] */
@@ -282,6 +310,28 @@ router.delete(
 router.post(
   "/geocode",
   /* #swagger.tags = ['Google Map'] */
+
+  /* #swagger.description = "Google 地址搜尋" */
+
+  /*	#swagger.parameters['obj'] = {
+            in: 'body',
+            description: '訂單狀態',
+            required: true,
+            schema: {
+              "address":"100台北市中正區北平西路3號號(地下一樓"
+          }
+    } */
+
+  /* #swagger.responses[201] = {
+      schema: {
+        "status": 201,
+        "message": "取得地址成功",
+        "data": {
+            "lat": 25.047702,
+            "lng": 121.5173735
+        }
+    },
+        description: "訂單取消" } */
   authMiddleware,
   ActivityController.googleMapGeocode
 );
@@ -289,6 +339,28 @@ router.post(
 router.post(
   "/autocomplete",
   /* #swagger.tags = ['Google Map'] */
+
+  /* #swagger.description = "Google 地址自動完成" */
+
+  /*	#swagger.parameters['obj'] = {
+            in: 'body',
+            description: '訂單狀態',
+            required: true,
+            schema: {
+              "query":"台北車站"
+          }
+    } */
+
+  /* #swagger.responses[200] = {
+      schema: {
+        "status": 201,
+        "message": "取得成功",
+        "predictions": [{
+            "lat": 25.047702,
+            "lng": 121.5173735
+}]
+    },
+        description: "訂單取消" } */
   authMiddleware,
   ActivityController.googleAutocomplete
 );

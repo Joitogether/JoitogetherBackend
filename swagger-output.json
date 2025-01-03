@@ -17,119 +17,102 @@
           "Activity"
         ],
         "description": "取得所有活動資料",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "region",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "keyword",
+            "in": "query",
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
-            "description": "成功取得資料",
+            "description": "資料獲取成功",
             "schema": {
               "type": "object",
               "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "活動資料取得成功"
+                },
                 "status": {
                   "type": "number",
                   "example": 200
                 },
-                "message": {
-                  "type": "string",
-                  "example": "成功取得資料"
-                },
                 "data": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "number",
-                        "example": 40
-                      },
-                      "name": {
-                        "type": "string",
-                        "example": "一起debug"
-                      },
-                      "img_url": {
-                        "type": "string",
-                        "example": "https://i.imgur.com/8fbnZTk.png"
-                      },
-                      "location": {
-                        "type": "string",
-                        "example": "台灣台北市信義區松仁路101號"
-                      },
-                      "host_id": {
-                        "type": "string",
-                        "example": "lNLo8eDmqoTcWghXpPA5H4P1iG02"
-                      },
-                      "description": {
-                        "type": "string",
-                        "example": "為什麼它動了？為什麼不動了？"
-                      },
-                      "max_participants": {
-                        "type": "number",
-                        "example": 5
-                      },
-                      "min_participants": {
-                        "type": "number",
-                        "example": 1
-                      },
-                      "category": {
-                        "type": "string",
-                        "example": "food"
-                      },
-                      "status": {
-                        "type": "string",
-                        "example": "registrationOpen"
-                      },
-                      "price": {
-                        "type": "string",
-                        "example": "150"
-                      },
-                      "pay_type": {
-                        "type": "string",
-                        "example": "AA"
-                      },
-                      "require_approval": {
-                        "type": "number",
-                        "example": 0
-                      },
-                      "created_at": {
-                        "type": "string",
-                        "example": "2024-12-22T21:28:01.000Z"
-                      },
-                      "approval_deadline": {
-                        "type": "string",
-                        "example": "2024-12-13T17:11:00.000Z"
-                      },
-                      "event_time": {
-                        "type": "string",
-                        "example": "2024-12-25T17:11:00.000Z"
-                      },
-                      "updated_at": {
-                        "type": "string",
-                        "example": "2024-12-22T21:28:01.000Z"
-                      },
-                      "require_payment": {
-                        "type": "number",
-                        "example": 0
-                      },
-                      "users": {
+                  "type": "object",
+                  "properties": {
+                    "activities": {
+                      "type": "array",
+                      "items": {
                         "type": "object",
                         "properties": {
-                          "display_name": {
-                            "type": "string",
-                            "example": "黃俊龍"
+                          "id": {
+                            "type": "number",
+                            "example": 87
                           },
-                          "photo_url": {
+                          "name": {
                             "type": "string",
-                            "example": "https://lh3.googleusercontent.com/a/ACg8ocIvgSvTl286GHd25o1C_74ayYw4N1Axn18NOl7HTGb21rqfTQ=s96-c"
-                          }
-                        }
-                      },
-                      "_count": {
-                        "type": "object",
-                        "properties": {
-                          "applications": {
+                            "example": "12隻狗"
+                          },
+                          "img_url": {
+                            "type": "string",
+                            "example": "https://firebasestorage.googleapis.com/v0/b/login-demo1-9d3cb.firebasestorage.app/o/activities%2F1735891465251_dog11111.jpg?alt=media&token=0741f69a-066f-4dac-b156-cd630665f477"
+                          },
+                          "location": {
+                            "type": "string",
+                            "example": "台北市中正區北平西路3號100臺灣"
+                          },
+                          "event_time": {
+                            "type": "string",
+                            "example": "2025-01-04T03:03:00.000Z"
+                          },
+                          "max_participants": {
                             "type": "number",
                             "example": 1
+                          },
+                          "host_id": {
+                            "type": "string",
+                            "example": "lNLo8eDmqoTcWghXpPA5H4P1iG02"
+                          },
+                          "users": {
+                            "type": "object",
+                            "properties": {
+                              "display_name": {
+                                "type": "string",
+                                "example": "黃俊龍"
+                              },
+                              "photo_url": {
+                                "type": "string",
+                                "example": "https://lh3.googleusercontent.com/a/ACg8ocIvgSvTl286GHd25o1C_74ayYw4N1Axn18NOl7HTGb21rqfTQ=s96-c"
+                              }
+                            }
                           }
                         }
                       }
+                    },
+                    "total": {
+                      "type": "number",
+                      "example": 1
                     }
                   }
                 }
@@ -138,6 +121,9 @@
                 "name": "main"
               }
             }
+          },
+          "400": {
+            "description": "Bad Request"
           }
         }
       },
@@ -147,6 +133,11 @@
         ],
         "description": "新增活動",
         "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
           {
             "name": "obj",
             "in": "body",
@@ -315,6 +306,9 @@
                 "name": "main"
               }
             }
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
@@ -715,111 +709,6 @@
         }
       }
     },
-    "/activities/category/{type}": {
-      "post": {
-        "tags": [
-          "Activity"
-        ],
-        "description": "取得特定類別活動資料",
-        "parameters": [
-          {
-            "name": "type",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "obj",
-            "in": "body",
-            "description": "分類與頁數",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "category": {
-                  "type": "string",
-                  "example": "food"
-                },
-                "page": {
-                  "type": "number",
-                  "example": 1
-                },
-                "pageSize": {
-                  "type": "number",
-                  "example": 12
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "成功取得資料",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "string",
-                  "example": "成功取得資料"
-                },
-                "status": {
-                  "type": "number",
-                  "example": 200
-                },
-                "data": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "number",
-                        "example": 40
-                      },
-                      "name": {
-                        "type": "string",
-                        "example": "一起debug"
-                      },
-                      "img_url": {
-                        "type": "string",
-                        "example": "https://i.imgur.com/8fbnZTk.png"
-                      },
-                      "location": {
-                        "type": "string",
-                        "example": "台灣台北市信義區松仁路101號"
-                      },
-                      "event_time": {
-                        "type": "string",
-                        "example": "2024-12-25T17:11:00.000Z"
-                      },
-                      "max_participants": {
-                        "type": "number",
-                        "example": 5
-                      },
-                      "users": {
-                        "type": "object",
-                        "properties": {
-                          "display_name": {
-                            "type": "string",
-                            "example": "黃俊龍"
-                          },
-                          "photo_url": {
-                            "type": "string",
-                            "example": "https://lh3.googleusercontent.com/a/ACg8ocIvgSvTl286GHd25o1C_74ayYw4N1Axn18NOl7HTGb21rqfTQ=s96-c"
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              },
-              "xml": {
-                "name": "main"
-              }
-            }
-          }
-        }
-      }
-    },
     "/activities/cancel/{id}": {
       "put": {
         "tags": [
@@ -831,6 +720,11 @@
             "name": "id",
             "in": "path",
             "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
             "type": "string"
           }
         ],
@@ -930,33 +824,9 @@
                 "name": "main"
               }
             }
-          }
-        }
-      }
-    },
-    "/activities/search": {
-      "post": {
-        "tags": [
-          "Activity"
-        ],
-        "description": "搜尋活動",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "keyword": {
-                  "example": "any"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
@@ -972,6 +842,11 @@
             "name": "activity_id",
             "in": "path",
             "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
             "type": "string"
           },
           {
@@ -1042,6 +917,9 @@
                 "name": "main"
               }
             }
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
@@ -1057,6 +935,11 @@
             "name": "comment_id",
             "in": "path",
             "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
             "type": "string"
           }
         ],
@@ -1108,6 +991,9 @@
                 "name": "main"
               }
             }
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
@@ -1119,6 +1005,11 @@
         ],
         "description": "",
         "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
           {
             "name": "body",
             "in": "body",
@@ -1138,6 +1029,9 @@
           },
           "400": {
             "description": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
@@ -1149,6 +1043,11 @@
         ],
         "description": "",
         "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
           {
             "name": "body",
             "in": "body",
@@ -1168,6 +1067,9 @@
           },
           "400": {
             "description": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
@@ -1867,6 +1769,11 @@
             "type": "string"
           },
           {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
             "name": "body",
             "in": "body",
             "schema": {
@@ -1882,6 +1789,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
@@ -2042,6 +1952,11 @@
         "description": "追蹤使用者",
         "parameters": [
           {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
             "name": "obj",
             "in": "body",
             "description": "追蹤使用者",
@@ -2104,6 +2019,9 @@
           },
           "201": {
             "description": "Created"
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
@@ -2119,6 +2037,11 @@
             "name": "id",
             "in": "path",
             "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
             "type": "string"
           },
           {
@@ -2181,6 +2104,9 @@
                 "name": "main"
               }
             }
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
@@ -2196,6 +2122,11 @@
             "name": "activity_id",
             "in": "path",
             "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
             "type": "string"
           }
         ],
@@ -2322,6 +2253,9 @@
                 "name": "main"
               }
             }
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
@@ -2337,6 +2271,11 @@
             "name": "activity_id",
             "in": "path",
             "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
             "type": "string"
           },
           {
@@ -2419,6 +2358,9 @@
           },
           "400": {
             "description": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
@@ -2434,6 +2376,11 @@
             "name": "activity_id",
             "in": "path",
             "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
             "type": "string"
           },
           {
@@ -2505,6 +2452,9 @@
                 "name": "main"
               }
             }
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
@@ -2520,6 +2470,11 @@
             "name": "application_id",
             "in": "path",
             "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
             "type": "string"
           },
           {
@@ -2598,6 +2553,9 @@
                 "name": "main"
               }
             }
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
@@ -2720,6 +2678,11 @@
         "description": "新增文章",
         "parameters": [
           {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
             "name": "obj",
             "in": "body",
             "description": "文章內容",
@@ -2827,6 +2790,9 @@
                 "name": "main"
               }
             }
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
@@ -3300,6 +3266,11 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
           }
         ],
         "responses": {
@@ -3362,6 +3333,9 @@
                 "name": "main"
               }
             }
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
@@ -3582,6 +3556,11 @@
             "type": "string"
           },
           {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
             "name": "obj",
             "in": "body",
             "description": "新增文章留言",
@@ -3670,6 +3649,9 @@
                 "name": "main"
               }
             }
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
@@ -3685,6 +3667,11 @@
             "name": "comment_id",
             "in": "path",
             "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
             "type": "string"
           }
         ],
@@ -3736,6 +3723,9 @@
                 "name": "main"
               }
             }
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
@@ -3815,6 +3805,11 @@
             "type": "string"
           },
           {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
             "name": "obj",
             "in": "body",
             "description": "新增文章點讚",
@@ -3878,6 +3873,9 @@
                 "name": "main"
               }
             }
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
@@ -3893,6 +3891,11 @@
             "name": "like_id",
             "in": "path",
             "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
             "type": "string"
           }
         ],
@@ -3940,6 +3943,9 @@
                 "name": "main"
               }
             }
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
@@ -4445,6 +4451,11 @@
         "description": "",
         "parameters": [
           {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
             "name": "obj",
             "in": "body",
             "description": "新增評論",
@@ -4553,6 +4564,9 @@
                 "name": "main"
               }
             }
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
@@ -4568,6 +4582,11 @@
             "name": "userId",
             "in": "path",
             "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
             "type": "string"
           }
         ],
@@ -4660,6 +4679,9 @@
                 "name": "main"
               }
             }
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       },
@@ -4673,6 +4695,11 @@
             "name": "userId",
             "in": "path",
             "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
             "type": "string"
           },
           {
@@ -4735,6 +4762,9 @@
                 "name": "main"
               }
             }
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
@@ -4756,6 +4786,11 @@
             "name": "activityId",
             "in": "path",
             "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
             "type": "string"
           }
         ],
@@ -4780,6 +4815,9 @@
               }
             }
           },
+          "403": {
+            "description": "Forbidden"
+          },
           "404": {
             "description": "Not Found"
           }
@@ -4797,6 +4835,11 @@
             "name": "userId",
             "in": "path",
             "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
             "type": "string"
           }
         ],
@@ -4889,6 +4932,9 @@
                 "name": "main"
               }
             }
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
@@ -4904,6 +4950,11 @@
             "name": "id",
             "in": "path",
             "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
             "type": "string"
           },
           {
@@ -4970,6 +5021,9 @@
           "400": {
             "description": "Bad Request"
           },
+          "403": {
+            "description": "Forbidden"
+          },
           "404": {
             "description": "Not Found"
           }
@@ -4987,6 +5041,11 @@
             "name": "uid",
             "in": "path",
             "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
             "type": "string"
           }
         ],
@@ -5022,6 +5081,9 @@
                 "name": "main"
               }
             }
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
@@ -5037,6 +5099,11 @@
             "name": "uid",
             "in": "path",
             "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
             "type": "string"
           },
           {
@@ -5115,6 +5182,9 @@
                 "name": "main"
               }
             }
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
@@ -5130,6 +5200,11 @@
             "name": "uid",
             "in": "path",
             "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
             "type": "string"
           },
           {
@@ -5205,6 +5280,9 @@
                 "name": "main"
               }
             }
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
@@ -5220,6 +5298,11 @@
             "name": "uid",
             "in": "path",
             "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
             "type": "string"
           },
           {
@@ -5270,6 +5353,9 @@
                 "name": "main"
               }
             }
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
@@ -5281,6 +5367,11 @@
         ],
         "description": "完整結帳流程（含扣除儲值金、建立訂單、清空購物車、處理活動報名）",
         "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
           {
             "name": "obj",
             "in": "body",
@@ -5471,6 +5562,9 @@
                 "name": "main"
               }
             }
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
@@ -5486,6 +5580,11 @@
             "name": "order_id",
             "in": "path",
             "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
             "type": "string"
           }
         ],
@@ -5582,6 +5681,9 @@
                 "name": "main"
               }
             }
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
@@ -5593,6 +5695,11 @@
         ],
         "description": "建立訂單",
         "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
           {
             "name": "obj",
             "in": "body",
@@ -5728,6 +5835,9 @@
           },
           "400": {
             "description": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
@@ -5743,6 +5853,11 @@
             "name": "order_id",
             "in": "path",
             "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
             "type": "string"
           },
           {
@@ -5809,6 +5924,9 @@
                 "name": "main"
               }
             }
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
@@ -5824,6 +5942,11 @@
             "name": "order_id",
             "in": "path",
             "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
             "type": "string"
           },
           {
@@ -5890,6 +6013,9 @@
                 "name": "main"
               }
             }
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
@@ -5905,6 +6031,11 @@
             "name": "order_id",
             "in": "path",
             "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
             "type": "string"
           },
           {
@@ -5971,6 +6102,9 @@
                 "name": "main"
               }
             }
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
@@ -5986,6 +6120,11 @@
             "name": "order_id",
             "in": "path",
             "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
             "type": "string"
           },
           {
@@ -6052,6 +6191,9 @@
                 "name": "main"
               }
             }
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
@@ -6067,6 +6209,11 @@
             "name": "uid",
             "in": "path",
             "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
             "type": "string"
           }
         ],
@@ -6142,6 +6289,9 @@
                 "name": "main"
               }
             }
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
@@ -6154,9 +6304,14 @@
         "description": "儲值加密處理",
         "parameters": [
           {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
             "name": "obj",
             "in": "body",
-            "description": "新增商品",
+            "description": "加密處理所需的參數",
             "required": true,
             "schema": {
               "type": "object",
@@ -6186,10 +6341,8 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
-          },
           "201": {
+            "description": "訂單加密成功",
             "schema": {
               "type": "object",
               "properties": {
@@ -6199,30 +6352,66 @@
                 },
                 "message": {
                   "type": "string",
-                  "example": "成功新增至購物車"
+                  "example": "訂單儲存成功＆加密成功"
                 },
                 "data": {
                   "type": "object",
                   "properties": {
-                    "id": {
+                    "Amt": {
                       "type": "number",
-                      "example": 115
+                      "example": 100
                     },
-                    "cart_id": {
-                      "type": "number",
-                      "example": 5
-                    },
-                    "activity_id": {
-                      "type": "number",
-                      "example": 34
-                    },
-                    "created_at": {
+                    "Email": {
                       "type": "string",
-                      "example": "2025-01-01T04:57:32.661Z"
+                      "example": "abc123@gmail.com"
                     },
-                    "is_selected": {
-                      "type": "boolean",
-                      "example": false
+                    "ItemDesc": {
+                      "type": "string",
+                      "example": "儲值金"
+                    },
+                    "MerchantID": {
+                      "type": "string",
+                      "example": "MS154678014"
+                    },
+                    "TimeStamp": {
+                      "type": "number",
+                      "example": 1735871760
+                    },
+                    "Version": {
+                      "type": "string",
+                      "example": "2.0"
+                    },
+                    "aesEncrypt": {
+                      "type": "string",
+                      "example": "c0aa6182730ba82ee309467d28a703d7f6bedabd6643a203330f91b5aeb278c3a564b8cc8a4b9f0ef99dc79940fbae75a4730bc49d893d57e1ab958e88aeefb8ba9db67dbe6049f4b1f0cb3bf2cd76ad33db0e811148d3afeb5c4e9d1405f677281ef3693ef94ab4ec85ebeab2d74007129ca4e66a1487655972680b43b5c703cad7ee03e136a015286ba54bb71e4d7c31a841b5b07432543a8db3b4ecba0402e4784bc4455d82c3bbf5ad0ea3cfe97377be0963c4bc55192a078dbc80aa5d698c70a32a34a13b6db7c949b338599611d1cf9b88d4fb7182599595a49233f4e5800f3ef82fa64d337a21c67fdeb2692d5d90baa363d0ec171afd66d951447b008d20da67b882cbb03bf58ce55dd297d4b5e92be9aedf39a000932cf5daeef091cac853b5fbc955dbfa3d124bbce23f940b9938628c1639e6917bdd5b3b0d5a5bd32f389ca7e3d00d86e9270bd8afdbedf0437348914b05329ad42c8bc5ceee8e293b11af43e2c2ea1ad15f3eec75068aed660ca101e304e7907639e27a238bb42007c010a4230e1e360c5eed10ec0dff"
+                    },
+                    "amount": {
+                      "type": "number",
+                      "example": 100
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "abc123@gmail.com"
+                    },
+                    "merchantOrderNo": {
+                      "type": "string",
+                      "example": "Joi1735871760DepositfE3"
+                    },
+                    "payment_status": {
+                      "type": "string",
+                      "example": "PENDING"
+                    },
+                    "shaEncrypt": {
+                      "type": "string",
+                      "example": "F29E9C75873E640CDDB2DBC9E392E0E47CC15350B1315B635C0C542B728CC6C6"
+                    },
+                    "topuper_id": {
+                      "type": "string",
+                      "example": "2ymk8Xpx4mZjKiUJfl11jc3IIfE3"
+                    },
+                    "type": {
+                      "type": "string",
+                      "example": "儲值金"
                     }
                   }
                 }
@@ -6230,8 +6419,10 @@
               "xml": {
                 "name": "main"
               }
-            },
-            "description": "成功新增至購物車"
+            }
+          },
+          "403": {
+            "description": "Forbidden"
           }
         }
       }
