@@ -6,7 +6,7 @@ const router = express.Router();
 router.get(
   "/",
   /* #swagger.tags = ['Activity'] */
-  ActivityController.fetchAllActiveActivities
+  ActivityController.fetchAllActivities
 );
 router.get(
   "/:id",
@@ -120,11 +120,7 @@ router.get(
         description: "資料獲取成功" } */
   ActivityController.fetchActivityDetails
 );
-router.get(
-  "/",
-  /* #swagger.tags = ['Activity'] */
-  ActivityController.fetchActivitiesByCategory
-);
+
 
 
 // Activity Create/Delete
@@ -221,13 +217,6 @@ router.put(
   ActivityController.cancelActivityRequest
 );
 
-router.post(
-  "/search",
-  /* #swagger.tags = ['Activity'] */
-
-  /* #swagger.description = "搜尋活動" */
-  ActivityController.searchActivities
-);
 
 // Activity Comment
 router.post(
