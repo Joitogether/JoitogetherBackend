@@ -6,48 +6,8 @@ const router = express.Router();
 router.get(
   "/",
   /* #swagger.tags = ['Activity'] */
-
-  /* #swagger.description = "取得所有活動資料" */
-
-  /* #swagger.responses[200] = { 
-      schema: {
-  "status": 200,
-  "message": "成功取得資料",
-  "data": [
-    {
-      "id": 40,
-      "name": "一起debug",
-      "img_url": "https://i.imgur.com/8fbnZTk.png",
-      "location": "台灣台北市信義區松仁路101號",
-      "host_id": "lNLo8eDmqoTcWghXpPA5H4P1iG02",
-      "description": "為什麼它動了？為什麼不動了？",
-      "max_participants": 5,
-      "min_participants": 1,
-      "category": "food",
-      "status": "registrationOpen",
-      "price": "150",
-      "pay_type": "AA",
-      "require_approval": 0,
-      "created_at": "2024-12-22T21:28:01.000Z",
-      "approval_deadline": "2024-12-13T17:11:00.000Z",
-      "event_time": "2024-12-25T17:11:00.000Z",
-      "updated_at": "2024-12-22T21:28:01.000Z",
-      "require_payment": 0,
-      "users": {
-        "display_name": "黃俊龍",
-        "photo_url": "https://lh3.googleusercontent.com/a/ACg8ocIvgSvTl286GHd25o1C_74ayYw4N1Axn18NOl7HTGb21rqfTQ=s96-c"
-      },
-      "_count": {
-        "applications": 1
-      }
-    }
-  ]
-},
-        description: "成功取得資料" } */
-
   ActivityController.fetchAllActiveActivities
 );
-
 router.get(
   "/:id",
   /* #swagger.tags = ['Activity'] */
@@ -160,59 +120,12 @@ router.get(
         description: "資料獲取成功" } */
   ActivityController.fetchActivityDetails
 );
-
-router.post(
-  "/category/:type",
+router.get(
+  "/",
   /* #swagger.tags = ['Activity'] */
-
-  /* #swagger.description = "取得特定類別活動資料" */
-
-  /*	#swagger.parameters['obj'] = {
-            in: 'body',
-            description: '分類與頁數',
-            required: true,
-            schema: {
-              "category":"food",
-              "page":1,
-              "pageSize":12
-          }
-    } */
-
-  /* #swagger.responses[200] = { 
-      schema: {
-        "message": "成功取得資料",
-        "status": 200,
-        "data": [
-            {
-                "id": 41,
-                "name": "台中一日遊",
-                "img_url": "https://firebasestorage.googleapis.com/v0/b/login-demo1-9d3cb.firebasestorage.app/o/activities%2F1735527699399_1666836078785.jpg?alt=media&token=4ef9ae4e-2355-49a9-b787-3a41624557a1",
-                "location": "台灣台中清水區漁港海堤梧棲漁港管制區(遊客禁止進入)",
-                "event_time": "2024-12-30T16:00:00.000Z",
-                "max_participants": 5,
-                "users": {
-                    "display_name": "沙拉貓",
-                    "photo_url": "https://firebasestorage.googleapis.com/v0/b/login-demo1-9d3cb.firebasestorage.app/o/avatars%2F1735439695053_images%20(2).jpeg?alt=media&token=347b9eb2-8af7-4381-9aea-de763f29df09"
-                }
-            },
-            {
-                "id": 40,
-                "name": "一起debug",
-                "img_url": "https://i.imgur.com/8fbnZTk.png",
-                "location": "台灣台北市信義區松仁路101號",
-                "event_time": "2024-12-25T17:11:00.000Z",
-                "max_participants": 5,
-                "users": {
-                    "display_name": "黃俊龍",
-                    "photo_url": "https://lh3.googleusercontent.com/a/ACg8ocIvgSvTl286GHd25o1C_74ayYw4N1Axn18NOl7HTGb21rqfTQ=s96-c"
-                }
-            }
-        ]
-    },
-        description: "成功取得資料" } */
-
   ActivityController.fetchActivitiesByCategory
 );
+
 
 // Activity Create/Delete
 router.post(

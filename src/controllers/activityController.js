@@ -10,27 +10,7 @@ import paymentService from "../services/paymentService.js";
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 
-const fetchAllActiveActivities = async (_req, res, next) => {
-  try {
-    const response = await activityService.getAllActivities();
 
-    if (!response || response.length === 0) {
-      return res.status(200).json({
-        status: 200,
-        message: "查無資料",
-        data: [],
-      });
-    }
-
-    res.status(200).json({
-      status: 200,
-      message: "成功取得資料",
-      data: response,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
 
 const fetchActivityDetails = async (req, res, next) => {
   try {
@@ -53,37 +33,6 @@ const fetchActivityDetails = async (req, res, next) => {
       status: 200,
       message: "資料獲取成功",
       data: { ...activityDetail, recent_activities, ratings },
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-const fetchActivitiesByCategory = async (req, res, next) => {
-  try {
-    const { type } = req.params;
-    const { category, page, pageSize } = req.body;
-    ActivityGetCategorySchema.parse({ type, category, page, pageSize });
-
-    const response = await activityService.getActivityByCategory(
-      type,
-      category,
-      page,
-      pageSize
-    );
-
-    if (!response || response.length === 0) {
-      return res.status(200).json({
-        status: 200,
-        message: "查無資料",
-        data: [],
-      });
-    }
-
-    res.status(200).json({
-      message: "成功取得資料",
-      status: 200,
-      data: response,
     });
   } catch (error) {
     next(error);
@@ -202,49 +151,6 @@ const removeActivityComment = async (req, res, next) => {
   }
 };
 
-const searchActivities = async (req, res, next) => {
-  try {
-    let { keyword } = req.body;
-    switch (keyword) {
-      case "運動":
-        keyword = "sport";
-        break;
-      case "美食":
-        keyword = "food";
-        break;
-      case "旅遊":
-        keyword = "travel";
-        break;
-      case "購物":
-        keyword = "shopping";
-        break;
-      case "教育":
-        keyword = "education";
-        break;
-      default:
-        break;
-    }
-
-    const response = await activityService.searchActivities(keyword);
-
-    if (response.length === 0) {
-      return res.status(200).json({
-        status: 200,
-        message: "查無資料",
-        data: [],
-      });
-    }
-    res.status(200).json({
-      status: 200,
-      message: "成功取得資料",
-      data: response,
-    });
-    // prism找資料
-  } catch (error) {
-    next(error);
-  }
-};
-
 const googleMapGeocode = async (req, res, next) => {
   const { address } = req.body;
 
@@ -328,15 +234,56 @@ const googleAutocomplete = async (req, res, next) => {
   }
 };
 
+const fetchAllActivities = async (req, res, next) => {
+ try {
+  const { page = 1, pageSize = 12, category, region, keyword } = req.query;
+  const parsedPage = parseInt(page, 10);
+  const parsedPageSize = parseInt(pageSize, 10);
+  
+  if(isNaN(parsedPage) || isNaN(parsedPageSize) || parsedPage < 1 || parsedPageSize < 1){
+    return res.status(400).json({
+      message:" 請提供有效的page 和 pageSize 參數",
+      status: 400,
+      data: null,
+    })
+  } 
+
+  const activities = await activityService.fetchAllActivities({
+    page: parsedPage,
+    pageSize: parsedPageSize,
+    category,
+    region,
+    keyword,
+  });
+
+
+  if(!activities || activities.length === 0){
+    return res.status(200).json({
+    message:"目前沒有符合條件的活動資料",
+    status: 200,
+    data: [],
+    });
+  }
+
+  res.status(200).json({
+    message: "活動資料取得成功",
+    status: 200,
+    data: activities,
+    total: activities.length,
+  });
+} catch (error) {
+  next(error);
+}
+};
+
+
 export {
-  fetchAllActiveActivities,
   fetchActivityDetails,
-  fetchActivitiesByCategory,
   addNewActivity,
   cancelActivityRequest,
   addActivityComments,
   removeActivityComment,
   googleMapGeocode,
   googleAutocomplete,
-  searchActivities,
+  fetchAllActivities,
 };

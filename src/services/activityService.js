@@ -1,7 +1,9 @@
 import { prisma } from "../config/db.js";
+import { fetchAllActivities } from "../controllers/activityController.js";
 import {
   ActivityCommentCancelSchema,
   ActivityGetCategorySchema,
+  ActivityGetAllActivities,
 } from "../validations/activitySchema.js";
 
 // Service 層
@@ -326,32 +328,26 @@ export const activityService = {
     };
   },
 
-  async searchActivities(keyword) {
-    return await prisma.activities.findMany({
-      where: {
-        status: "registrationOpen",
-        //今天以後的活動
-        event_time: {
-          gte: new Date(),
-        },
-        OR: [
-          {
-            name: {
-              contains: keyword,
-            },
-          },
-          {
-            description: {
-              contains: keyword,
-            },
-          },
-          {
-            location: {
-              contains: keyword,
-            },
-          },
-        ],
-      },
+  async fetchAllActivities({ page, pageSize, category, region, keyword }) {
+  ActivityGetAllActivities.parse({ page, pageSize, category, region, keyword });
+    const skip = (page - 1) * pageSize;
+  
+    const filters = { status: "registrationOpen" };
+  
+    if (category) filters.category = category;
+    if (region) filters.location = { contains: region };
+    if (keyword) {
+      filters.OR = [
+        { name: { contains: keyword } },
+        { description: { contains: keyword } },
+        { location: { contains: keyword } },
+      ];
+    }
+  
+    const activities = await prisma.activities.findMany({
+      skip,
+      take: pageSize,
+      where: filters,
       select: {
         id: true,
         name: true,
@@ -359,6 +355,7 @@ export const activityService = {
         location: true,
         event_time: true,
         max_participants: true,
+        host_id:true,
         users: {
           select: {
             display_name: true,
@@ -366,9 +363,12 @@ export const activityService = {
           },
         },
       },
-      orderBy: {
-        event_time: "asc",
-      },
+      orderBy: { created_at: "desc" },
     });
+
+    const total = await prisma.activities.count({
+      where: filters,
+    });
+    return { activities, total};
   },
 };
