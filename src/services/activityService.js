@@ -341,7 +341,7 @@ export const activityService = {
       ];
     }
   
-    return await prisma.activities.findMany({
+    const activities = await prisma.activities.findMany({
       skip,
       take: pageSize,
       where: filters,
@@ -362,5 +362,10 @@ export const activityService = {
       },
       orderBy: { created_at: "desc" },
     });
+
+    const total = await prisma.activities.count({
+      where: filters,
+    });
+    return { activities, total};
   },
 };
