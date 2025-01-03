@@ -138,22 +138,20 @@ const cancelActivityRequest = async (req, res, next) => {
       };
     });
     if (!activity.require_payment) {
-      const res = await userService.addNotifications(noRefundNotiData);
+      const response = await userService.addNotifications(noRefundNotiData);
       return res.status(200).json({
         status: 200,
         message: "資料刪除成功",
-        data: response,
       });
     }
 
     // 沒有需要被退款這裡就結束
     if (subscribedList.length == 0) {
-      const res = await userService.addNotifications(noRefundNotiData);
+      const response = await userService.addNotifications(noRefundNotiData);
 
       return res.status(200).json({
         status: 200,
         message: "資料刪除成功",
-        data: response,
       });
     }
     // 先把錢退給參加者
