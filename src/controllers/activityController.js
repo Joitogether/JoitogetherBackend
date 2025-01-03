@@ -186,6 +186,7 @@ const cancelActivityRequest = async (req, res, next) => {
           link: `/activity/detail/${activity.id}`,
         });
         if (io) {
+          console.log(notification);
           io.to(notification.user_id).emit("newNotification", notification);
         }
         return { refund, record, notification };
