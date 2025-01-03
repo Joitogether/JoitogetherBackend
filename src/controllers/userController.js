@@ -93,6 +93,28 @@ const updateUserInfo = async (req, res, next) => {
   }
 };
 
+const fetchUserHostActivities = async (req, res, next) => {
+  try {
+    const { uid } = req.params;
+    
+    const response = await userService.getUserHostActivitiesByUid(uid);
+    if (!response || response.length === 0) {
+      return res.status(200).json({
+        status: 200,
+        message: "查無資料",
+        data: [],
+      });
+    }
+    res.status(200).json({
+      message: "成功取得資料",
+      status: 200,
+      data: response,
+    });
+  } catch (error) {
+    next (error)
+  }
+}
+
 const fetchUserApplications = async (req, res, next) => {
   try {
     const { uid } = req.params;
@@ -308,4 +330,5 @@ export {
   fetchUserFollowers,
   fetchUserFollowing,
   fetchUserSummaries,
+  fetchUserHostActivities,
 };

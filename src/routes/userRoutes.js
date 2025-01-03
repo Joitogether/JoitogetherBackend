@@ -171,7 +171,8 @@ router.get(
       description: "成功取得活動、文章、追蹤人數資料" } */
   UserController.fetchUserSummaries
 );
-
+// User host Activity
+router.get("/activities/:uid", UserController.fetchUserHostActivities)
 // User Application
 router.get(
   "/applications/:uid",

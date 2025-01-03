@@ -42,6 +42,13 @@ export const userService = {
       data: userData,
     });
   },
+// 依照uid取得單一使用者所以主辦過的活動
+async getUserHostActivitiesByUid(uid) {
+  UserUidSchema.parse({ uid })
+  return await prisma.activities.findMany({
+    where: { host_id: uid }
+  })
+},
 
   // 依照 uid 取得單一使用者報名資料
   async getApplicationsByUserId(uid) {
