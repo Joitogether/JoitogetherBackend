@@ -7,6 +7,8 @@ import {
 } from "../validations/activitySchema.js";
 import { fetchSummaryFn } from "./ratingController.js";
 import paymentService from "../services/paymentService.js";
+import { userService } from "../services/userService.js";
+import { getIO } from "../config/socket.js";
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 
@@ -64,31 +66,54 @@ const cancelActivityRequest = async (req, res, next) => {
       activityService.getParticipantsByActivityId(activityId),
       activityService.getActivityById(activityId),
     ]);
-    // 活動不用付款就不用處理是否要退款
-    if (!activity.require_payment) {
-      return res.status(200).json({
-        status: 200,
-        message: "資料刪除成功",
-        data: response,
-      });
-    }
-    //活動要付款所以過濾一下有哪些人需要被退款
-    const refundList = applications.filter((application) => {
+
+    // 哪些是參加者、報名者
+    const subscribedList = applications.filter((application) => {
       return (
         application.status == "approved" || application.status == "registered"
       );
     });
-    // 沒有需要被退款這裡就結束
-    if (refundList.length == 0) {
+
+    // 活動不用付款就不用處理是否要退款
+    // action看要不要新增cancel，先暫時歸類在報名
+    const noRefundNotiData = subscribedList.map((application) => {
+      return {
+        actor_id: activity.host_id,
+        user_id: application.participant_id,
+        action: "register",
+        target_type: "activity",
+        target_id: activity.id,
+        message: "您報名參加的活動已遭團主取消",
+        link: `/activity/detail/${activity.id}`,
+      };
+    });
+    if (!activity.require_payment) {
+      const response = await userService.addNotifications(noRefundNotiData);
+      const io = getIO();
+      if (io) {
+        io.to(response[1]).emit("newNotification", response[0]);
+      }
       return res.status(200).json({
         status: 200,
         message: "資料刪除成功",
-        data: response,
+      });
+    }
+
+    // 沒有需要被退款這裡就結束
+    if (subscribedList.length == 0) {
+      const response = await userService.addNotifications(noRefundNotiData);
+      const io = getIO();
+      if (io) {
+        io.to(response[1]).emit("newNotification", response[0]);
+      }
+      return res.status(200).json({
+        status: 200,
+        message: "資料刪除成功",
       });
     }
     // 先把錢退給參加者
-    await Promise.all(
-      refundList.map(async (application) => {
+    const data = await Promise.all(
+      subscribedList.map(async (application) => {
         const refund = await paymentService.addDeposit(
           application.participant_id,
           parseInt(activity.price)
@@ -99,7 +124,25 @@ const cancelActivityRequest = async (req, res, next) => {
           parseInt(activity.price),
           refund.balance
         );
-        return { refund, record };
+        const notification = await userService.addNotification({
+          actor_id: activity.host_id,
+          user_id: application.participant_id,
+          action: "register",
+          target_type: "activity",
+          target_id: activity.id,
+          message: "您報名參加的活動已遭團主取消,已退款",
+          link: "/walletRecord",
+        });
+        const io = getIO();
+        if (io) {
+          console.log(notification);
+
+          io.to(application.participant_id).emit(
+            "newNotification",
+            notification
+          );
+        }
+        return { refund, record, notification };
       })
     );
 

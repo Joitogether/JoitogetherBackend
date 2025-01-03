@@ -2,6 +2,7 @@ import { prisma } from "../config/db.js";
 import {
   NotificationListSchema,
   NotificationSchema,
+  NotificationsSchema,
   UserUidSchema,
 } from "../validations/userSchema.js";
 import {
@@ -148,10 +149,10 @@ export const userService = {
     }
   },
 
-  async addNotifications(data) {
+  async addNotificationsToFollowers(data) {
     try {
       // 先校驗
-      NotificationSchema.parse(data);
+      NotificationsSchema.parse(data);
       const { actor_id, action, target_type, target_id, message, link } = data;
       const followers = await userService.getSimplifyFollowers(actor_id);
       if (followers.length == 0) return;
@@ -217,6 +218,78 @@ export const userService = {
           target_detail,
         },
         followerIds,
+      ];
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  },
+
+  async addNotifications(data) {
+    try {
+      // 先校驗
+      NotificationsSchema.parse(data);
+      // 存db
+      const response = await Promise.all(
+        data.map((data) => prisma.notifications.create({ data }))
+      );
+      console.log("123", response);
+      // 回傳整理過的資料
+      const detailResponse = await prisma.notifications.findUnique({
+        where: { id: response[0].id },
+        select: {
+          users_notifications_actor_idTousers: {
+            select: {
+              display_name: true,
+              photo_url: true,
+            },
+          },
+          user_id: true,
+          message: true,
+          action: true,
+          is_read: true,
+          created_at: true,
+          target_type: true,
+          target_id: true,
+          id: true,
+          link: true,
+        },
+      });
+      let target_detail;
+      switch (detailResponse.target_type) {
+        case "activity":
+          target_detail = await prisma.activities.findUnique({
+            where: { id: detailResponse.target_id },
+            select: {
+              name: true,
+            },
+          });
+          break;
+        case "post":
+          target_detail = await prisma.posts.findUnique({
+            where: { post_id: detailResponse.target_id },
+            select: {
+              post_title: true,
+            },
+          });
+          break;
+        case "rating":
+          target_detail = await prisma.ratings.findUnique({
+            where: { id: detailResponse.target_id },
+            select: {
+              user_comment: true,
+            },
+          });
+          break;
+      }
+
+      const recievers = data.map((data) => data.user_id);
+      return [
+        {
+          ...detailResponse,
+          target_detail,
+        },
+        recievers,
       ];
     } catch (error) {
       console.log(error);

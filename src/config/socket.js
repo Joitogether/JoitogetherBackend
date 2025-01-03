@@ -2,8 +2,9 @@ import { Server } from "socket.io";
 import { userService } from "../services/userService.js";
 import "dotenv/config";
 
+let io;
 export const initSocket = (server) => {
-  const io = new Server(server, {
+  io = new Server(server, {
     cors: {
       origin: process.env.FRONTEND_URL, // 前端地址
       methods: ["GET", "POST"],
@@ -20,7 +21,7 @@ export const initSocket = (server) => {
     socket.on("sendNotification", async (data) => {
       if (data.action == "create") {
         // data 0 為通知內容 1 為使用者陣列
-        const data = await userService.addNotifications(data);
+        const data = await userService.addNotificationsToFollowers(data);
         io.to(data[1]).emit("newNotification", data[0]);
       } else {
         //拿到提醒先新增在資料庫
@@ -33,4 +34,12 @@ export const initSocket = (server) => {
       }
     });
   });
+};
+
+export const getIO = () => {
+  if (!io) {
+    console.log("沒有sockets鞥用");
+    return;
+  }
+  return io;
 };

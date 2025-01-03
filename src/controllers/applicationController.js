@@ -1,5 +1,7 @@
+import { getIO } from "../config/socket.js";
 import { activityService } from "../services/activityService.js";
 import paymentService from "../services/paymentService.js";
+import { userService } from "../services/userService.js";
 import {
   ApplicationSchema,
   ApplicationReviewSchema,
@@ -68,6 +70,20 @@ const removeActivityRegistration = async (req, res, next) => {
         parseInt(activity.price),
         wallet.balance
       );
+
+      const notification = await userService.addNotification({
+        actor_id: activity.host_id,
+        user_id: participant_id,
+        action: "register",
+        target_type: "activity",
+        target_id: activity.id,
+        message: "已退款您報名參加的活動",
+        link: `/walletRecord`,
+      });
+
+      const io = getIO();
+      io.to(participant_id).emit("newNotification", notification);
+
       return res.status(200).json({
         status: 200,
         message: "資料更新成功",
@@ -142,6 +158,22 @@ const approveActivityParticipant = async (req, res, next) => {
         parseInt(activity.price),
         wallet.balance
       );
+
+      const notification = await userService.addNotification({
+        actor_id: activity.host_id,
+        user_id: response.participant_id,
+        action: "register",
+        target_type: "activity",
+        target_id: activity.id,
+        message: "已退款您報名參加的活動",
+        link: `/walletRecord`,
+      });
+
+      const io = getIO();
+      if (io) {
+        io.to(response.participant_id).emit("newNotification", notification);
+      }
+
       return res.status(200).json({
         status: 200,
         message: "審核成功",
