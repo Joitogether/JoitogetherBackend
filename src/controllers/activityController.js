@@ -111,7 +111,6 @@ const addNewActivity = async (req, res, next) => {
 const cancelActivityRequest = async (req, res, next) => {
   try {
     // 取消活動 拿參加者
-    const io = getIO();
     const activityId = parseInt(req.params.id);
     const [response, applications, activity] = await Promise.all([
       activityService.cancelActivity(activityId),
@@ -141,6 +140,7 @@ const cancelActivityRequest = async (req, res, next) => {
     });
     if (!activity.require_payment) {
       const response = await userService.addNotifications(noRefundNotiData);
+      const io = getIO();
       if (io) {
         io.to(response[1]).emit("newNotification", response[0]);
       }
@@ -153,6 +153,7 @@ const cancelActivityRequest = async (req, res, next) => {
     // 沒有需要被退款這裡就結束
     if (subscribedList.length == 0) {
       const response = await userService.addNotifications(noRefundNotiData);
+      const io = getIO();
       if (io) {
         io.to(response[1]).emit("newNotification", response[0]);
       }
@@ -162,7 +163,7 @@ const cancelActivityRequest = async (req, res, next) => {
       });
     }
     // 先把錢退給參加者
-    await Promise.all(
+    const data = await Promise.all(
       subscribedList.map(async (application) => {
         const refund = await paymentService.addDeposit(
           application.participant_id,
@@ -174,7 +175,7 @@ const cancelActivityRequest = async (req, res, next) => {
           parseInt(activity.price),
           refund.balance
         );
-        const notification = userService.addNotification({
+        const notification = await userService.addNotification({
           actor_id: activity.host_id,
           user_id: application.participant_id,
           action: "register",
@@ -186,6 +187,14 @@ const cancelActivityRequest = async (req, res, next) => {
         return { refund, record, notification };
       })
     );
+
+    const io = getIO();
+    data.map((item) => {
+      io.to(item.notification.user_id).emit(
+        "newNotification",
+        item.notification
+      );
+    });
 
     res.status(200).json({
       status: 200,
