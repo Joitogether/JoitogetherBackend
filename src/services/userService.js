@@ -408,6 +408,7 @@ async getUserHostActivitiesByUid(uid) {
         id: true,
         follower_id: true,
         isFollowing: true,
+        user_id: true,
         users_followers_follower_idTousers: {
           select: {
             display_name: true,
