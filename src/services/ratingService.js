@@ -98,7 +98,7 @@ export const ratingService = {
       where: {
         host_id: activity.host_id,
       },
-      take: 6,
+      take: 4,
       orderBy: {
         created_at: "desc",
       },
