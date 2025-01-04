@@ -34,7 +34,7 @@ router.get(
     "total": 1
   }
 },
-        description: "資料獲取成功" } */
+        description: "成功取得所有活動資料" } */
   ActivityController.fetchAllActivities
 );
 
@@ -147,7 +147,7 @@ router.get(
     }
   }
 },
-        description: "資料獲取成功" } */
+        description: "成功取得單筆活動資料" } */
   ActivityController.fetchActivityDetails
 );
 
@@ -205,7 +205,7 @@ router.post(
             "require_payment": 0
         }
     },
-        description: "成功新增資料" } */
+        description: "活動新增成功" } */
   authMiddleware,
   ActivityController.addNewActivity
 );
@@ -241,7 +241,7 @@ router.put(
             "require_payment": 0
         }
     },
-        description: "資料刪除成功" } */
+        description: "活動取消成功" } */
   authMiddleware,
   ActivityController.cancelActivityRequest
 );
@@ -276,7 +276,7 @@ router.post(
             "status": "posted"
         }
     },
-        description: "新增資料成功" } */
+        description: "留言新增成功" } */
   authMiddleware,
   ActivityController.addActivityComments
 );
@@ -300,7 +300,7 @@ router.delete(
             "status": "deleted"
         }
     },
-        description: "資料刪除成功" } */
+        description: "留言刪除成功" } */
   authMiddleware,
   ActivityController.removeActivityComment
 );
@@ -315,7 +315,7 @@ router.post(
 
   /*	#swagger.parameters['obj'] = {
             in: 'body',
-            description: '訂單狀態',
+            description: '地址',
             required: true,
             schema: {
               "address":"100台北市中正區北平西路3號號(地下一樓"
@@ -331,7 +331,7 @@ router.post(
             "lng": 121.5173735
         }
     },
-        description: "訂單取消" } */
+        description: "地址取得成功" } */
   ActivityController.googleMapGeocode
 );
 
@@ -343,7 +343,7 @@ router.post(
 
   /*	#swagger.parameters['obj'] = {
             in: 'body',
-            description: '訂單狀態',
+            description: '搜尋字串',
             required: true,
             schema: {
               "query":"台北車站"
@@ -359,7 +359,7 @@ router.post(
             "lng": 121.5173735
 }]
     },
-        description: "訂單取消" } */
+        description: "經緯度取得成功" } */
   ActivityController.googleAutocomplete
 );
 
