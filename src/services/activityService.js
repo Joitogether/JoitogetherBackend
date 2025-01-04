@@ -38,6 +38,9 @@ export const activityService = {
   // 取得近期活動資料
   async getRecentActivities() {
     return await prisma.activities.findMany({
+      where: {
+        status: "registrationOpen",
+      },
       include: {
         users: {
           select: {
@@ -329,11 +332,17 @@ export const activityService = {
   },
 
   async fetchAllActivities({ page, pageSize, category, region, keyword }) {
-  ActivityGetAllActivities.parse({ page, pageSize, category, region, keyword });
+    ActivityGetAllActivities.parse({
+      page,
+      pageSize,
+      category,
+      region,
+      keyword,
+    });
     const skip = (page - 1) * pageSize;
-  
+
     const filters = { status: "registrationOpen" };
-  
+
     if (category) filters.category = category;
     if (region) filters.location = { contains: region };
     if (keyword) {
@@ -343,7 +352,7 @@ export const activityService = {
         { location: { contains: keyword } },
       ];
     }
-  
+
     const activities = await prisma.activities.findMany({
       skip,
       take: pageSize,
@@ -355,7 +364,7 @@ export const activityService = {
         location: true,
         event_time: true,
         max_participants: true,
-        host_id:true,
+        host_id: true,
         users: {
           select: {
             display_name: true,
@@ -369,6 +378,6 @@ export const activityService = {
     const total = await prisma.activities.count({
       where: filters,
     });
-    return { activities, total};
+    return { activities, total };
   },
 };
