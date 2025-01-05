@@ -42,18 +42,18 @@ export const userService = {
       data: userData,
     });
   },
-// 依照uid取得單一使用者所以主辦過的活動
-async getUserHostActivitiesByUid(uid) {
-  UserUidSchema.parse({ uid })
-  return await prisma.activities.findMany({
-    where: { 
-      host_id: uid
-    },
-    orderBy: {
+  // 依照uid取得單一使用者所以主辦過的活動
+  async getUserHostActivitiesByUid(uid) {
+    UserUidSchema.parse({ uid });
+    return await prisma.activities.findMany({
+      where: {
+        host_id: uid,
+      },
+      orderBy: {
         event_time: "desc",
-    },
-  })
-},
+      },
+    });
+  },
 
   // 依照 uid 取得單一使用者報名資料
   async getApplicationsByUserId(uid) {
@@ -65,8 +65,8 @@ async getUserHostActivitiesByUid(uid) {
       },
       orderBy: {
         activities: {
-          event_time: "desc"
-        }
+          event_time: "desc",
+        },
       },
       include: {
         activities: {
@@ -156,6 +156,11 @@ async getUserHostActivitiesByUid(uid) {
             },
           });
           break;
+        case "user":
+          target_detail = {
+            messgae: "去他的頁面看看吧！",
+          };
+          break;
       }
       return {
         ...detailResponse,
@@ -228,6 +233,11 @@ async getUserHostActivitiesByUid(uid) {
             },
           });
           break;
+        case "user":
+          target_detail = {
+            messgae: "去他的頁面看看吧！",
+          };
+          break;
       }
       const followerIds = followers.map((data) => data.follower_id);
       return [
@@ -298,6 +308,11 @@ async getUserHostActivitiesByUid(uid) {
               user_comment: true,
             },
           });
+          break;
+        case "user":
+          target_detail = {
+            messgae: "去他的頁面看看吧！",
+          };
           break;
       }
 

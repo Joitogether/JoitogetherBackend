@@ -355,6 +355,7 @@ enum notifications_target_type {
   post
   activity
   rating
+  user
 }
 
 enum post_likes_like_status {

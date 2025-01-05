@@ -62,7 +62,7 @@ export const NotificationSchema = z.object({
     "create",
     "follow",
   ]),
-  target_type: z.enum(["post", "activity", "rating"]),
+  target_type: z.enum(["post", "activity", "rating", "user"]),
   message: z.string(),
 });
 
