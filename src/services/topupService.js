@@ -4,11 +4,7 @@ import { newebpayOrderSchema } from "../validations/topupSchema.js";
 ///儲值紀錄
 export const TopupService = {
     async createTopup(data) {
-        console.log('service收到的data:',data);
-
-        const validatedData = newebpayOrderSchema.parse(data)  
-        console.log("validatedData", validatedData);
-        
+        const validatedData = newebpayOrderSchema.parse(data)          
             if(validatedData) {
                 const newTopupRecord = await prisma.newebpay_transactions.create({
                     data: {
@@ -35,7 +31,6 @@ export const TopupService = {
         })
     },
     async updateNewebpayOrder(data) {
-        console.log('藍新notify傳來的資料', data);
         const { Result, Status } = data
         let pay_time = Result.PayTime;
 
@@ -49,7 +44,6 @@ export const TopupService = {
                 throw new Error("Invalid pay_time format");
             }
 
-            // 轉為 ISO 格式
             pay_time = parsedDate.toISOString();
         }
         const updateData = {
@@ -62,7 +56,6 @@ export const TopupService = {
             card_last_four: Result.PayerAccount5Code || undefined,
             escrow_bank: Result.EscrowBank || undefined,
             };
-        console.log('updateData', updateData);
         
             // 移除 undefined 的欄位，這樣不會覆蓋原有的值
             const cleanedData = Object.fromEntries(
