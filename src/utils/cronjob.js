@@ -11,6 +11,7 @@ import {
 import paymentService from "../services/paymentService.js";
 import { getIO } from "../config/socket.js";
 import { userService } from "../services/userService.js";
+import { parse } from "dotenv";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 const tz = "Asia/Taipei";
@@ -18,7 +19,7 @@ const tz = "Asia/Taipei";
 const cronJobs = {
   dailyUpdates() {
     cron.schedule(
-      "0 0 * * *",
+      "31 15 * * *",
       async () => {
         try {
           const today = dayjs().tz(tz).startOf("day").toISOString();
@@ -27,13 +28,13 @@ const cronJobs = {
             .subtract(1, "day")
             .startOf("day")
             .toISOString();
-          // 找有哪些活動是昨天最後截止報名，回來的只會有狀態為已報名但沒審核通過的
+          // 找有哪些活動是昨天最後截止報名，裡便報名回來的只會有狀態為已報名但沒審核通過的
           const deadLineActivities = await getActivitiesByApprovalDeadline(
             yesterday,
             today
           );
           deadLineActivities.forEach(async (activity) => {
-            if (activity.length != 0) {
+            if (activity.applications.length != 0) {
               await Promise.all(
                 activity.applications.map(async (application) => {
                   const refund = await paymentService.addDeposit(
@@ -81,6 +82,20 @@ const cronJobs = {
           const promises = activities
             .filter((activity) => activity.applications.length > 0)
             .map(async (activity) => {
+              if (activity.require_payment) {
+                const wallet = await paymentService.addDeposit(
+                  activity.host_id,
+                  parseInt(activity.price) *
+                    parseInt(activity.applications.length)
+                );
+                await paymentService.createPaymentRecord(
+                  activity.host_id,
+                  "income",
+                  parseInt(activity.price) *
+                    parseInt(activity.applications.length),
+                  wallet.balance
+                );
+              }
               await updateActivities(activity);
               // 發送提醒讓參加者可以去評價
               return sendNotifications(activity);

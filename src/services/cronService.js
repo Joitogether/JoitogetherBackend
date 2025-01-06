@@ -10,6 +10,9 @@ export async function getActivitiesByTime(start, end) {
       status: "registrationOpen",
     },
     select: {
+      require_payment: true,
+      price: true,
+      host_id: true,
       id: true,
       applications: {
         where: {
