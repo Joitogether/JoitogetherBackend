@@ -233,11 +233,6 @@ export const userService = {
             },
           });
           break;
-        case "user":
-          target_detail = {
-            messgae: "去他的頁面看看吧！",
-          };
-          break;
       }
       const followerIds = followers.map((data) => data.follower_id);
       return [
@@ -389,6 +384,11 @@ export const userService = {
                 user_comment: true,
               },
             });
+            break;
+          case "user":
+            target_detail = {
+              messgae: "去他的頁面看看吧！",
+            };
             break;
         }
         return {
