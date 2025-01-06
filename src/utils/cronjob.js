@@ -11,7 +11,6 @@ import {
 import paymentService from "../services/paymentService.js";
 import { getIO } from "../config/socket.js";
 import { userService } from "../services/userService.js";
-import { parse } from "dotenv";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 const tz = "Asia/Taipei";
@@ -19,7 +18,7 @@ const tz = "Asia/Taipei";
 const cronJobs = {
   dailyUpdates() {
     cron.schedule(
-      "* * * * *",
+      "0 0 * * *",
       async () => {
         try {
           const today = dayjs().tz(tz).startOf("day").toISOString();
@@ -95,6 +94,22 @@ const cronJobs = {
                     parseInt(activity.applications.length),
                   wallet.balance
                 );
+                const notiData = {
+                  actor_id: activity.host_id,
+                  user_id: activity.host_id,
+                  action: "register",
+                  target_type: "activity",
+                  target_id: activity.id,
+                  message: "你主辦的活動費用已入帳",
+                  link: `/walletRecord`,
+                };
+                const notification = await userService.addNotification(
+                  notiData
+                );
+                const io = getIO();
+                if (io) {
+                  io.to(activity.host_id).emit("newNotification", notification);
+                }
               }
               await updateActivities(activity);
               // 發送提醒讓參加者可以去評價
