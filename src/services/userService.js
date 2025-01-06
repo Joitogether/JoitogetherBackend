@@ -150,7 +150,7 @@ export const userService = {
           break;
         case "rating":
           target_detail = await prisma.ratings.findUnique({
-            where: { id: detailResponse.target_id },
+            where: { rating_id: detailResponse.target_id },
             select: {
               user_comment: true,
             },
@@ -298,7 +298,7 @@ export const userService = {
           break;
         case "rating":
           target_detail = await prisma.ratings.findUnique({
-            where: { id: detailResponse.target_id },
+            where: { rating_id: detailResponse.target_id },
             select: {
               user_comment: true,
             },
@@ -379,7 +379,7 @@ export const userService = {
             break;
           case "rating":
             target_detail = await prisma.ratings.findUnique({
-              where: { id: notification.target_id },
+              where: { rating_id: notification.target_id },
               select: {
                 user_comment: true,
               },
