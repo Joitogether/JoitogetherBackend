@@ -19,7 +19,7 @@ const tz = "Asia/Taipei";
 const cronJobs = {
   dailyUpdates() {
     cron.schedule(
-      "31 15 * * *",
+      "* * * * *",
       async () => {
         try {
           const today = dayjs().tz(tz).startOf("day").toISOString();

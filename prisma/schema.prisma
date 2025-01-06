@@ -381,6 +381,7 @@ enum wallet_record_action {
   withdraw
   deposit
   refund
+  income
 }
 
 enum activities_pay_type {
