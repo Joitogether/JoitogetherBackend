@@ -38,6 +38,7 @@ export async function getActivitiesByApprovalDeadline(start, end) {
     select: {
       id: true,
       price: true,
+      host_id: true,
       applications: {
         where: {
           register_validated: 0,
