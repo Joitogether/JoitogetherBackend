@@ -12,8 +12,6 @@ import { getIO } from "../config/socket.js";
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 
-
-
 const fetchActivityDetails = async (req, res, next) => {
   try {
     const activity_id = parseInt(req.params.id);
@@ -76,22 +74,28 @@ const cancelActivityRequest = async (req, res, next) => {
 
     // 活動不用付款就不用處理是否要退款
     // action看要不要新增cancel，先暫時歸類在報名
-    const noRefundNotiData = subscribedList.map((application) => {
-      return {
-        actor_id: activity.host_id,
-        user_id: application.participant_id,
-        action: "register",
-        target_type: "activity",
-        target_id: activity.id,
-        message: "您報名參加的活動已遭團主取消",
-        link: `/activity/detail/${activity.id}`,
-      };
-    });
+    let noRefundNotiData = [];
+    if (subscribedList.length != 0) {
+      noRefundNotiData = subscribedList.map((application) => {
+        return {
+          actor_id: activity.host_id,
+          user_id: application.participant_id,
+          action: "register",
+          target_type: "activity",
+          target_id: activity.id,
+          message: "您報名參加的活動已遭團主取消",
+          link: `/activity/detail/${activity.id}`,
+        };
+      });
+    }
+
     if (!activity.require_payment) {
-      const response = await userService.addNotifications(noRefundNotiData);
-      const io = getIO();
-      if (io) {
-        io.to(response[1]).emit("newNotification", response[0]);
+      if (noRefundNotiData.length != 0) {
+        const response = await userService.addNotifications(noRefundNotiData);
+        const io = getIO();
+        if (io) {
+          io.to(response[1]).emit("newNotification", response[0]);
+        }
       }
       return res.status(200).json({
         status: 200,
@@ -101,11 +105,14 @@ const cancelActivityRequest = async (req, res, next) => {
 
     // 沒有需要被退款這裡就結束
     if (subscribedList.length == 0) {
-      const response = await userService.addNotifications(noRefundNotiData);
-      const io = getIO();
-      if (io) {
-        io.to(response[1]).emit("newNotification", response[0]);
+      if (noRefundNotiData.length != 0) {
+        const response = await userService.addNotifications(noRefundNotiData);
+        const io = getIO();
+        if (io) {
+          io.to(response[1]).emit("newNotification", response[0]);
+        }
       }
+
       return res.status(200).json({
         status: 200,
         message: "資料刪除成功",
@@ -278,47 +285,50 @@ const googleAutocomplete = async (req, res, next) => {
 };
 
 const fetchAllActivities = async (req, res, next) => {
- try {
-  const { page = 1, pageSize = 12, category, region, keyword } = req.query;
-  const parsedPage = parseInt(page, 10);
-  const parsedPageSize = parseInt(pageSize, 10);
-  
-  if(isNaN(parsedPage) || isNaN(parsedPageSize) || parsedPage < 1 || parsedPageSize < 1){
-    return res.status(400).json({
-      message:" 請提供有效的page 和 pageSize 參數",
-      status: 400,
-      data: null,
-    })
-  } 
+  try {
+    const { page = 1, pageSize = 12, category, region, keyword } = req.query;
+    const parsedPage = parseInt(page, 10);
+    const parsedPageSize = parseInt(pageSize, 10);
 
-  const activities = await activityService.fetchAllActivities({
-    page: parsedPage,
-    pageSize: parsedPageSize,
-    category,
-    region,
-    keyword,
-  });
+    if (
+      isNaN(parsedPage) ||
+      isNaN(parsedPageSize) ||
+      parsedPage < 1 ||
+      parsedPageSize < 1
+    ) {
+      return res.status(400).json({
+        message: " 請提供有效的page 和 pageSize 參數",
+        status: 400,
+        data: null,
+      });
+    }
 
-
-  if(!activities || activities.length === 0){
-    return res.status(200).json({
-    message:"目前沒有符合條件的活動資料",
-    status: 200,
-    data: [],
+    const activities = await activityService.fetchAllActivities({
+      page: parsedPage,
+      pageSize: parsedPageSize,
+      category,
+      region,
+      keyword,
     });
+
+    if (!activities || activities.length === 0) {
+      return res.status(200).json({
+        message: "目前沒有符合條件的活動資料",
+        status: 200,
+        data: [],
+      });
+    }
+
+    res.status(200).json({
+      message: "活動資料取得成功",
+      status: 200,
+      data: activities,
+      total: activities.length,
+    });
+  } catch (error) {
+    next(error);
   }
-
-  res.status(200).json({
-    message: "活動資料取得成功",
-    status: 200,
-    data: activities,
-    total: activities.length,
-  });
-} catch (error) {
-  next(error);
-}
 };
-
 
 export {
   fetchActivityDetails,
