@@ -73,7 +73,7 @@ const fetchActivityAndHostRating = async (req, res, next) => {
   try {
     let { activity_id } = req.params;
     activity_id = parseInt(activity_id);
-    const [response, applications] = Promise.all([
+    const [response, applications] = await Promise.all([
       ratingService.getRatingAndActivityByActivityId(activity_id),
       activityService.getParticipantsByActivityId(activity_id),
     ]);
