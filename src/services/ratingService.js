@@ -68,6 +68,7 @@ export const ratingService = {
     const activity = await prisma.activities.findUnique({
       where: { id },
       include: {
+        applications,
         users: {
           select: {
             uid: true,
