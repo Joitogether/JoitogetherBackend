@@ -43,7 +43,7 @@ model users {
   full_name                                   String              @db.VarChar(255)
   display_name                                String              @db.VarChar(255)
   phone_number                                String              @db.VarChar(10)
-  photo_url                                   String?             @default("https://firebasestorage.googleapis.com/v0/b/login-demo1-9d3cb.firebasestorage.app/o/avatars%2Fcatavatar.png?alt=media&token=ccd02591-0c4f-435c-9a4a-34f219774558")
+  photo_url                                   String?             @default("https://firebasestorage.googleapis.com/v0/b/login-demo1-9d3cb.firebasestorage.app/o/avatars%2Fcatavatar.png?alt=media&token=ccd02591-0c4f-435c-9a4a-34f219774558") @db.VarChar(2000)
   created_at                                  DateTime            @default(now()) @db.DateTime(0)
   city                                        String?             @db.VarChar(5)
   age                                         Int?
