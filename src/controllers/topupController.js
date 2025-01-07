@@ -80,6 +80,8 @@ export const handleNewebpayNotify = async (req, res, next) => {
       if (record) {
         return res.end("1|OK");
       }
+    } else {
+      return res.end("0|FAIL")
     }
   } catch (error) {
     next(error);
