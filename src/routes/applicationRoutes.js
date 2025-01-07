@@ -82,7 +82,7 @@ router.get(
           }
         ]
       },
-        description: "成功取得資料" } */
+        description: "成功取得報名資料" } */
   authMiddleware,
   ApplicationController.fetchActivityRegistrations
 );

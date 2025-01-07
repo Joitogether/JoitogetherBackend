@@ -157,46 +157,49 @@ router.post(
 
   /* #swagger.responses[201] = { 
       schema: {
-        "status": 201,
-        "message": "訂單與報名成功完成",
-        "data": {
-            "order": {
-                "order_id": 68,
-                "uid": "XRS2wbAZv3NqQ33uvoSh68veitv2",
-                "total_amount": "500",
-                "order_status": "completed",
-                "created_at": "2025-01-01T04:11:28.000Z",
-                "updated_at": "2025-01-01T04:11:28.000Z",
-                "order_items": [
-                    {
-                        "order_item_id": 129,
-                        "order_id": 68,
-                        "activity_id": 34,
-                        "quantity": 1,
-                        "price": "500",
-                        "subtotal": "500",
-                        "created_at": "2025-01-01T04:11:28.000Z"
-                    }
-                ]
-            },
-            "wallet": {
-                "uid": "XRS2wbAZv3NqQ33uvoSh68veitv2",
-                "balance": "9991149"
-            },
-            "registrations": [
+    "status": 201,
+    "message": "訂單與報名成功完成",
+    "data": {
+        "order": {
+            "order_id": 76,
+            "uid": "XRS2wbAZv3NqQ42uvoSh68veitv2",
+            "total_amount": "500",
+            "order_status": "completed",
+            "created_at": "2025-01-07T02:54:47.000Z",
+            "updated_at": "2025-01-07T02:54:47.000Z",
+            "order_items": [
                 {
-                    "application_id": 53,
+                    "order_item_id": 139,
+                    "order_id": 76,
                     "activity_id": 34,
-                    "participant_id": "XRS2wbAZv3NqQ42uvoSh68veitv2",
-                    "status": "registered",
-                    "comment": "",
-                    "register_validated": 1,
-                    "created_at": "2024-12-24T06:16:08.000Z",
-                    "updated_at": "2025-01-01T04:11:28.000Z"
+                    "quantity": 1,
+                    "price": "500",
+                    "subtotal": "500",
+                    "created_at": "2025-01-07T02:54:47.000Z",
+                    "activities": {
+                        "host_id": "lNLo8eDmqoTcWghXpPA5H4P1iG02"
+                    }
                 }
             ]
-        }
-    },
+        },
+        "wallet": {
+            "uid": "XRS2wbAZv3NqQ42uvoSh68veitv2",
+            "balance": "9989699"
+        },
+        "registrations": [
+            {
+                "application_id": 53,
+                "activity_id": 34,
+                "participant_id": "XRS2wbAZv3NqQ42uvoSh68veitv2",
+                "status": "registered",
+                "comment": "",
+                "register_validated": 1,
+                "created_at": "2024-12-24T06:16:08.000Z",
+                "updated_at": "2025-01-07T02:54:47.000Z"
+            }
+        ]
+    }
+},
         description: "訂單與報名成功完成" } */
   authMiddleware,
   PaymentController.handleCheckoutProcess

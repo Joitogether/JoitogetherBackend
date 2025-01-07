@@ -2303,7 +2303,7 @@
         ],
         "responses": {
           "200": {
-            "description": "成功取得資料",
+            "description": "成功取得報名資料",
             "schema": {
               "type": "object",
               "properties": {
@@ -5613,11 +5613,11 @@
                       "properties": {
                         "order_id": {
                           "type": "number",
-                          "example": 68
+                          "example": 76
                         },
                         "uid": {
                           "type": "string",
-                          "example": "XRS2wbAZv3NqQ33uvoSh68veitv2"
+                          "example": "XRS2wbAZv3NqQ42uvoSh68veitv2"
                         },
                         "total_amount": {
                           "type": "string",
@@ -5629,11 +5629,11 @@
                         },
                         "created_at": {
                           "type": "string",
-                          "example": "2025-01-01T04:11:28.000Z"
+                          "example": "2025-01-07T02:54:47.000Z"
                         },
                         "updated_at": {
                           "type": "string",
-                          "example": "2025-01-01T04:11:28.000Z"
+                          "example": "2025-01-07T02:54:47.000Z"
                         },
                         "order_items": {
                           "type": "array",
@@ -5642,11 +5642,11 @@
                             "properties": {
                               "order_item_id": {
                                 "type": "number",
-                                "example": 129
+                                "example": 139
                               },
                               "order_id": {
                                 "type": "number",
-                                "example": 68
+                                "example": 76
                               },
                               "activity_id": {
                                 "type": "number",
@@ -5666,7 +5666,16 @@
                               },
                               "created_at": {
                                 "type": "string",
-                                "example": "2025-01-01T04:11:28.000Z"
+                                "example": "2025-01-07T02:54:47.000Z"
+                              },
+                              "activities": {
+                                "type": "object",
+                                "properties": {
+                                  "host_id": {
+                                    "type": "string",
+                                    "example": "lNLo8eDmqoTcWghXpPA5H4P1iG02"
+                                  }
+                                }
                               }
                             }
                           }
@@ -5678,11 +5687,11 @@
                       "properties": {
                         "uid": {
                           "type": "string",
-                          "example": "XRS2wbAZv3NqQ33uvoSh68veitv2"
+                          "example": "XRS2wbAZv3NqQ42uvoSh68veitv2"
                         },
                         "balance": {
                           "type": "string",
-                          "example": "9991149"
+                          "example": "9989699"
                         }
                       }
                     },
@@ -5721,7 +5730,7 @@
                           },
                           "updated_at": {
                             "type": "string",
-                            "example": "2025-01-01T04:11:28.000Z"
+                            "example": "2025-01-07T02:54:47.000Z"
                           }
                         }
                       }

@@ -43,6 +43,7 @@ export const orderService = {
   },
 
   // 建立訂單
+  // 建立訂單
   async createOrder(data) {
     CreateOrderSchema.parse(data);
     return await prisma.orders.create({
@@ -60,7 +61,15 @@ export const orderService = {
         },
       },
       include: {
-        order_items: true,
+        order_items: {
+          include: {
+            activities: {
+              select: {
+                host_id: true,
+              },
+            },
+          },
+        },
       },
     });
   },
