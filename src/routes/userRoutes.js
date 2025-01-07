@@ -171,8 +171,46 @@ router.get(
       description: "成功取得活動、文章、追蹤人數資料" } */
   UserController.fetchUserSummaries
 );
+
 // User host Activity
-router.get("/activities/:uid", UserController.fetchUserHostActivities)
+router.get(
+  "/activities/:uid",
+  /* #swagger.tags = ['User_Host_Activity'] */
+
+  /* #swagger.description = "取得使用者主辦活動" */
+
+  /* #swagger.responses[200] = { 
+      schema: { 
+        "message": "成功取得資料",
+        "status": 200,
+        "data": [
+          {
+            "id": 51,
+            "name": "一起當消波塊",
+            "img_url": "https://firebasestorage.googleapis.com/v0/b/login-demo1-9d3cb.firebasestorage.app/o/activities%2F1735542700318_1666836078785.jpg?alt=media&token=2b973b51-0d67-4984-a9b7-5e2c00bf6f18",
+            "location": "台北車站",
+            "host_id": "XRS2wbAZv3NqQ42uvoSh68veitv2",
+            "description": "消波塊讚",
+            "max_participants": 3,
+            "min_participants": 1,
+            "category": "education",
+            "status": "registrationOpen",
+            "price": "0",
+            "pay_type": "free",
+            "require_approval": 0,
+            "created_at": "2024-12-30T07:11:44.000Z",
+            "approval_deadline": "1970-01-01T00:00:00.000Z",
+            "event_time": "2025-01-09T07:11:00.000Z",
+            "updated_at": "2024-12-30T07:11:44.000Z",
+            "require_payment": 0
+          }
+        ]
+      },
+      description: "成功取得資料" } */
+
+  UserController.fetchUserHostActivities
+);
+
 // User Application
 router.get(
   "/applications/:uid",

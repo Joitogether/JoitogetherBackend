@@ -46,7 +46,7 @@
         ],
         "responses": {
           "200": {
-            "description": "資料獲取成功",
+            "description": "成功取得所有活動資料",
             "schema": {
               "type": "object",
               "properties": {
@@ -212,7 +212,7 @@
         ],
         "responses": {
           "201": {
-            "description": "成功新增資料",
+            "description": "活動新增成功",
             "schema": {
               "type": "object",
               "properties": {
@@ -329,7 +329,7 @@
         ],
         "responses": {
           "200": {
-            "description": "資料獲取成功",
+            "description": "成功取得單筆活動資料",
             "schema": {
               "type": "object",
               "properties": {
@@ -730,7 +730,7 @@
         ],
         "responses": {
           "200": {
-            "description": "資料刪除成功",
+            "description": "活動取消成功",
             "schema": {
               "type": "object",
               "properties": {
@@ -871,7 +871,7 @@
         ],
         "responses": {
           "201": {
-            "description": "新增資料成功",
+            "description": "留言新增成功",
             "schema": {
               "type": "object",
               "properties": {
@@ -945,7 +945,7 @@
         ],
         "responses": {
           "200": {
-            "description": "資料刪除成功",
+            "description": "留言刪除成功",
             "schema": {
               "type": "object",
               "properties": {
@@ -1006,14 +1006,9 @@
         "description": "Google 地址搜尋",
         "parameters": [
           {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          },
-          {
             "name": "obj",
             "in": "body",
-            "description": "訂單狀態",
+            "description": "地址",
             "required": true,
             "schema": {
               "type": "object",
@@ -1028,7 +1023,7 @@
         ],
         "responses": {
           "201": {
-            "description": "訂單取消",
+            "description": "地址取得成功",
             "schema": {
               "type": "object",
               "properties": {
@@ -1061,9 +1056,6 @@
           },
           "400": {
             "description": "Bad Request"
-          },
-          "403": {
-            "description": "Forbidden"
           }
         }
       }
@@ -1076,14 +1068,9 @@
         "description": "Google 地址自動完成",
         "parameters": [
           {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          },
-          {
             "name": "obj",
             "in": "body",
-            "description": "訂單狀態",
+            "description": "搜尋字串",
             "required": true,
             "schema": {
               "type": "object",
@@ -1130,16 +1117,13 @@
                 "name": "main"
               }
             },
-            "description": "訂單取消"
+            "description": "經緯度取得成功"
           },
           "201": {
             "description": "Created"
           },
           "400": {
             "description": "Bad Request"
-          },
-          "403": {
-            "description": "Forbidden"
           }
         }
       }
@@ -1536,7 +1520,10 @@
     },
     "/users/activities/{uid}": {
       "get": {
-        "description": "",
+        "tags": [
+          "User_Host_Activity"
+        ],
+        "description": "取得使用者主辦活動",
         "parameters": [
           {
             "name": "uid",
@@ -1547,7 +1534,103 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "成功取得資料",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "成功取得資料"
+                },
+                "status": {
+                  "type": "number",
+                  "example": 200
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "number",
+                        "example": 51
+                      },
+                      "name": {
+                        "type": "string",
+                        "example": "一起當消波塊"
+                      },
+                      "img_url": {
+                        "type": "string",
+                        "example": "https://firebasestorage.googleapis.com/v0/b/login-demo1-9d3cb.firebasestorage.app/o/activities%2F1735542700318_1666836078785.jpg?alt=media&token=2b973b51-0d67-4984-a9b7-5e2c00bf6f18"
+                      },
+                      "location": {
+                        "type": "string",
+                        "example": "台北車站"
+                      },
+                      "host_id": {
+                        "type": "string",
+                        "example": "XRS2wbAZv3NqQ42uvoSh68veitv2"
+                      },
+                      "description": {
+                        "type": "string",
+                        "example": "消波塊讚"
+                      },
+                      "max_participants": {
+                        "type": "number",
+                        "example": 3
+                      },
+                      "min_participants": {
+                        "type": "number",
+                        "example": 1
+                      },
+                      "category": {
+                        "type": "string",
+                        "example": "education"
+                      },
+                      "status": {
+                        "type": "string",
+                        "example": "registrationOpen"
+                      },
+                      "price": {
+                        "type": "string",
+                        "example": "0"
+                      },
+                      "pay_type": {
+                        "type": "string",
+                        "example": "free"
+                      },
+                      "require_approval": {
+                        "type": "number",
+                        "example": 0
+                      },
+                      "created_at": {
+                        "type": "string",
+                        "example": "2024-12-30T07:11:44.000Z"
+                      },
+                      "approval_deadline": {
+                        "type": "string",
+                        "example": "1970-01-01T00:00:00.000Z"
+                      },
+                      "event_time": {
+                        "type": "string",
+                        "example": "2025-01-09T07:11:00.000Z"
+                      },
+                      "updated_at": {
+                        "type": "string",
+                        "example": "2024-12-30T07:11:44.000Z"
+                      },
+                      "require_payment": {
+                        "type": "number",
+                        "example": 0
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
