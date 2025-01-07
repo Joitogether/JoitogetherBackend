@@ -47,7 +47,11 @@ export const TopupService = {
             pay_time = parsedDate.toISOString();
         }
         const updateData = {
-            payment_status: Status === 'PENDING' ? 'SUCCESS' : Status,
+            payment_status: Status === 'PENDING' 
+            ? 'SUCCESS' 
+            : Status === 'SUCCESS' 
+            ? 'SUCCESS' 
+            : 'FAILED',
             tradeNo: Result.TradeNo,
             payment_type: Result.PaymentType,
             pay_time: pay_time,
@@ -56,24 +60,28 @@ export const TopupService = {
             card_last_four: Result.PayerAccount5Code || undefined,
             escrow_bank: Result.EscrowBank || undefined,
             };
-        
+        if(updateData.payment_status === 'SUCCESS') {
             // 移除 undefined 的欄位，這樣不會覆蓋原有的值
             const cleanedData = Object.fromEntries(
-            Object.entries(updateData).filter(([_, value]) => value !== undefined)
-            );
-        
-            return await prisma.newebpay_transactions.update({
-            where: { 
-                merchantOrderNo: Result.MerchantOrderNo,
-                payment_status: "PENDING"
-            },
-            data: cleanedData,
-            select: {
-                topuper_id: true,
-                amount: true,
-                payment_status: true,  
-                tradeNo: true      
-            }
-            });
+                Object.entries(updateData).filter(([_, value]) => value !== undefined)
+                );
+            
+                return await prisma.newebpay_transactions.update({
+                where: { 
+                    merchantOrderNo: Result.MerchantOrderNo,
+                    payment_status: "PENDING"
+                },
+                data: cleanedData,
+                select: {
+                    topuper_id: true,
+                    amount: true,
+                    payment_status: true,  
+                    tradeNo: true      
+                }
+                });
+        } else {
+            return
         }
+            
+    }
 } 
