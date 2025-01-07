@@ -60,7 +60,7 @@ export const TopupService = {
             card_last_four: Result.PayerAccount5Code || undefined,
             escrow_bank: Result.EscrowBank || undefined,
             };
-        if(updateData.payment_status === 'SUCCESS') {
+        if(updateData.payment_status === 'SUCCESS' || updateData.payment_status === 'FAILED') {
             // 移除 undefined 的欄位，這樣不會覆蓋原有的值
             const cleanedData = Object.fromEntries(
                 Object.entries(updateData).filter(([_, value]) => value !== undefined)

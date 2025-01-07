@@ -65,7 +65,6 @@ export const handleNewebpayNotify = async (req, res, next) => {
     const response = req.body;
     const decryptData = createSesDecrypt(response.TradeInfo);
     const createResponse = await TopupService.updateNewebpayOrder(decryptData);
-
     if (createResponse.payment_status == "SUCCESS") {
       const addDepositResponse = await paymentService.addDeposit(
         createResponse.topuper_id,
