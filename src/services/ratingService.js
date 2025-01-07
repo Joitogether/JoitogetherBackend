@@ -70,6 +70,7 @@ export const ratingService = {
       include: {
         users: {
           select: {
+            uid: true,
             display_name: true,
             photo_url: true,
           },

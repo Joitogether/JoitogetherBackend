@@ -27,13 +27,13 @@ const cronJobs = {
             .subtract(1, "day")
             .startOf("day")
             .toISOString();
-          // 找有哪些活動是昨天最後截止報名，回來的只會有狀態為已報名但沒審核通過的
+          // 找有哪些活動是昨天最後截止報名，裡便報名回來的只會有狀態為已報名但沒審核通過的
           const deadLineActivities = await getActivitiesByApprovalDeadline(
             yesterday,
             today
           );
           deadLineActivities.forEach(async (activity) => {
-            if (activity.length != 0) {
+            if (activity.applications.length != 0) {
               await Promise.all(
                 activity.applications.map(async (application) => {
                   const refund = await paymentService.addDeposit(
@@ -81,6 +81,36 @@ const cronJobs = {
           const promises = activities
             .filter((activity) => activity.applications.length > 0)
             .map(async (activity) => {
+              if (activity.require_payment) {
+                const wallet = await paymentService.addDeposit(
+                  activity.host_id,
+                  parseInt(activity.price) *
+                    parseInt(activity.applications.length)
+                );
+                await paymentService.createPaymentRecord(
+                  activity.host_id,
+                  "income",
+                  parseInt(activity.price) *
+                    parseInt(activity.applications.length),
+                  wallet.balance
+                );
+                const notiData = {
+                  actor_id: activity.host_id,
+                  user_id: activity.host_id,
+                  action: "register",
+                  target_type: "activity",
+                  target_id: activity.id,
+                  message: "你主辦的活動費用已入帳",
+                  link: `/walletRecord`,
+                };
+                const notification = await userService.addNotification(
+                  notiData
+                );
+                const io = getIO();
+                if (io) {
+                  io.to(activity.host_id).emit("newNotification", notification);
+                }
+              }
               await updateActivities(activity);
               // 發送提醒讓參加者可以去評價
               return sendNotifications(activity);

@@ -1,3 +1,4 @@
+import { activityService } from "../services/activityService.js";
 import { ratingService } from "../services/ratingService.js";
 
 const fetchHostRatings = async (req, res, next) => {
@@ -72,10 +73,10 @@ const fetchActivityAndHostRating = async (req, res, next) => {
   try {
     let { activity_id } = req.params;
     activity_id = parseInt(activity_id);
-    const response = await ratingService.getRatingAndActivityByActivityId(
-      activity_id
-    );
-
+    const [response, applications] = await Promise.all([
+      ratingService.getRatingAndActivityByActivityId(activity_id),
+      activityService.getParticipantsByActivityId(activity_id),
+    ]);
     if (!response) {
       return res.status(200).json({
         status: 200,
@@ -87,7 +88,10 @@ const fetchActivityAndHostRating = async (req, res, next) => {
     return res.status(200).json({
       status: 200,
       message: "成功取得資料",
-      data: response,
+      data: {
+        ...response,
+        applications,
+      },
     });
   } catch (error) {
     next(error);
