@@ -10,7 +10,7 @@ router.get(
 
   /* #swagger.description = "取得儲值紀錄" */
 
-  /* #swagger.responses[200] = { 
+  /* #swagger.responses[200] = {
         schema: {
             "status": 200,
             "message": "資料獲取成功",
@@ -46,7 +46,6 @@ router.post(
   /* #swagger.ignore = true */
 
   /* #swagger.description = "儲值回傳" */
-  authMiddleware,
   TopupController.handleReturn
 );
 
@@ -92,7 +91,6 @@ router.post(
       },
       description: "訂單加密成功"
   } */
-
   authMiddleware,
   TopupController.handleTopupProcess
 );
@@ -102,7 +100,6 @@ router.post(
   /* #swagger.ignore = true */
 
   /* #swagger.description = "儲值回傳" */
-  authMiddleware,
   TopupController.handleNewebpayNotify
 );
 
