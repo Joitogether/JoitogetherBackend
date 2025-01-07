@@ -356,7 +356,12 @@ export const activityService = {
     const activities = await prisma.activities.findMany({
       skip,
       take: pageSize,
-      where: filters,
+      where: {
+        ...filters,
+        event_time: {
+          gte: (new Date()).toISOString(),
+        }
+      },
       select: {
         id: true,
         name: true,
