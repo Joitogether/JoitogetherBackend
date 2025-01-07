@@ -22,6 +22,7 @@ export const initSocket = (server) => {
       if (data.action == "create") {
         // data 0 為通知內容 1 為使用者陣列
         const result = await userService.addNotificationsToFollowers(data);
+        if(result[1].length == 0 || !result) return
         result[1].forEach((user) => {
           io.to(user).emit("newNotification", result[0]);
         });
