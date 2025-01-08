@@ -158,7 +158,7 @@ export const userService = {
           break;
         case "user":
           target_detail = {
-            messgae: "去他的頁面看看吧！",
+            message: "去他的頁面看看吧！",
           };
           break;
       }
@@ -257,7 +257,6 @@ export const userService = {
       const response = await Promise.all(
         data.map((data) => prisma.notifications.create({ data }))
       );
-      console.log("123", response);
       // 回傳整理過的資料
       const detailResponse = await prisma.notifications.findUnique({
         where: { id: response[0].id },
@@ -307,7 +306,7 @@ export const userService = {
           break;
         case "user":
           target_detail = {
-            messgae: "去他的頁面看看吧！",
+            message: "去他的頁面看看吧！",
           };
           break;
       }
@@ -388,7 +387,7 @@ export const userService = {
             break;
           case "user":
             target_detail = {
-              messgae: "去他的頁面看看吧！",
+              message: "去他的頁面看看吧！",
             };
             break;
         }
