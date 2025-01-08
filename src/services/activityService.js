@@ -381,7 +381,13 @@ export const activityService = {
     });
 
     const total = await prisma.activities.count({
-      where: filters,
+      where: {
+        ...filters,
+        event_time:{
+          gte: (new Date()).toISOString(),
+        }
+      }
+      
     });
     return { activities, total };
   },
