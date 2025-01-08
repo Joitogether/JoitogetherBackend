@@ -178,8 +178,9 @@ export const userService = {
       NotificationSchema.parse(data);
       const { actor_id, action, target_type, target_id, message, link } = data;
       const followers = await userService.getSimplifyFollowers(actor_id);
-      if (followers.length == 0) return;
-
+      if (followers.length == 0) {
+        return [null, []];
+      }
       const followersArray = followers.map((follower) => {
         return {
           actor_id,
