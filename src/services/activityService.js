@@ -40,6 +40,9 @@ export const activityService = {
     return await prisma.activities.findMany({
       where: {
         status: "registrationOpen",
+        event_time: {
+          gte: (new Date()).toISOString()
+        }
       },
       include: {
         users: {
