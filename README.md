@@ -1,95 +1,105 @@
-// Step 1. install packages 安裝所有依賴包
+# JoitogetherBackend
+
+[技術](#技術) • [開始使用](#開始使用) • [clone 專案](#clone-專案) • [配置.env 變數](#配置env-變數) • [開始](#開始) • [API 端點](#api-端點) • [成員](#成員)
+
+## 技術
+
+- axios
+- dayjs
+- express
+- firebase
+- mysql2
+- socket.io
+- swagger-autogen
+- zod
+- prisma
+- node-cron
+
+## 開始使用
+
+1. 下載 MySQL
+2. 設定用戶名及密碼
+3. Google API Key
+4. Firebase, project ID, email and private key
+5. 開啟 vscode
+6. clone 專案～
+
+## clone 專案
+
+```bash
+git clone https://github.com/Joitogether/JoitogetherBackend.git
+```
+
+注意: server 的 port 預設為 3030，應該要與你的 db server「不同」port
+
+## 配置.env 變數
+
+- DATABASE_URL=
+- FIREBASE_CLIENT_EMAIL=""
+- FIREBASE_PRIVATE_KEY=""""
+- FIREBASE_PROJECT_ID=""
+- FRONTEND_URL=""
+- GOOGLE_API_KEY=""
+- HASHIV=""
+- HASHKEY=""
+- MerchantID=""
+- NotifyUrl=""
+- PayGateWay=""
+- ReturnUrl=""
+- Version=
+
+## 開始
+
+Step 1. install packages 安裝所有依賴包
 npm install
 
-// Step 2. 在.env設定db連接URl
-範例:
-DATABASE_URL=mysql://<用戶名>:<密碼>@localhost:<port>/<table名>
-DATABASE_URL=mysql://root:abc@localhost:3306/joitogether
+Step 2. 在.env 設定 db 連接 URl
 
-注意:
-server的port預設為3030，應該要與你的db server「不同」port
+Step 3. 於 mysql 匯入放置公用雲端資料夾的三個 table
 
-// Step 3. 於mysql匯入放置公用雲端資料夾的三個table  
-users
-applications
-activities
+- users
+- applications
+- activities
 
-// Step 4. 聯動db 啟動伺服器 
+Step 4. 聯動 db 啟動伺服器
 npx prisma db pull
 npx prisma generate
 
-npm run dev
+Step 5. 可以打 API 了！
+base url: http://localhost:3030
 
-// Step 5. 可以打API了！
-base url: http://localhost:3030  
+## API 端點
 
+http://localhost:3030/api-docs/
 
+開啟前請先 npm run dev
 
+## 成員
 
+**王嘉駿 / Jun** -
+[GitHub](https://github.com/Junwanghere)
+[Email](change60201@gmail.com)
 
+**黃芷妍 / Latte** -
+[GitHub](https://github.com/Warmlatte)
+[Email](latte.0975582420@gmail.com)
 
-Users:
-// 獲得所有使用者資料
-GET /users
-// 獲得單一使用者資料
-GET  /users/:id
-// 新增使用者資料
-POST /users/register
-data = {
-  使用者資料
-}
-// 更改使用者資料
-PUT /users/update/:id
+**李佳樺 / Helen** -
+[GitHub](https://github.com/h-e-l-e-n)
+[Email](leeleilei07@gmail.com)
 
+**黃俊龍 / Roger** -
+[GitHub](https://github.com/Roger0122)
+[Email](a86527913@gmail.com)
 
-Activities:
-// 獲得單一活動資料
-GET /activities/:id
-// 獲得所有活動資料
-GET /activities/
-// 新增活動資料
-POST /activities
-data = {
-  活動資料
-}
-// 取消單一活動
-PUT /activities/cancel/:id
-POST /activities/comment/:activity_id
-{ participant_id, comment }
-DELETE /activities/comment/:comment_id
+**林侑萱 / Yuka** -
+[GitHub](https://github.com/yucochann)
+[Email](yuca.work@gmail.com)
 
-Applications:
-// 獲得該活動所有報名資訊
-GET /applications/:activity_id
-// 報名活動
-POST /applications/register/:activity_id
-data = {
-  使用者id
-  報名評論
-}
-// 取消報名
-PUT /applications/cancel/:activity_id
-// 審核單筆報名
-PUT /applications/verify/:application_id
-data = {
-  status: registered/approved/host_declined/participant_cancelled
-}
+**蔡庚志 / Evan** -
+[GitHub](https://github.com/ggps9924114)
+[Email](ggps9924114@gmail.com)
 
-Posts:
-// 新增貼文
-POST /posts/
-{
-    "post_title": "上個禮拜去玩水好讚喔",
-    "post_content": "上禮拜我們一群人一起去玩水，結果人超多的啦",
-    "uid": "7P6ocyCefPc8oTzjfAEs16RZThR",
-    "post_category": "Travel",
-    "post_status": "onEdit",
-    "post_img": "https://tse3.mm.bing.net/th?id=OIP.lvtKu4xQC80LcJUgC2qw3gHaE8&pid=Api&P=0&h=180"
-}
-
-// 新增貼文留言
-POST /posts/comment/:post_id
-{
-    "uid": "abcd1234efgh5678",
-    "comment_content": "超同意的啦" 
-}
+**柯宣宇 / Lance** -
+[GitHub](https://github.com/Yellowaystry)
+[Email](kk772641@gmail.com)
