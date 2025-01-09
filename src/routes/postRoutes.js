@@ -256,7 +256,7 @@ router.put(
         }
     } */
 
-  /* #swagger.responses[200] = { 
+  /* #swagger.responses[200] = {
       schema: {
     "status": 200,
     "message": "資料更新成功",
@@ -273,6 +273,7 @@ router.put(
       }
 }}
         description: "資料更新成功" } */
+  authMiddleware,
   PostController.editPost
 );
 router.delete(
