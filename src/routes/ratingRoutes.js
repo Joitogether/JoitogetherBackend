@@ -174,6 +174,25 @@ router.get(
   RatingController.fetchSummary
 );
 
+router.get(
+  /* #swagger.tags = ['Rating'] */
+
+  /* #swagger.description = "取得是否評價" */
+
+  /* #swagger.responses[200] = {
+      schema: {
+        "message": "成功取得資料",
+        "status": 200,
+        "data":{
+        "hasRated":false
+        }
+    },
+        description: "取得是否評價值成功" } */
+
+  "/activityRatings/:activity_id/user/:user_id",
+  RatingController.fetchActivityRatingUserIds
+);
+
 router.post(
   "/",
   /* #swagger.tags = ['Rating'] */

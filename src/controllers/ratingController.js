@@ -1,3 +1,4 @@
+import { parse } from "dotenv";
 import { activityService } from "../services/activityService.js";
 import { ratingService } from "../services/ratingService.js";
 
@@ -168,6 +169,25 @@ const fetchSummaryFn = async (host_id) => {
     averageHeart: averageHeart,
   };
 };
+
+const fetchActivityRatingUserIds = async (req, res, next) => {
+  try {
+    const { activity_id, user_id } = req.params;
+    const hasRated = await ratingService.getActivityRatings(
+      parseInt(activity_id),
+      user_id
+    );
+    res.status(200).json({
+      status: 200,
+      message: "成功取得資料",
+      data: {
+        hasRated,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 export {
   fetchHostRatings,
   fetchHostDetails,
@@ -176,4 +196,5 @@ export {
   createRating,
   fetchSummary,
   fetchSummaryFn,
+  fetchActivityRatingUserIds,
 };

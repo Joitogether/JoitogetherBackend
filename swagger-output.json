@@ -4614,6 +4614,49 @@
         }
       }
     },
+    "/ratings/*#swagger.description=取得是否評價*/{*#swagger.responses[200]={schema{message:成功取得資料}": {
+      "get": {
+        "description": "取得是否評價",
+        "parameters": [
+          {
+            "name": null,
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "成功取得資料"
+                },
+                "status": {
+                  "type": "number",
+                  "example": 200
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "hasRated": {
+                      "type": "boolean",
+                      "example": false
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            },
+            "description": "取得是否評價值成功"
+          }
+        }
+      }
+    },
     "/ratings/": {
       "post": {
         "tags": [

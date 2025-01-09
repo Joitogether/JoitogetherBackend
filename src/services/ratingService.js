@@ -3,6 +3,7 @@ import {
   GetRatingSchema,
 } from "../validations/ratingSchema.js";
 import { prisma } from "../config/db.js";
+import { getActivitiesByTime } from "./cronService.js";
 
 export const ratingService = {
   // 查詢特定 host_id（評價者）的評論列表
@@ -140,5 +141,18 @@ export const ratingService = {
         rating_heart: true,
       },
     });
+  },
+
+  async getActivityRatings(activity_id, user_id) {
+    const existingRating = await prisma.ratings.findFirst({
+      where: {
+        activity_id,
+        user_id,
+      },
+      select: {
+        rating_id: true,
+      },
+    });
+    return !!existingRating;
   },
 };
