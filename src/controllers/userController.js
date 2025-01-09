@@ -3,27 +3,6 @@ import {
   UserCreateSchema,
   UserUpdateSchema,
 } from "../validations/userSchema.js";
-const fetchAllUsers = async (_req, res, next) => {
-  try {
-    const response = await userService.getAllUsers();
-
-    if (!response || response.length === 0) {
-      return res.status(200).json({
-        status: 200,
-        message: "查無資料",
-        data: [],
-      });
-    }
-
-    res.status(200).json({
-      status: 200,
-      message: "成功取得資料",
-      data: response,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
 
 const fetchUserById = async (req, res, next) => {
   try {
@@ -96,7 +75,7 @@ const updateUserInfo = async (req, res, next) => {
 const fetchUserHostActivities = async (req, res, next) => {
   try {
     const { uid } = req.params;
-    
+
     const response = await userService.getUserHostActivitiesByUid(uid);
     if (!response || response.length === 0) {
       return res.status(200).json({
@@ -111,9 +90,9 @@ const fetchUserHostActivities = async (req, res, next) => {
       data: response,
     });
   } catch (error) {
-    next (error)
+    next(error);
   }
-}
+};
 
 const fetchUserApplications = async (req, res, next) => {
   try {
@@ -319,7 +298,6 @@ const unFollowUser = async (req, res, next) => {
 export {
   unFollowUser,
   followUser,
-  fetchAllUsers,
   fetchUserById,
   registerUser,
   updateUserInfo,

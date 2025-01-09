@@ -10,12 +10,7 @@ import {
   GetFollowingSchema,
 } from "../validations/userSchema.js";
 
-// 取得所有使用者
 export const userService = {
-  async getAllUsers() {
-    return await prisma.users.findMany();
-  },
-
   // 依照 uid 取得單一使用者資料
   async getUserById(uid) {
     return await prisma.users.findUnique({

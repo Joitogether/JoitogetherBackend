@@ -5,11 +5,6 @@ import { authMiddleware } from "../middlewares/authMiddleware.js";
 const router = express.Router();
 
 // User List
-router.get(
-  "/",
-  /* #swagger.ignore = true */
-  UserController.fetchAllUsers
-);
 
 router.get(
   "/:uid",
